@@ -30,4 +30,7 @@ RUN apt-get update && apt-get install -y build-essential texinfo wget \
 USER $USERNAME
 WORKDIR /workspace
 
+RUN Rscript -e "install.packages('languageserver', repos='https://cloud.r-project.org')"
+ENV R_HOME "/usr/local/bin/R"
+
 ENTRYPOINT ["bash", "-l"]
