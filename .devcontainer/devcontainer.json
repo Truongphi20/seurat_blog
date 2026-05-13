@@ -1,0 +1,29 @@
+{
+  "name": "seurat-dev-myst",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "rstudio",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "yzhang.markdown-all-in-one",
+        "mystmd.mystmd",
+        "REditorSupport.r",
+        "ms-vscode.cpptools-extension-pack"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "updateRemoteUserUID": true,
+  "runArgs": [
+    "--cap-add=SYS_PTRACE",
+    "--security-opt", "seccomp=unconfined"
+  ],
+  "forwardPorts": [3000, 3100]
+}
