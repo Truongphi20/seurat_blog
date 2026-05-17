@@ -3,6 +3,10 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# Load debugable binary
+dyn.unload("/usr/local/lib/R/site-library/SeuratObject/libs/SeuratObject.so")
+dyn.load("/workspaces/seurat_blog/commands/seurat-5.5.0/src/build/SeuratObject.so")
+
 # Load the PBMC dataset
 pbmc.data <- Read10X(data.dir = "test_data/pbmc3k_filtered_gene_bc_matrices/filtered_gene_bc_matrices/hg19")
 # Initialize the Seurat object with the raw (non-normalized data).
