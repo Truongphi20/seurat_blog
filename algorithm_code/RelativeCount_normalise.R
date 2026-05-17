@@ -8,34 +8,26 @@ RelativeCounts <- function(data, scale.factor = 1) {
     return(data)
 }
 
-# commands/seurat-5.5.0/R/preprocessing.R:4912
-NormalizeData.V3Matrix <- function(
-  object,
-  scale.factor = 1e4
-){
-    normalized.data = RelativeCounts(
-        data = object,
-        scale.factor = scale.factor
-    )
-
-    return(normalized.data)
-}
-
 # commands/seurat-5.5.0/R/preprocessing5.R:311
 NormalizeData.StdAssay <- function(
   object,
   scale.factor = 1e4
 ) {
     layer <- Layers(object = object, search = "counts")
+    object_layer = LayerData(object = object, layer = "counts", fast = NA)
+
+    # commands/seurat-5.5.0/R/preprocessing.R:4912
+    normalized.data = RelativeCounts(
+        data = object_layer,
+        scale.factor = scale.factor
+    )
+
     LayerData(
       object = object,
       layer = "data",
       features = Features(x = object, layer = "counts"),
       cells = Cells(x = object, layer = "counts")
-    ) <- NormalizeData.V3Matrix(
-      object = LayerData(object = object, layer = "counts", fast = NA),
-      scale.factor = scale.factor
-    )
+    ) <- normalized.data
     return(object)
 }
 
