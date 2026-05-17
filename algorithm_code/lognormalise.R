@@ -7,18 +7,16 @@ dyn.unload("/usr/local/lib/R/site-library/SeuratObject/libs/SeuratObject.so")
 dyn.load("/workspaces/seurat_blog/commands/seurat-5.5.0/src/build/SeuratObject.so")
 
 # commands/seurat-5.5.0/R/RcppExports.R:20
-LogNorm <- function(data, scale_factor, display_progress = TRUE) {
-    .Call('_Seurat_LogNorm', PACKAGE = 'Seurat', data, scale_factor, display_progress)
+LogNorm <- function(data, scale_factor) {
+    .Call('_Seurat_LogNorm', PACKAGE = 'Seurat', data, scale_factor, FALSE)
 }
 
 # commands/seurat-5.5.0/R/preprocessing.R:4865
 LogNormalize.V3Matrix <- function(
   data,
-  scale.factor = 1e4,
-  margin = 2L,
-  verbose = TRUE
+  scale.factor = 1e4
 ){
-    norm.data <- LogNorm(data, scale_factor = scale.factor, display_progress = verbose)
+    norm.data <- LogNorm(data, scale_factor = scale.factor)
     colnames(x = norm.data) <- colnames(x = data)
     rownames(x = norm.data) <- rownames(x = data)
     return(norm.data)
@@ -27,16 +25,11 @@ LogNormalize.V3Matrix <- function(
 # commands/seurat-5.5.0/R/preprocessing.R:4912
 NormalizeData.V3Matrix <- function(
   object,
-  normalization.method = "LogNormalize",
-  scale.factor = 1e4,
-  margin = 1,
-  block.size = NULL,
-  verbose = TRUE
+  scale.factor = 1e4
 ){
     normalized.data <- LogNormalize.V3Matrix(
         data = object,
-        scale.factor = scale.factor,
-        verbose = verbose
+        scale.factor = scale.factor
     )
     return(normalized.data)
 }
@@ -44,12 +37,10 @@ NormalizeData.V3Matrix <- function(
 # commands/seurat-5.5.0/R/preprocessing5.R:311
 NormalizeData.StdAssay <- function(
   object,
-  normalization.method = 'LogNormalize',
   scale.factor = 1e4,
   margin = 1L,
   layer = 'counts',
-  save = 'data',
-  verbose = TRUE
+  save = 'data'
 ) {
     layer <- Layers(object = object, search = layer)
 
@@ -60,10 +51,7 @@ NormalizeData.StdAssay <- function(
       cells = Cells(x = object, layer = "counts")
     ) <- NormalizeData.V3Matrix(
       object = LayerData(object = object, layer = "counts", fast = NA),
-      normalization.method = normalization.method,
-      scale.factor = scale.factor,
-      margin = margin,
-      verbose = verbose
+      scale.factor = scale.factor
     )
     return(object)
 
@@ -73,18 +61,12 @@ NormalizeData.StdAssay <- function(
 NormalizeData.Seurat <- function(
   object,
   assay = NULL,
-  normalization.method = "LogNormalize",
-  scale.factor = 1e4,
-  margin = 1,
-  verbose = TRUE
+  scale.factor = 1e4
 ) {
     assay <- assay %||% DefaultAssay(object = object)
     assay.data <- NormalizeData.StdAssay(
         object = object[[assay]],
-        normalization.method = normalization.method,
-        scale.factor = scale.factor,
-        verbose = verbose,
-        margin = margin
+        scale.factor = scale.factor
     )
     object[[assay]] <- assay.data
     return(object)
@@ -96,7 +78,7 @@ pbmc.data <- Read10X(data.dir = "test_data/pbmc3k_filtered_gene_bc_matrices/filt
 pbmc <- CreateSeuratObject(counts = pbmc.data, project = "pbmc3k", min.cells = 3, min.features = 200)
 
 # Normalise
-pbmc <- NormalizeData.Seurat(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+pbmc <- NormalizeData.Seurat(pbmc, scale.factor = 10000)
 
 
 ## Checking the result 
