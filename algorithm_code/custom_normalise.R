@@ -2,13 +2,36 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing.R:5056
+NormalizeData.Seurat <- function(
+  object,
+  assay = NULL,
+  normalization.method = "LogNormalize",
+  scale.factor = 1e4,
+  margin = 1,
+  verbose = TRUE,
+  ...
+) {
+    assay = DefaultAssay(object = object)
+    assay.data <- NormalizeData(
+        object = object[[assay]],
+        normalization.method = normalization.method,
+        scale.factor = scale.factor,
+        verbose = verbose,
+        margin = margin,
+        ...
+    )
+    object[[assay]] <- assay.data
+    return(object)
+}
+
 
 # Load the PBMC dataset
 pbmc.data <- Read10X(data.dir = "test_data/pbmc3k_filtered_gene_bc_matrices/filtered_gene_bc_matrices/hg19")
 # Initialize the Seurat object with the raw (non-normalized data).
 pbmc <- CreateSeuratObject(counts = pbmc.data, project = "pbmc3k", min.cells = 3, min.features = 200)
 
-pbmc <- NormalizeData(pbmc, normalization.method = "CLR", scale.factor = 10000)
+pbmc <- NormalizeData.Seurat(pbmc, normalization.method = "CLR", scale.factor = 10000)
 
 ## Checking the result 
 # Extract the full matrix
