@@ -2,6 +2,59 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# # commands/seurat-5.5.0/R/preprocessing.R:5837
+# CustomNormalize <- function(data, custom_function, margin, verbose = TRUE) {
+#   if (is.data.frame(x = data)) {
+#     data <- as.matrix(x = data)
+#   }
+#   if (!inherits(x = data, what = 'dgCMatrix')) {
+#     data <- as.sparse(x = data)
+#   }
+#   myapply <- ifelse(test = verbose, yes = pbapply, no = apply)
+#   # margin <- switch(
+#   #   EXPR = across,
+#   #   'cells' = 2,
+#   #   'features' = 1,
+#   #   stop("'across' must be either 'cells' or 'features'")
+#   # )
+#   if (verbose) {
+#     message("Normalizing across ", c('features', 'cells')[margin])
+#   }
+#   norm.data <- myapply(
+#     X = data,
+#     MARGIN = margin,
+#     FUN = custom_function)
+#   if (margin == 1) {
+#     norm.data = Matrix::t(x = norm.data)
+#   }
+#   colnames(x = norm.data) <- colnames(x = data)
+#   rownames(x = norm.data) <- rownames(x = data)
+#   return(norm.data)
+# }
+
+# commands/seurat-5.5.0/R/preprocessing.R:4912
+NormalizeData.V3Matrix <- function(
+  object,
+  normalization.method = "LogNormalize",
+  scale.factor = 1e4,
+  margin = 1,
+  block.size = NULL,
+  verbose = TRUE,
+  ...
+){
+    normalized.data = Seurat:::CustomNormalize(
+        data = object,
+        custom_function = function(x) {
+            return(log1p(x = x / (exp(x = sum(log1p(x = x[x > 0]), na.rm = TRUE) / length(x = x)))))
+        },
+        margin = margin,
+        verbose = verbose
+        # across = across
+    )
+
+    return(normalized.data)
+}
+
 # commands/seurat-5.5.0/R/preprocessing5.R:311
 NormalizeData.StdAssay <- function(
   object,
@@ -20,7 +73,7 @@ NormalizeData.StdAssay <- function(
       layer = "data",
       features = Features(x = object, layer = "counts"),
       cells = Cells(x = object, layer = "counts")
-    ) <- NormalizeData(
+    ) <- NormalizeData.V3Matrix(
       object = LayerData(object = object, layer = "counts", fast = NA),
       normalization.method = normalization.method,
       scale.factor = scale.factor,
