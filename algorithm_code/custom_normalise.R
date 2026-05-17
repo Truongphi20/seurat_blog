@@ -2,6 +2,35 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing5.R:311
+NormalizeData.StdAssay <- function(
+  object,
+  normalization.method = 'LogNormalize',
+  scale.factor = 1e4,
+  margin = 1L,
+  layer = 'counts',
+  save = 'data',
+  verbose = TRUE,
+  ...
+){
+    olayer <- layer <- unique(x = "counts")
+    layer <- Layers(object = object, search = "counts")
+    LayerData(
+      object = object,
+      layer = "data",
+      features = Features(x = object, layer = "counts"),
+      cells = Cells(x = object, layer = "counts")
+    ) <- NormalizeData(
+      object = LayerData(object = object, layer = "counts", fast = NA),
+      normalization.method = normalization.method,
+      scale.factor = scale.factor,
+      margin = margin,
+      verbose = verbose,
+      ...
+    )
+    return(object)
+}
+
 # commands/seurat-5.5.0/R/preprocessing.R:5056
 NormalizeData.Seurat <- function(
   object,
