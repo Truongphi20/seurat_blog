@@ -2,6 +2,35 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+NormalizeData.StdAssay <- function(
+  object,
+  normalization.method = 'LogNormalize',
+  scale.factor = 1e4,
+  margin = 1L,
+  layer = 'counts',
+  save = 'data',
+  verbose = TRUE,
+  ...
+) {
+    layer <- Layers(object = object, search = layer)
+
+    LayerData(
+      object = object,
+      layer = "data",
+      features = Features(x = object, layer = "counts"),
+      cells = Cells(x = object, layer = "counts")
+    ) <- NormalizeData(
+      object = LayerData(object = object, layer = "counts", fast = NA),
+      normalization.method = normalization.method,
+      scale.factor = scale.factor,
+      margin = margin,
+      verbose = verbose,
+      ...
+    )
+    return(object)
+
+}
+
 NormalizeData.Seurat <- function(
   object,
   assay = NULL,
@@ -12,7 +41,7 @@ NormalizeData.Seurat <- function(
   ...
 ) {
     assay <- assay %||% DefaultAssay(object = object)
-    assay.data <- NormalizeData(
+    assay.data <- NormalizeData.StdAssay(
         object = object[[assay]],
         normalization.method = normalization.method,
         scale.factor = scale.factor,
