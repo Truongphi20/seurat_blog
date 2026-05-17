@@ -4,22 +4,11 @@ library(patchwork)
 library(Matrix)
 
 # commands/seurat-5.5.0/src/data_manipulation.cpp:115
-LogNorm <- function(data, scale_factor, display_progress = FALSE) {
+LogNorm <- function(data, scale_factor) {
     col_sums <- Matrix::colSums(data)
     cell_indices <- rep.int(1:ncol(data), diff(data@p))
     data@x <- log1p(data@x / col_sums[cell_indices] * scale_factor)
     return(data)
-}
-
-# commands/seurat-5.5.0/R/preprocessing.R:4865
-LogNormalize.V3Matrix <- function(
-  object,
-  scale.factor = 1e4
-){
-    norm.data <- LogNorm(object, scale_factor = scale.factor)
-    colnames(x = norm.data) <- colnames(x = object)
-    rownames(x = norm.data) <- rownames(x = object)
-    return(norm.data)
 }
 
 # commands/seurat-5.5.0/R/preprocessing5.R:311
@@ -29,15 +18,21 @@ NormalizeData.StdAssay <- function(
 ) {
     layer <- Layers(object = object, search = "counts")
 
+    # commands/seurat-5.5.0/R/preprocessing.R:4865
+    object_layer = LayerData(object = object, layer = "counts", fast = NA)
+    norm.data <- LogNorm(
+        object_layer, 
+        scale_factor = scale.factor
+    )
+    colnames(x = norm.data) <- colnames(x = object_layer)
+    rownames(x = norm.data) <- rownames(x = object_layer)
+
     LayerData(
       object = object,
       layer = "data",
       features = Features(x = object, layer = "counts"),
       cells = Cells(x = object, layer = "counts")
-    ) <- LogNormalize.V3Matrix(
-      object = LayerData(object = object, layer = "counts", fast = NA),
-      scale.factor = scale.factor
-    )
+    ) <- norm.data
     return(object)
 
 }
