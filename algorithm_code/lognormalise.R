@@ -13,43 +13,28 @@ LogNorm <- function(data, scale_factor, display_progress = FALSE) {
 
 # commands/seurat-5.5.0/R/preprocessing.R:4865
 LogNormalize.V3Matrix <- function(
-  data,
-  scale.factor = 1e4
-){
-    norm.data <- LogNorm(data, scale_factor = scale.factor)
-    colnames(x = norm.data) <- colnames(x = data)
-    rownames(x = norm.data) <- rownames(x = data)
-    return(norm.data)
-}
-
-# commands/seurat-5.5.0/R/preprocessing.R:4912
-NormalizeData.V3Matrix <- function(
   object,
   scale.factor = 1e4
 ){
-    normalized.data <- LogNormalize.V3Matrix(
-        data = object,
-        scale.factor = scale.factor
-    )
-    return(normalized.data)
+    norm.data <- LogNorm(object, scale_factor = scale.factor)
+    colnames(x = norm.data) <- colnames(x = object)
+    rownames(x = norm.data) <- rownames(x = object)
+    return(norm.data)
 }
 
 # commands/seurat-5.5.0/R/preprocessing5.R:311
 NormalizeData.StdAssay <- function(
   object,
-  scale.factor = 1e4,
-  margin = 1L,
-  layer = 'counts',
-  save = 'data'
+  scale.factor = 1e4
 ) {
-    layer <- Layers(object = object, search = layer)
+    layer <- Layers(object = object, search = "counts")
 
     LayerData(
       object = object,
       layer = "data",
       features = Features(x = object, layer = "counts"),
       cells = Cells(x = object, layer = "counts")
-    ) <- NormalizeData.V3Matrix(
+    ) <- LogNormalize.V3Matrix(
       object = LayerData(object = object, layer = "counts", fast = NA),
       scale.factor = scale.factor
     )
@@ -60,10 +45,9 @@ NormalizeData.StdAssay <- function(
 # commands/seurat-5.5.0/R/preprocessing.R:5056
 NormalizeData.Seurat <- function(
   object,
-  assay = NULL,
   scale.factor = 1e4
 ) {
-    assay <- assay %||% DefaultAssay(object = object)
+    assay <- DefaultAssay(object = object)
     assay.data <- NormalizeData.StdAssay(
         object = object[[assay]],
         scale.factor = scale.factor
