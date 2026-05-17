@@ -16,8 +16,7 @@ LogNormalize.V3Matrix <- function(
   data,
   scale.factor = 1e4,
   margin = 2L,
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 ){
     norm.data <- LogNorm(data, scale_factor = scale.factor, display_progress = verbose)
     colnames(x = norm.data) <- colnames(x = data)
@@ -32,8 +31,7 @@ NormalizeData.V3Matrix <- function(
   scale.factor = 1e4,
   margin = 1,
   block.size = NULL,
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 ){
     normalized.data <- LogNormalize.V3Matrix(
         data = object,
@@ -51,8 +49,7 @@ NormalizeData.StdAssay <- function(
   margin = 1L,
   layer = 'counts',
   save = 'data',
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 ) {
     layer <- Layers(object = object, search = layer)
 
@@ -66,8 +63,7 @@ NormalizeData.StdAssay <- function(
       normalization.method = normalization.method,
       scale.factor = scale.factor,
       margin = margin,
-      verbose = verbose,
-      ...
+      verbose = verbose
     )
     return(object)
 
@@ -80,8 +76,7 @@ NormalizeData.Seurat <- function(
   normalization.method = "LogNormalize",
   scale.factor = 1e4,
   margin = 1,
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 ) {
     assay <- assay %||% DefaultAssay(object = object)
     assay.data <- NormalizeData.StdAssay(
@@ -89,8 +84,7 @@ NormalizeData.Seurat <- function(
         normalization.method = normalization.method,
         scale.factor = scale.factor,
         verbose = verbose,
-        margin = margin,
-        ...
+        margin = margin
     )
     object[[assay]] <- assay.data
     return(object)
