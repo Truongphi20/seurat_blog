@@ -1,14 +1,14 @@
 library(dplyr)
 library(Seurat)
 library(patchwork)
+library(Matrix)
 
-# Load debugable binary
-dyn.unload("/usr/local/lib/R/site-library/SeuratObject/libs/SeuratObject.so")
-dyn.load("/workspaces/seurat_blog/commands/seurat-5.5.0/src/build/SeuratObject.so")
-
-# commands/seurat-5.5.0/R/RcppExports.R:20
-LogNorm <- function(data, scale_factor) {
-    .Call('_Seurat_LogNorm', PACKAGE = 'Seurat', data, scale_factor, FALSE)
+# commands/seurat-5.5.0/src/data_manipulation.cpp:115
+LogNorm <- function(data, scale_factor, display_progress = FALSE) {
+    col_sums <- Matrix::colSums(data)
+    cell_indices <- rep.int(1:ncol(data), diff(data@p))
+    data@x <- log1p(data@x / col_sums[cell_indices] * scale_factor)
+    return(data)
 }
 
 # commands/seurat-5.5.0/R/preprocessing.R:4865
