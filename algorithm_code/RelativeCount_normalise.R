@@ -3,7 +3,7 @@ library(Seurat)
 library(patchwork)
 
 # commands/seurat-5.5.0/R/preprocessing.R:3601
-RelativeCounts <- function(data, scale.factor = 1) {
+RelativeCounts <- function(data, scale.factor) {
     data@x <- data@x / rep.int(Matrix::colSums(data), diff(data@p)) * scale.factor
     return(data)
 }
@@ -11,7 +11,7 @@ RelativeCounts <- function(data, scale.factor = 1) {
 # commands/seurat-5.5.0/R/preprocessing5.R:311
 NormalizeData.StdAssay <- function(
   object,
-  scale.factor = 1e4
+  scale.factor
 ) {
     layer <- Layers(object = object, search = "counts")
     object_layer = LayerData(object = object, layer = "counts", fast = NA)
