@@ -2,6 +2,13 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing.R:3601
+RelativeCounts <- function(data, scale.factor = 1, verbose = TRUE) {
+    norm.data <- data
+    norm.data@x <- norm.data@x / rep.int(Matrix::colSums(norm.data), diff(norm.data@p)) * scale.factor
+    return(norm.data)
+}
+
 # commands/seurat-5.5.0/R/preprocessing.R:4912
 NormalizeData.V3Matrix <- function(
   object,
