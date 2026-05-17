@@ -30,27 +30,19 @@ NormalizeData.V3Matrix <- function(object){
     return(normalized.data)
 }
 
-# commands/seurat-5.5.0/R/preprocessing5.R:311
-NormalizeData.StdAssay <- function(object){
-
-    LayerData(
-      object = object,
-      layer = "data",
-      features = Features(x = object, layer = "counts"),
-      cells = Cells(x = object, layer = "counts")
-    ) <- NormalizeData.V3Matrix(
-      object = LayerData(object = object, layer = "counts", fast = NA)
-    )
-    return(object)
-}
-
 # commands/seurat-5.5.0/R/preprocessing.R:5056
 NormalizeData.Seurat <- function(object) {
     assay = DefaultAssay(object = object)
-    assay.data <- NormalizeData.StdAssay(
-        object = object[[assay]]
+
+    LayerData(
+      object = object[[assay]],
+      layer = "data",
+      features = Features(x = object[[assay]], layer = "counts"),
+      cells = Cells(x = object[[assay]], layer = "counts")
+    ) <- NormalizeData.V3Matrix(
+      object = LayerData(object = object[[assay]], layer = "counts", fast = NA)
     )
-    object[[assay]] <- assay.data
+
     return(object)
 }
 
