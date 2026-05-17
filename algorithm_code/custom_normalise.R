@@ -4,10 +4,10 @@ library(patchwork)
 library(pbapply)
 
 # commands/seurat-5.5.0/R/preprocessing.R:5837
-CustomNormalize <- function(data, custom_function, margin, verbose = TRUE) {
+CustomNormalize <- function(data, custom_function) {
     norm.data <- apply(
         X = data,
-        MARGIN = margin,
+        MARGIN = 1,
         FUN = custom_function
     )
 
@@ -18,75 +18,37 @@ CustomNormalize <- function(data, custom_function, margin, verbose = TRUE) {
 }
 
 # commands/seurat-5.5.0/R/preprocessing.R:4912
-NormalizeData.V3Matrix <- function(
-  object,
-  normalization.method = "LogNormalize",
-  scale.factor = 1e4,
-  margin = 1,
-  block.size = NULL,
-  verbose = TRUE,
-  ...
-){
+NormalizeData.V3Matrix <- function(object){
+
     normalized.data = CustomNormalize(
         data = object,
         custom_function = function(x) {
             return(log1p(x = x / (exp(x = sum(log1p(x = x[x > 0]), na.rm = TRUE) / length(x = x)))))
-        },
-        margin = margin,
-        verbose = verbose
-        # across = across
+        }
     )
 
     return(normalized.data)
 }
 
 # commands/seurat-5.5.0/R/preprocessing5.R:311
-NormalizeData.StdAssay <- function(
-  object,
-  normalization.method = 'LogNormalize',
-  scale.factor = 1e4,
-  margin = 1L,
-  layer = 'counts',
-  save = 'data',
-  verbose = TRUE,
-  ...
-){
-    olayer <- layer <- unique(x = "counts")
-    layer <- Layers(object = object, search = "counts")
+NormalizeData.StdAssay <- function(object){
+
     LayerData(
       object = object,
       layer = "data",
       features = Features(x = object, layer = "counts"),
       cells = Cells(x = object, layer = "counts")
     ) <- NormalizeData.V3Matrix(
-      object = LayerData(object = object, layer = "counts", fast = NA),
-      normalization.method = normalization.method,
-      scale.factor = scale.factor,
-      margin = margin,
-      verbose = verbose,
-      ...
+      object = LayerData(object = object, layer = "counts", fast = NA)
     )
     return(object)
 }
 
 # commands/seurat-5.5.0/R/preprocessing.R:5056
-NormalizeData.Seurat <- function(
-  object,
-  assay = NULL,
-  normalization.method = "LogNormalize",
-  scale.factor = 1e4,
-  margin = 1,
-  verbose = TRUE,
-  ...
-) {
+NormalizeData.Seurat <- function(object) {
     assay = DefaultAssay(object = object)
-    assay.data <- NormalizeData(
-        object = object[[assay]],
-        normalization.method = normalization.method,
-        scale.factor = scale.factor,
-        verbose = verbose,
-        margin = margin,
-        ...
+    assay.data <- NormalizeData.StdAssay(
+        object = object[[assay]]
     )
     object[[assay]] <- assay.data
     return(object)
@@ -98,7 +60,7 @@ pbmc.data <- Read10X(data.dir = "test_data/pbmc3k_filtered_gene_bc_matrices/filt
 # Initialize the Seurat object with the raw (non-normalized data).
 pbmc <- CreateSeuratObject(counts = pbmc.data, project = "pbmc3k", min.cells = 3, min.features = 200)
 
-pbmc <- NormalizeData.Seurat(pbmc, normalization.method = "CLR", scale.factor = 10000)
+pbmc <- NormalizeData.Seurat(pbmc)
 
 ## Checking the result 
 # Extract the full matrix
