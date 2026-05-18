@@ -37,10 +37,7 @@ SCTransform.default <- function(
     vst.args[['return_gene_attr']] <- TRUE
     vst.args[['return_corrected_umi']] <- do.correct.umi
     vst.args[['n_cells']] <- min(ncells, ncol(x = umi))
-    residual.type <- vst.args[['residual_type']] %||% 'pearson'
-    res.clip.range <- vst.args[['res_clip_range']] %||% c(-sqrt(x = ncol(x = umi)), sqrt(x = ncol(x = umi)))
 
-    sct.method <- "default"
     vst.out <- do.call(what = 'vst', args = vst.args)
 
     feature.variance <- vst.out$gene_attr[,"residual_variance"]
@@ -71,7 +68,6 @@ SCTransform.default <- function(
     )
     vst.out$y <- scale.data
     vst.out$variable_features <- top.features
-    min_var <- vst.out$arguments$min_variance
     return(vst.out)
 }
 
@@ -119,7 +115,6 @@ SCTransform.Assay <- function(
                          verbose = verbose,
                          ...)
     
-    residual.type = "pearson"
     sct.method = NULL
 
     # create output assay and put (corrected) umi counts in count slot
