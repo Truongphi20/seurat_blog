@@ -93,14 +93,13 @@ SCTransform.StdAssay <- function(
 
     # Extract residuals for the selected features and store them in
     # the outputs scaled.data slot.
-    residuals <- suppressWarnings(
-        FetchResiduals(
+    residuals <- FetchResiduals(
         object = assay_out, 
         umi.object = object,
         features = scale_data_features,
         verbose = FALSE
-        )
     )
+    
     LayerData(assay_out, layer = "scale.data") <- residuals
 
     # Set the output's variable features.
@@ -160,16 +159,6 @@ SCTransform.Seurat <- function(
                                 seed.use = seed.use,
                                 verbose = verbose,
                                 ...)
-    assay.data <- Seurat:::SCTAssay(assay.data, assay.orig = assay)
-    
-    # Extract all SCT models stored in assay
-    sct_models <- slot(object = assay.data, name = "SCTModel.list")
-    
-    # Update umi.assay field for every SCT model 
-    slot(object = assay.data, name = "SCTModel.list") <- lapply(sct_models, function(model) {
-        slot(model, name = "umi.assay") <- assay
-        model
-    })
 
     object[[new.assay.name]] <- assay.data
     
