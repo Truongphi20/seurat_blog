@@ -26,66 +26,37 @@ SCTransform.StdAssay <- function(
   ...
 ){
     # Extract TK and TK.
-    layer_names = "counts"
-    input_list <- lapply(
-        layer_names,
-        function(layer_name) {
-            layer_counts <- LayerData(object, layer = layer_name)
-            layer_object <- CreateAssayObject(layer_counts)
-            return(layer_object)
-        }
-    )
+    layer_name = "counts"
+    layer_counts <- LayerData(object, layer = layer_name)
+    layer_object <- CreateAssayObject(layer_counts)
+
 
     # Apply SCTransform to each assay in `input_list`.
-    output_list <- lapply(
-        input_list,
-        function(input) {
-            .cell.attr <- cell.attr[Cells(input), ]
-            result <- SCTransform(
-                input,
-                cell.attr = .cell.attr,
-                reference.SCT.model = reference.SCT.model,
-                do.correct.umi = do.correct.umi,
-                ncells = ncells,
-                residual.features = residual.features,
-                variable.features.n = variable.features.n,
-                variable.features.rv.th = variable.features.rv.th,
-                vars.to.regress = vars.to.regress,
-                latent.data = latent.data,
-                do.scale = do.scale,
-                do.center = do.center,
-                clip.range = clip.range,
-                vst.flavor = vst.flavor,
-                conserve.memory = conserve.memory,
-                return.only.var.genes = return.only.var.genes,
-                seed.use = seed.use,
-                verbose = verbose,
-                ...
-            )
-        }
+    .cell.attr <- cell.attr[Cells(layer_object), ]
+    assay_out <- SCTransform(
+        layer_object,
+        cell.attr = .cell.attr,
+        reference.SCT.model = reference.SCT.model,
+        do.correct.umi = do.correct.umi,
+        ncells = ncells,
+        residual.features = residual.features,
+        variable.features.n = variable.features.n,
+        variable.features.rv.th = variable.features.rv.th,
+        vars.to.regress = vars.to.regress,
+        latent.data = latent.data,
+        do.scale = do.scale,
+        do.center = do.center,
+        clip.range = clip.range,
+        vst.flavor = vst.flavor,
+        conserve.memory = conserve.memory,
+        return.only.var.genes = return.only.var.genes,
+        seed.use = seed.use,
+        verbose = verbose,
+        ...
     )
 
-    assay_out <- output_list[[1]]
-    # Take the union of variable features across all output assays/layers.
-    var_features_union <- Reduce(
-      union,
-      lapply(
-        output_list,
-        function(output) {
-          return(VariableFeatures(output))
-        }
-      )
-    )
-    # Take the intersection of all features across all output assays/layers.
-    all_features_intersect <- Reduce(
-      intersect,
-      lapply(
-        output_list,
-        function(output) {
-          return(rownames(output))
-        }
-      )
-    )
+    var_features_union <- VariableFeatures(assay_out)
+    all_features_intersect <- rownames(assay_out)
 
     # Keep features that are variable in at least one output assay/layer but
     # present in all of them.
