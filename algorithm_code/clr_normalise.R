@@ -17,31 +17,24 @@ CustomNormalize <- function(data, custom_function) {
     return(norm.data)
 }
 
-# commands/seurat-5.5.0/R/preprocessing.R:4912
-NormalizeData.V3Matrix <- function(object){
-
-    normalized.data = CustomNormalize(
-        data = object,
-        custom_function = function(x) {
-            return(log1p(x = x / (exp(x = sum(log1p(x = x[x > 0]), na.rm = TRUE) / length(x = x)))))
-        }
-    )
-
-    return(normalized.data)
-}
-
 # commands/seurat-5.5.0/R/preprocessing.R:5056
 NormalizeData.Seurat <- function(object) {
     assay = DefaultAssay(object = object)
+
+    # commands/seurat-5.5.0/R/preprocessing.R:4912
+    normalized.data = CustomNormalize(
+      data = LayerData(object = object[[assay]], layer = "counts", fast = NA),
+      custom_function = function(x) {
+            return(log1p(x = x / (exp(x = sum(log1p(x = x[x > 0]), na.rm = TRUE) / length(x = x)))))
+        }
+    )
 
     LayerData(
       object = object[[assay]],
       layer = "data",
       features = Features(x = object[[assay]], layer = "counts"),
       cells = Cells(x = object[[assay]], layer = "counts")
-    ) <- NormalizeData.V3Matrix(
-      object = LayerData(object = object[[assay]], layer = "counts", fast = NA)
-    )
+    ) <- normalized.data
 
     return(object)
 }
