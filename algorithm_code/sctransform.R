@@ -2,6 +2,79 @@ library(Seurat)
 library(ggplot2)
 library(sctransform)
 
+# commands/seurat-5.5.0/R/preprocessing.R:3863
+SCTransform.default <- function(
+  object,
+  cell.attr,
+  reference.SCT.model = NULL,
+  do.correct.umi = TRUE,
+  ncells = 5000,
+  residual.features = NULL,
+  variable.features.n = 3000,
+  variable.features.rv.th = 1.3,
+  vars.to.regress = NULL,
+  latent.data = NULL,
+  do.scale = FALSE,
+  do.center = TRUE,
+  clip.range = c(-sqrt(x = ncol(x = umi) / 30), sqrt(x = ncol(x = umi) / 30)),
+  vst.flavor = 'v2',
+  conserve.memory = FALSE,
+  return.only.var.genes = TRUE,
+  seed.use = 1448145,
+  verbose = TRUE,
+  ...
+) {
+    set.seed(seed = seed.use)
+    vst.args <- list(...)
+    object <- as.sparse(x = object)
+    umi <- object
+
+    vst.args[['vst.flavor']] <- vst.flavor
+    vst.args[['umi']] <- umi
+    vst.args[['cell_attr']] <- cell.attr
+    vst.args[['verbosity']] <- as.numeric(x = verbose) * 1
+    vst.args[['return_cell_attr']] <- TRUE
+    vst.args[['return_gene_attr']] <- TRUE
+    vst.args[['return_corrected_umi']] <- do.correct.umi
+    vst.args[['n_cells']] <- min(ncells, ncol(x = umi))
+    residual.type <- vst.args[['residual_type']] %||% 'pearson'
+    res.clip.range <- vst.args[['res_clip_range']] %||% c(-sqrt(x = ncol(x = umi)), sqrt(x = ncol(x = umi)))
+
+    sct.method <- "default"
+    vst.out <- do.call(what = 'vst', args = vst.args)
+
+    feature.variance <- vst.out$gene_attr[,"residual_variance"]
+    names(x = feature.variance) <- rownames(x = vst.out$gene_attr)
+
+    feature.variance <- sort(x = feature.variance, decreasing = TRUE)
+    top.features <- names(x = feature.variance)[1:min(variable.features.n, length(x = feature.variance))]
+    vst.out$y <- vst.out$y[top.features, ]
+
+    scale.data <- vst.out$y
+    # clip the residuals
+    scale.data[scale.data < clip.range[1]] <- clip.range[1]
+    scale.data[scale.data > clip.range[2]] <- clip.range[2]
+    # 2nd regression
+    scale.data <- ScaleData(
+        scale.data,
+        features = NULL,
+        vars.to.regress = vars.to.regress,
+        latent.data = latent.data,
+        model.use = 'linear',
+        use.umi = FALSE,
+        do.scale = do.scale,
+        do.center = do.center,
+        scale.max = Inf,
+        block.size = 750,
+        min.cells.to.block = 3000,
+        verbose = verbose
+    )
+    vst.out$y <- scale.data
+    vst.out$variable_features <- top.features
+    min_var <- vst.out$arguments$min_variance
+    return(vst.out)
+}
+
 # commands/seurat-5.5.0/R/preprocessing.R:4136
 SCTransform.Assay <- function(
     object,
@@ -26,7 +99,7 @@ SCTransform.Assay <- function(
 ) {
     set.seed(seed = seed.use)
     umi <- GetAssayData(object = object, layer = 'counts')
-    vst.out <- SCTransform(object = umi,
+    vst.out <- SCTransform.default(object = umi,
                          cell.attr = cell.attr,
                          reference.SCT.model = reference.SCT.model,
                          do.correct.umi = do.correct.umi,
