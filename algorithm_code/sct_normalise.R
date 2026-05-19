@@ -2,6 +2,50 @@ library(Seurat)
 library(ggplot2)
 library(sctransform)
 
+# commands/seurat-5.5.0/R/preprocessing.R:6105
+RegressOutMatrix <- function(
+  data.expr,
+  latent.data = NULL,
+  features.regress = NULL,
+  model.use = NULL,
+  use.umi = FALSE,
+  verbose = TRUE
+) {
+    bypass <- vapply(
+        X = list(latent.data, model.use),
+        FUN = is.null,
+        FUN.VALUE = logical(length = 1L)
+    )
+    features.regress <- intersect(x = features.regress, y = rownames(x = data.expr))
+    use.umi <- FALSE
+
+    # Create formula for regression
+    vars.to.regress <- colnames(x = latent.data)
+    fmla <- paste('GENE ~', paste(vars.to.regress, collapse = '+'))
+    fmla <- as.formula(object = fmla)
+
+    regression.mat <- cbind(latent.data, data.expr[1,])
+    colnames(regression.mat) <- c(colnames(x = latent.data), "GENE")
+    qr <- lm(fmla, data = regression.mat, qr = TRUE)$qr
+
+    # Make results matrix
+    data.resid <- matrix(
+        nrow = nrow(x = data.expr),
+        ncol = ncol(x = data.expr)
+    )
+
+    for (i in 1:length(x = features.regress)) {
+        x <- features.regress[i]
+        regression.mat <- cbind(latent.data, data.expr[x, ])
+        colnames(x = regression.mat) <- c(vars.to.regress, 'GENE')
+        regression.mat <- qr.resid(qr = qr, y = data.expr[x,])
+        data.resid[i, ] <- regression.mat
+    }
+
+    dimnames(x = data.resid) <- dimnames(x = data.expr)
+    return(data.resid)
+}
+
 # commands/seurat-5.5.0/R/preprocessing.R:5111
 ScaleData.default <- function(
   object,
@@ -33,7 +77,7 @@ ScaleData.default <- function(
     object <- lapply(
         X = names(x = split.cells),
         FUN = function(x) {
-            return(Seurat:::RegressOutMatrix(
+            return(RegressOutMatrix(
                 data.expr = object[, split.cells[[x]], drop = FALSE],
                 latent.data = latent.data[split.cells[[x]], , drop = FALSE],
                 features.regress = features,
