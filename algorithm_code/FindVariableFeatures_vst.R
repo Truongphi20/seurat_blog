@@ -2,6 +2,55 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing5.R:66
+FindVariableFeatures.StdAssay <- function(
+  object,
+  method = NULL,
+  nfeatures = 2000L,
+  layer = NULL,
+  span = 0.3,
+  clip = NULL,
+  key = NULL,
+  verbose = TRUE,
+  selection.method = 'vst',
+  ...
+){
+    layer <- "counts"
+    method <- VST
+    key <- 'vst'
+
+    layer <- Layers(object = object, search = layer)
+    data <- LayerData(object = object, layer = layer[1], fast = TRUE)
+    hvf.function <- Seurat:::FindVariableFeatures.default
+
+    hvf.info <- hvf.function(
+      object = data,
+      method = method,
+      nfeatures = nfeatures,
+      span = span,
+      clip = clip,
+      verbose = verbose,
+      ...
+    )
+
+    colnames(x = hvf.info) <- paste(
+      'vf',
+      key,
+      layer[1],
+      colnames(x = hvf.info),
+      sep = '_'
+    )
+
+    rownames(x = hvf.info) <- Features(x = object, layer = layer[1])
+    object[["var.features"]] <- NULL
+    object[["var.features.rank"]] <- NULL
+    object[[names(x = hvf.info)]] <- NULL
+    object[[names(x = hvf.info)]] <- hvf.info
+
+    VariableFeatures(object) <- VariableFeatures(object, nfeatures=nfeatures,method = key)
+    return(object)
+}
+
 # commands/seurat-5.5.0/R/preprocessing.R:4595
 FindVariableFeatures.Seurat <- function(
   object,
@@ -20,7 +69,7 @@ FindVariableFeatures.Seurat <- function(
   ...
 ) {
     assay <- "RNA"
-    assay.data <- FindVariableFeatures(
+    assay.data <- FindVariableFeatures.StdAssay(
         object = object[[assay]],
         selection.method = selection.method,
         loess.span = loess.span,
