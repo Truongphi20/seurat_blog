@@ -2,6 +2,25 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing5.R:27
+FindVariableFeatures.default <- function(
+  object,
+  method = VST,
+  nfeatures = 2000L,
+  verbose = TRUE,
+  selection.method = selection.method,
+  ...
+){
+    var.gene.ouput <- method(
+        data = object,
+        nselect = nfeatures,
+        verbose = verbose,
+        ...
+    )
+    rownames(x = var.gene.ouput) <- rownames(x = object)
+    return(var.gene.ouput)
+}
+
 # commands/seurat-5.5.0/R/preprocessing5.R:66
 FindVariableFeatures.StdAssay <- function(
   object,
@@ -22,7 +41,7 @@ FindVariableFeatures.StdAssay <- function(
     layer <- Layers(object = object, search = layer)
     data <- LayerData(object = object, layer = layer[1], fast = TRUE)
 
-    hvf.info <- Seurat:::FindVariableFeatures.default(
+    hvf.info <- FindVariableFeatures.default(
       object = data,
       method = method,
       nfeatures = nfeatures,
