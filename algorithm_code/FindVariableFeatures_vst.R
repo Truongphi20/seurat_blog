@@ -6,6 +6,50 @@ library(patchwork)
 dyn.unload("/usr/local/lib/R/site-library/SeuratObject/libs/SeuratObject.so")
 dyn.load("/workspaces/seurat_blog/commands/seurat-5.5.0/src/build/SeuratObject.so")
 
+# commands/seurat-5.5.0/src/data_manipulation.cpp:278
+SparseRowVar2_R <- function(mat, mu, display_progress = FALSE) {
+    
+  n_cells <- ncol(mat)
+  n_genes <- nrow(mat)
+  
+  # Extract standard dgCMatrix slots
+  x_vals <- mat@x
+  p_ptr  <- mat@p
+  
+  # Pre-allocate output vector for variances
+  allVars <- numeric(n_genes)
+  
+  # Loop over each gene
+  for (k in 1:n_genes) {
+    # 0-indexed adjustment for R's 1-indexed vectors
+    start_idx <- p_ptr[k] + 1
+    end_idx   <- p_ptr[k + 1]
+    
+    # Catch cases where there are absolutely no non-zero elements for this feature
+    if (is.na(start_idx) || is.na(end_idx) || (start_idx > end_idx)) {
+      allVars[k] <- 0
+      next
+    }
+    
+    n_nonzero <- end_idx - start_idx + 1
+    nZero <- n_cells - n_nonzero
+    
+    # Grab just the non-zero raw counts for this gene
+    gene_nonzero_vals <- x_vals[start_idx:end_idx]
+    
+    # Sum of squared deviations for non-zero items: (value - mu_k)^2
+    colSum <- sum((gene_nonzero_vals - mu[k])^2)
+    
+    # Add the mathematical contribution of the structural zeros: (0 - mu_k)^2 * nZero
+    colSum <- colSum + (mu[k]^2) * nZero
+    
+    # Calculate sample variance (divide by N - 1)
+    allVars[k] <- colSum / (n_cells - 1)
+  }
+  
+  return(allVars)
+}
+
 # commands/seurat-5.5.0/R/preprocessing5.R:542
 VST.dgCMatrix <- function(
   data,
@@ -21,7 +65,7 @@ VST.dgCMatrix <- function(
     # Calculate feature means
     hvf.info$mean <- Matrix::rowMeans(x = data)
     # Calculate feature variance
-    hvf.info$variance <- Seurat:::SparseRowVar2(
+    hvf.info$variance <- SparseRowVar2_R(
         mat = data,
         mu = hvf.info$mean,
         display_progress = FALSE
