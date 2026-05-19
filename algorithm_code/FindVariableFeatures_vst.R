@@ -21,9 +21,8 @@ FindVariableFeatures.StdAssay <- function(
 
     layer <- Layers(object = object, search = layer)
     data <- LayerData(object = object, layer = layer[1], fast = TRUE)
-    hvf.function <- Seurat:::FindVariableFeatures.default
 
-    hvf.info <- hvf.function(
+    hvf.info <- Seurat:::FindVariableFeatures.default(
       object = data,
       method = method,
       nfeatures = nfeatures,
