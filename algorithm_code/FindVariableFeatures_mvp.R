@@ -2,6 +2,25 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing5.R:704
+DISP <- function(
+  data,
+  nselect = 2000L,
+  verbose = TRUE,
+  ...
+) {
+  hvf.info <- CalcDispersion(object = data, verbose = verbose, ...)
+  hvf.info$variable <- FALSE
+  hvf.info$rank <- NA
+  vf <- head(
+    x = order(hvf.info$mvp.dispersion, decreasing = TRUE),
+    n = nselect
+  )
+  hvf.info$variable[vf] <- TRUE
+  hvf.info$rank[vf] <- seq_along(along.with = vf)
+  return(hvf.info)
+}
+
 # commands/seurat-5.5.0/R/preprocessing5.R:1832
 MVP <- function(
   data,
@@ -22,7 +41,7 @@ MVP <- function(
     selected.indices <- which(rownames(x = hvf.info) %in% rank.rows)
     hvf.info$rank[selected.indices] <- seq_along(selected.indices)
     hvf.info <- hvf.info[order(as.numeric(row.names(hvf.info))), ]
-    
+
     return(hvf.info)
 }
 
