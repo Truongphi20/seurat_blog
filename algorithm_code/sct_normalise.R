@@ -11,11 +11,6 @@ RegressOutMatrix <- function(
   use.umi = FALSE,
   verbose = TRUE
 ) {
-    bypass <- vapply(
-        X = list(latent.data, model.use),
-        FUN = is.null,
-        FUN.VALUE = logical(length = 1L)
-    )
     features.regress <- intersect(x = features.regress, y = rownames(x = data.expr))
     use.umi <- FALSE
 
