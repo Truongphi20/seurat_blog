@@ -3,15 +3,7 @@ library(Seurat)
 library(patchwork)
 
 # commands/seurat-5.5.0/src/data_manipulation.cpp:335
-FastLogVMR <- function(mat, display_progress = TRUE) {
-  if (display_progress) {
-    message("Calculating gene variance to mean ratios")
-  }
-  
-  # Ensure the matrix is in sparse format (dgCMatrix)
-  if (!inherits(mat, "dgCMatrix")) {
-    mat <- as(mat, "dgCMatrix")
-  }
+FastLogVMR <- function(mat) {
   
   ncols <- ncol(mat)
   
@@ -38,16 +30,8 @@ FastLogVMR <- function(mat, display_progress = TRUE) {
 }
 
 # commands/seurat-5.5.0/src/data_manipulation.cpp:255
-FastExpMean <- function(mat, display_progress = TRUE) {
-  if (display_progress) {
-    message("Calculating gene means")
-  }
-  
-  # Ensure the matrix is in sparse format (dgCMatrix)
-  if (!inherits(mat, "dgCMatrix")) {
-    mat <- as(mat, "dgCMatrix")
-  }
-  
+FastExpMean <- function(mat) {
+    
   ncols <- ncol(mat)
   
   # 1. Transform the non-zero values to exp(x) - 1
@@ -66,30 +50,30 @@ FastExpMean <- function(mat, display_progress = TRUE) {
 # commands/seurat-5.5.0/R/preprocessing5.R:629
 CalcDispersion <- function(object){
 
-    feature.mean <- Seurat:::FastExpMean(object, TRUE)
-    feature.dispersion <- Seurat:::FastLogVMR(object, TRUE)
+  feature.mean <- FastExpMean(object)
+  feature.dispersion <- FastLogVMR(object)
 
-    names(x = feature.mean) <- names(
-    x = feature.dispersion) <- rownames(x = object)
-    feature.dispersion[is.na(x = feature.dispersion)] <- 0
-    feature.mean[is.na(x = feature.mean)] <- 0
+  names(x = feature.mean) <- names(
+  x = feature.dispersion) <- rownames(x = object)
+  feature.dispersion[is.na(x = feature.dispersion)] <- 0
+  feature.mean[is.na(x = feature.mean)] <- 0
 
-    data.x.breaks <- 20
-    data.x.bin <- cut(x = feature.mean, breaks = data.x.breaks,
-                    include.lowest = TRUE)
-    
-    names(x = data.x.bin) <- names(x = feature.mean)
-    mean.y <- tapply(X = feature.dispersion, INDEX = data.x.bin, FUN = mean)
-    sd.y <- tapply(X = feature.dispersion, INDEX = data.x.bin, FUN = sd)
-    feature.dispersion.scaled <- (feature.dispersion - mean.y[as.numeric(x = data.x.bin)]) /
-        sd.y[as.numeric(x = data.x.bin)]
-    names(x = feature.dispersion.scaled) <- names(x = feature.mean)
-    hvf.info <- data.frame(feature.mean, feature.dispersion, feature.dispersion.scaled)
+  data.x.breaks <- 20
+  data.x.bin <- cut(x = feature.mean, breaks = data.x.breaks,
+                  include.lowest = TRUE)
+  
+  names(x = data.x.bin) <- names(x = feature.mean)
+  mean.y <- tapply(X = feature.dispersion, INDEX = data.x.bin, FUN = mean)
+  sd.y <- tapply(X = feature.dispersion, INDEX = data.x.bin, FUN = sd)
+  feature.dispersion.scaled <- (feature.dispersion - mean.y[as.numeric(x = data.x.bin)]) /
+      sd.y[as.numeric(x = data.x.bin)]
+  names(x = feature.dispersion.scaled) <- names(x = feature.mean)
+  hvf.info <- data.frame(feature.mean, feature.dispersion, feature.dispersion.scaled)
 
-    rownames(x = hvf.info) <- rownames(x = object)
-    colnames(x = hvf.info) <- paste0('mvp.', c('mean', 'dispersion', 'dispersion.scaled'))
-    
-    return(hvf.info)
+  rownames(x = hvf.info) <- rownames(x = object)
+  colnames(x = hvf.info) <- paste0('mvp.', c('mean', 'dispersion', 'dispersion.scaled'))
+  
+  return(hvf.info)
 }
 
 # commands/seurat-5.5.0/R/preprocessing5.R:704
