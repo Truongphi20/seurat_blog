@@ -2,6 +2,42 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing5.R:629
+CalcDispersion <- function(
+  object,
+  mean.function = FastExpMean,
+  dispersion.function = FastLogVMR,
+  num.bin = 20,
+  binning.method = "equal_width",
+  verbose = TRUE,
+  ...
+){
+    feature.mean <- FastExpMean(object, verbose)
+    feature.dispersion <- FastLogVMR(object, verbose)
+
+    names(x = feature.mean) <- names(
+    x = feature.dispersion) <- rownames(x = object)
+    feature.dispersion[is.na(x = feature.dispersion)] <- 0
+    feature.mean[is.na(x = feature.mean)] <- 0
+
+    data.x.breaks <- num.bin
+    data.x.bin <- cut(x = feature.mean, breaks = data.x.breaks,
+                    include.lowest = TRUE)
+    
+    names(x = data.x.bin) <- names(x = feature.mean)
+    mean.y <- tapply(X = feature.dispersion, INDEX = data.x.bin, FUN = mean)
+    sd.y <- tapply(X = feature.dispersion, INDEX = data.x.bin, FUN = sd)
+    feature.dispersion.scaled <- (feature.dispersion - mean.y[as.numeric(x = data.x.bin)]) /
+        sd.y[as.numeric(x = data.x.bin)]
+    names(x = feature.dispersion.scaled) <- names(x = feature.mean)
+    hvf.info <- data.frame(feature.mean, feature.dispersion, feature.dispersion.scaled)
+
+    rownames(x = hvf.info) <- rownames(x = object)
+    colnames(x = hvf.info) <- paste0('mvp.', c('mean', 'dispersion', 'dispersion.scaled'))
+    
+    return(hvf.info)
+}
+
 # commands/seurat-5.5.0/R/preprocessing5.R:704
 DISP <- function(
   data,
@@ -34,11 +70,13 @@ MVP <- function(
     hvf.info$variable <- FALSE
     hvf.info$rank <- NA
     hvf.info <- hvf.info[order(hvf.info$mvp.dispersion, decreasing = TRUE), , drop = FALSE]
+
     means.use <- (hvf.info[, 1] > mean.cutoff[1]) & (hvf.info[, 1] < mean.cutoff[2])
     dispersions.use <- (hvf.info[, 3] > dispersion.cutoff[1]) & (hvf.info[, 3] < dispersion.cutoff[2])
     hvf.info[which(x = means.use & dispersions.use), 'variable'] <- TRUE
     rank.rows <- rownames(x = hvf.info)[which(x = means.use & dispersions.use)]
     selected.indices <- which(rownames(x = hvf.info) %in% rank.rows)
+    
     hvf.info$rank[selected.indices] <- seq_along(selected.indices)
     hvf.info <- hvf.info[order(as.numeric(row.names(hvf.info))), ]
 
