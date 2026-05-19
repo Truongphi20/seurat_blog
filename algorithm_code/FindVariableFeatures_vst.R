@@ -2,9 +2,74 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
-# Load debugable binary
-dyn.unload("/usr/local/lib/R/site-library/SeuratObject/libs/SeuratObject.so")
-dyn.load("/workspaces/seurat_blog/commands/seurat-5.5.0/src/build/SeuratObject.so")
+# commands/seurat-5.5.0/src/data_manipulation.cpp:305
+SparseRowVarStd_R <- function(mat, mu, sd, vmax, display_progress = FALSE) {
+  if (display_progress) {
+    message("Calculating feature variances of standardized and clipped values")
+  }
+  
+  n_cells <- ncol(mat)
+  n_genes <- nrow(mat)
+  
+  # Extract standard dgCMatrix slots
+  x_vals <- mat@x
+  p_ptr  <- mat@p
+  
+  # Pre-allocate output vector for standardized variances
+  allVars <- numeric(n_genes)
+  
+  # Loop over each gene
+  for (k in 1:n_genes) {
+    # If standard deviation is 0, skip to avoid division-by-zero (variance remains 0)
+    if (is.na(sd[k]) || sd[k] == 0) {
+      allVars[k] <- 0
+      next
+    }
+    
+    # Get internal column pointer boundaries
+    start_idx <- p_ptr[k] + 1
+    end_idx   <- p_ptr[k + 1]
+    
+    # Catch cases where there are absolutely no non-zero elements for this feature
+    if (is.na(start_idx) || is.na(end_idx) || (start_idx > end_idx)) {
+      n_nonzero <- 0
+    } else {
+      n_nonzero <- end_idx - start_idx + 1
+    }
+    
+    nZero <- n_cells - n_nonzero
+    colSum <- 0
+    
+    if (n_nonzero > 0) {
+      # Grab the non-zero raw counts for this gene
+      gene_nonzero_vals <- x_vals[start_idx:end_idx]
+      
+      # Standardize the non-zero values: (value - mu) / sd
+      standardized_nonzero <- (gene_nonzero_vals - mu[k]) / sd[k]
+      
+      # Clip values using the vmax threshold: std::min(vmax, value)
+      # pmin() processes the vector element-wise against the scalar vmax
+      clipped_nonzero <- pmin(vmax, standardized_nonzero)
+      
+      # Sum of squared deviations for non-zero items
+      colSum <- sum(clipped_nonzero^2)
+    }
+    
+    # Standardize the structural zeros: (0 - mu) / sd
+    standardized_zero <- (0 - mu[k]) / sd[k]
+    
+    # Clip the zero-value representation as well
+    clipped_zero <- pmin(vmax, standardized_zero)
+    
+    # Add the mathematical contribution of the omitted zeros
+    colSum <- colSum + (clipped_zero^2) * nZero
+    
+    # Calculate sample variance of the standardized, clipped entries
+    allVars[k] <- colSum / (n_cells - 1)
+  }
+  
+  return(allVars)
+}
 
 # commands/seurat-5.5.0/src/data_manipulation.cpp:278
 SparseRowVar2_R <- function(mat, mu, display_progress = FALSE) {
@@ -78,7 +143,7 @@ VST.dgCMatrix <- function(
         span = span
     )
     hvf.info$variance.expected[not.const] <- 10 ^ fit$fitted
-    hvf.info$variance.standardized <- Seurat:::SparseRowVarStd(
+    hvf.info$variance.standardized <- SparseRowVarStd_R(
         mat = data,
         mu = hvf.info$mean,
         sd = sqrt(x = hvf.info$variance.expected),
