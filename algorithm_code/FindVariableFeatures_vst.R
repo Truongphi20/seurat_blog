@@ -2,6 +2,10 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# Load debugable binary
+dyn.unload("/usr/local/lib/R/site-library/SeuratObject/libs/SeuratObject.so")
+dyn.load("/workspaces/seurat_blog/commands/seurat-5.5.0/src/build/SeuratObject.so")
+
 # commands/seurat-5.5.0/R/preprocessing5.R:542
 VST.dgCMatrix <- function(
   data,
