@@ -3,73 +3,39 @@ library(Seurat)
 library(patchwork)
 
 # commands/seurat-5.5.0/src/data_manipulation.cpp:335
-# FastLogVMR <- function(mat, display_progress = FALSE) {
-    
-#   n_cells <- ncol(mat)
-#   n_genes <- nrow(mat)
+FastLogVMR <- function(mat, display_progress = TRUE) {
+  if (display_progress) {
+    message("Calculating gene variance to mean ratios")
+  }
   
-#   # Extract standard dgCMatrix structural slots
-#   x_vals <- mat@x
-#   p_ptr  <- mat@p
+  # Ensure the matrix is in sparse format (dgCMatrix)
+  if (!inherits(mat, "dgCMatrix")) {
+    mat <- as(mat, "dgCMatrix")
+  }
   
-#   # Pre-allocate output vector for row dispersions
-#   rowdisp <- numeric(n_genes)
+  ncols <- ncol(mat)
   
-#   # Loop over each gene
-#   for (k in 1:n_genes) {
-#     # Get internal column pointer boundaries for gene k
-#     start_idx <- p_ptr[k] + 1
-#     end_idx   <- p_ptr[k + 1]
-    
-#     # Catch cases where there are absolutely no non-zero elements for this feature
-#     if (is.na(start_idx) || is.na(end_idx) || (start_idx > end_idx)) {
-#       nnZero <- 0
-#     } else {
-#       nnZero <- end_idx - start_idx + 1
-#     }
-    
-#     rm_sum <- 0
-    
-#     # --- Step 1: Calculate the mean in linear space ---
-#     if (nnZero > 0) {
-#       gene_nonzero_vals <- x_vals[start_idx:end_idx]
-#       rm_sum <- sum(expm1(gene_nonzero_vals))
-#     }
-    
-#     # Structural zeros evaluate to 0 in expm1 space, so they don't add to the sum
-#     rm <- rm_sum / n_cells
-    
-#     # Guard against completely unexpressed genes to avoid division-by-zero
-#     if (rm == 0) {
-#       rowdisp[k] <- NA
-#       next
-#     }
-    
-#     # --- Step 2: Calculate the variance in linear space ---
-#     v_sum <- 0
-#     if (nnZero > 0) {
-#       # Square of deviations for non-zero entries in linear space: (expm1(x) - mean)^2
-#       v_sum <- sum((expm1(gene_nonzero_vals) - rm)^2)
-#     }
-    
-#     # Add the contribution of the structural zero entries: (0 - mean)^2 * nZero
-#     nZero <- n_cells - nnZero
-#     v_sum <- v_sum + (nZero * (rm^2))
-    
-#     # Calculate sample variance
-#     v <- v_sum / (n_cells - 1)
-    
-#     # --- Step 3: Compute the final log(Variance-to-Mean Ratio) ---
-#     # Guard against 0 variance or negative numbers before taking the natural log
-#     if (v <= 0) {
-#       rowdisp[k] <- NA
-#     } else {
-#       rowdisp[k] <- log(v / rm)
-#     }
-#   }
+  # 1. Transform the non-zero values to exp(x) - 1
+  mat_expm1 <- mat
+  mat_expm1@x <- expm1(mat_expm1@x)
   
-#   return(rowdisp)
-# }
+  # 2. Compute the means of the untransformed data
+  rm_means <- Matrix::rowSums(mat_expm1) / ncols
+  
+  # 3. Compute the sample variances of the untransformed data
+  # Mathematically, Var(X) = (Sum(X^2) - n * Mean^2) / (n - 1)
+  # We square the non-zero elements directly to preserve structural sparsity
+  mat_expm1_sq <- mat_expm1
+  mat_expm1_sq@x <- (mat_expm1_sq@x)^2
+  
+  sum_squares <- Matrix::rowSums(mat_expm1_sq)
+  v_variances <- (sum_squares - ncols * (rm_means^2)) / (ncols - 1)
+  
+  # 4. Calculate the Log VMR
+  rowdisp <- log(v_variances / rm_means)
+  
+  return(rowdisp)
+}
 
 # commands/seurat-5.5.0/src/data_manipulation.cpp:255
 FastExpMean <- function(mat, display_progress = TRUE) {
