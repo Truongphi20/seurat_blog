@@ -72,52 +72,30 @@ library(patchwork)
 # }
 
 # commands/seurat-5.5.0/src/data_manipulation.cpp:255
-# FastExpMean <- function(mat, display_progress = FALSE) {
-   
-#   n_cells <- ncol(mat)
-#   n_genes <- nrow(mat)
+FastExpMean <- function(mat, display_progress = TRUE) {
+  if (display_progress) {
+    message("Calculating gene means")
+  }
   
-#   # Extract standard dgCMatrix structural slots
-#   x_vals <- mat@x
-#   p_ptr  <- mat@p
+  # Ensure the matrix is in sparse format (dgCMatrix)
+  if (!inherits(mat, "dgCMatrix")) {
+    mat <- as(mat, "dgCMatrix")
+  }
   
-#   # Pre-allocate output vector for row means
-#   rowmeans <- numeric(n_genes)
+  ncols <- ncol(mat)
   
-#   # Loop over each gene (analogous to the C++ outer loop after transposing)
-#   for (k in 1:n_genes) {
-#     # Get internal column pointer boundaries for gene k
-#     start_idx <- p_ptr[k] + 1
-#     end_idx   <- p_ptr[k + 1]
-    
-#     # Catch cases where there are absolutely no non-zero elements for this feature
-#     if (is.na(start_idx) || is.na(end_idx) || (start_idx > end_idx)) {
-#       n_nonzero <- 0
-#     } else {
-#       n_nonzero <- end_idx - start_idx + 1
-#     }
-    
-#     rm_sum <- 0
-    
-#     if (n_nonzero > 0) {
-#       # Grab just the non-zero counts for this gene
-#       gene_nonzero_vals <- x_vals[start_idx:end_idx]
-      
-#       # Sum up the un-logged values: exp(x) - 1
-#       # expm1() is vector-optimized in R and matches C++ expm1()
-#       rm_sum <- sum(expm1(gene_nonzero_vals))
-#     }
-    
-#     # The contribution of structural zeros to the sum is 0, since exp(0) - 1 = 0.
-#     # Therefore, we can just divide directly by total cell count (ncols in C++)
-#     rm_avg <- rm_sum / n_cells
-    
-#     # Log-transform the averaged result back: log(1 + mean)
-#     rowmeans[k] <- log1p(rm_avg)
-#   }
+  # 1. Transform the non-zero values to exp(x) - 1
+  # Operating directly on the x slot of a dgCMatrix preserves structural sparsity
+  mat_expm1 <- mat
+  mat_expm1@x <- expm1(mat_expm1@x)
   
-#   return(rowmeans)
-# }
+  # 2. Sum up rows, divide by number of columns, and log1p the result
+  row_sums <- Matrix::rowSums(mat_expm1)
+  rm_means <- row_sums / ncols
+  rowmeans <- log1p(rm_means)
+  
+  return(rowmeans)
+}
 
 # commands/seurat-5.5.0/R/preprocessing5.R:629
 CalcDispersion <- function(object){
