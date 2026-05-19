@@ -2,6 +2,30 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing5.R:1832
+MVP <- function(
+  data,
+  verbose = TRUE,
+  nselect = 2000L,
+  mean.cutoff = c(0.1, 8),
+  dispersion.cutoff = c(1, Inf),
+  ...
+){
+    hvf.info <- DISP(data = data, nselect = nselect, verbose = verbose)
+    hvf.info$variable <- FALSE
+    hvf.info$rank <- NA
+    hvf.info <- hvf.info[order(hvf.info$mvp.dispersion, decreasing = TRUE), , drop = FALSE]
+    means.use <- (hvf.info[, 1] > mean.cutoff[1]) & (hvf.info[, 1] < mean.cutoff[2])
+    dispersions.use <- (hvf.info[, 3] > dispersion.cutoff[1]) & (hvf.info[, 3] < dispersion.cutoff[2])
+    hvf.info[which(x = means.use & dispersions.use), 'variable'] <- TRUE
+    rank.rows <- rownames(x = hvf.info)[which(x = means.use & dispersions.use)]
+    selected.indices <- which(rownames(x = hvf.info) %in% rank.rows)
+    hvf.info$rank[selected.indices] <- seq_along(selected.indices)
+    hvf.info <- hvf.info[order(as.numeric(row.names(hvf.info))), ]
+    
+    return(hvf.info)
+}
+
 # commands/seurat-5.5.0/R/preprocessing5.R:27
 FindVariableFeatures.default <- function(
   object,
