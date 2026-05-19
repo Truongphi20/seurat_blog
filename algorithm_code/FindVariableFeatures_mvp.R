@@ -116,16 +116,6 @@ MVP <- function(data, nselect = 2000L){
     return(hvf.info)
 }
 
-# commands/seurat-5.5.0/R/preprocessing5.R:27
-FindVariableFeatures.default <- function(
-  object,
-  nfeatures = 2000L
-){
-    var.gene.ouput <- MVP(data = object, nselect = nfeatures)
-    rownames(x = var.gene.ouput) <- rownames(x = object)
-    return(var.gene.ouput)
-}
-
 # commands/seurat-5.5.0/R/preprocessing5.R:66
 FindVariableFeatures.StdAssay <- function(object, nfeatures = 2000L){
 
@@ -135,7 +125,8 @@ FindVariableFeatures.StdAssay <- function(object, nfeatures = 2000L){
     layer <- Layers(object = object, search = layer)
     data <- LayerData(object = object, layer = layer[1], fast = TRUE)
 
-    hvf.info <- FindVariableFeatures.default(object = data, nfeatures = nfeatures)
+    hvf.info <- MVP(data = data, nselect = nfeatures)
+    rownames(x = hvf.info) <- rownames(x = data)
 
     colnames(x = hvf.info) <- paste(
       'vf',
