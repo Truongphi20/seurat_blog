@@ -2,6 +2,53 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing5.R:542
+VST.dgCMatrix <- function(
+  data,
+  margin = 1L,
+  nselect = 2000L,
+  span = 0.3,
+  clip = NULL,
+  verbose = TRUE,
+  ...
+) {
+    nfeatures <- nrow(x = data)
+    hvf.info <- EmptyDF(n = nfeatures)
+    # Calculate feature means
+    hvf.info$mean <- Matrix::rowMeans(x = data)
+    # Calculate feature variance
+    hvf.info$variance <- Seurat:::SparseRowVar2(
+        mat = data,
+        mu = hvf.info$mean,
+        display_progress = FALSE
+    )
+    hvf.info$variance.expected <- 0L
+    not.const <- hvf.info$variance > 0
+    fit <- loess(
+        formula = log10(x = variance) ~ log10(x = mean),
+        data = hvf.info[not.const, , drop = TRUE],
+        span = span
+    )
+    hvf.info$variance.expected[not.const] <- 10 ^ fit$fitted
+    hvf.info$variance.standardized <- Seurat:::SparseRowVarStd(
+        mat = data,
+        mu = hvf.info$mean,
+        sd = sqrt(x = hvf.info$variance.expected),
+        vmax = clip %||% sqrt(x = ncol(x = data)),
+        display_progress = verbose
+    )
+    # Set variable features
+    hvf.info$variable <- FALSE
+    hvf.info$rank <- NA
+    vf <- head(
+        x = order(hvf.info$variance.standardized, decreasing = TRUE),
+        n = nselect
+    )
+    hvf.info$variable[vf] <- TRUE
+    hvf.info$rank[vf] <- seq_along(along.with = vf)
+    return(hvf.info)
+}
+
 # commands/seurat-5.5.0/R/preprocessing5.R:27
 FindVariableFeatures.default <- function(
   object,
