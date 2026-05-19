@@ -2,6 +2,43 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing.R:4595
+FindVariableFeatures.Seurat <- function(
+  object,
+  assay = NULL,
+  selection.method = "vst",
+  loess.span = 0.3,
+  clip.max = 'auto',
+  mean.function = FastExpMean,
+  dispersion.function = FastLogVMR,
+  num.bin = 20,
+  binning.method = "equal_width",
+  nfeatures = 2000,
+  mean.cutoff = c(0.1, 8),
+  dispersion.cutoff = c(1, Inf),
+  verbose = TRUE,
+  ...
+) {
+    assay <- "RNA"
+    assay.data <- FindVariableFeatures(
+        object = object[[assay]],
+        selection.method = selection.method,
+        loess.span = loess.span,
+        clip.max = clip.max,
+        mean.function = mean.function,
+        dispersion.function = dispersion.function,
+        num.bin = num.bin,
+        binning.method = binning.method,
+        nfeatures = nfeatures,
+        mean.cutoff = mean.cutoff,
+        dispersion.cutoff = dispersion.cutoff,
+        verbose = verbose,
+        ...
+    )
+    object[[assay]] <- assay.data
+    return(object)
+}
+
 # Load the PBMC dataset
 pbmc.data <- Read10X(data.dir = "test_data/pbmc3k_filtered_gene_bc_matrices/filtered_gene_bc_matrices/hg19")
 # Initialize the Seurat object with the raw (non-normalized data).
@@ -12,7 +49,7 @@ pbmc <- CreateSeuratObject(counts = pbmc.data, project = "pbmc3k", min.cells = 3
 pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
 
 ## Identification of highly variable features (feature selection)
-pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
+pbmc <- FindVariableFeatures.Seurat(pbmc, selection.method = "vst", nfeatures = 2000)
 
 ## Check output
 print(pbmc@assays$RNA@meta.data[1:10,1:3])
