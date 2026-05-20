@@ -6,13 +6,9 @@ library(sctransform)
 RegressOutMatrix <- function(
   data.expr,
   latent.data = NULL,
-  features.regress = NULL,
-  model.use = NULL,
-  use.umi = FALSE,
-  verbose = TRUE
+  features.regress = NULL
 ) {
     features.regress <- intersect(x = features.regress, y = rownames(x = data.expr))
-    use.umi <- FALSE
 
     # Create formula for regression
     vars.to.regress <- colnames(x = latent.data)
@@ -44,19 +40,12 @@ RegressOutMatrix <- function(
 # commands/seurat-5.5.0/R/preprocessing.R:5111
 ScaleData.default <- function(
   object,
-  features = NULL,
-  vars.to.regress = NULL,
   latent.data = NULL,
-  split.by = NULL,
-  model.use = 'linear',
-  use.umi = FALSE,
   do.scale = TRUE,
   do.center = TRUE,
   scale.max = 10,
   block.size = 1000,
-  min.cells.to.block = 3000,
-  verbose = TRUE,
-  ...
+  min.cells.to.block = 3000
 ){
     features <- rownames(x = object)
     features <- as.vector(x = intersect(x = features, y = rownames(x = object)))
@@ -75,10 +64,7 @@ ScaleData.default <- function(
             return(RegressOutMatrix(
                 data.expr = object[, split.cells[[x]], drop = FALSE],
                 latent.data = latent.data[split.cells[[x]], , drop = FALSE],
-                features.regress = features,
-                model.use = model.use,
-                use.umi = use.umi,
-                verbose = verbose
+                features.regress = features
             ))
         }
     )
@@ -123,33 +109,25 @@ ScaleData.default <- function(
 SCTransform.default <- function(
   object,
   cell.attr,
-  reference.SCT.model = NULL,
   do.correct.umi = TRUE,
   ncells = 5000,
-  residual.features = NULL,
   variable.features.n = 3000,
-  variable.features.rv.th = 1.3,
-  vars.to.regress = NULL,
   latent.data = NULL,
   do.scale = FALSE,
   do.center = TRUE,
   clip.range = c(-sqrt(x = ncol(x = umi) / 30), sqrt(x = ncol(x = umi) / 30)),
   vst.flavor = 'v2',
-  conserve.memory = FALSE,
-  return.only.var.genes = TRUE,
-  seed.use = 1448145,
-  verbose = TRUE,
-  ...
+  seed.use = 1448145
 ) {
     set.seed(seed = seed.use)
-    vst.args <- list(...)
+    vst.args <- list()
     object <- as.sparse(x = object)
     umi <- object
 
     vst.args[['vst.flavor']] <- vst.flavor
     vst.args[['umi']] <- umi
     vst.args[['cell_attr']] <- cell.attr
-    vst.args[['verbosity']] <- as.numeric(x = verbose) * 1
+    vst.args[['verbosity']] <- as.numeric(x = TRUE) * 1
     vst.args[['return_cell_attr']] <- TRUE
     vst.args[['return_gene_attr']] <- TRUE
     vst.args[['return_corrected_umi']] <- do.correct.umi
@@ -171,17 +149,12 @@ SCTransform.default <- function(
     # 2nd regression
     scale.data <- ScaleData.default(
         scale.data,
-        features = NULL,
-        vars.to.regress = vars.to.regress,
         latent.data = latent.data,
-        model.use = 'linear',
-        use.umi = FALSE,
         do.scale = do.scale,
         do.center = do.center,
         scale.max = Inf,
         block.size = 750,
-        min.cells.to.block = 3000,
-        verbose = verbose
+        min.cells.to.block = 3000
     )
     vst.out$y <- scale.data
     vst.out$variable_features <- top.features
@@ -192,45 +165,29 @@ SCTransform.default <- function(
 SCTransform.Assay <- function(
     object,
     cell.attr,
-    reference.SCT.model = NULL,
     do.correct.umi = TRUE,
     ncells = 5000,
-    residual.features = NULL,
     variable.features.n = 3000,
-    variable.features.rv.th = 1.3,
-    vars.to.regress = NULL,
     latent.data = NULL,
     do.scale = FALSE,
     do.center = TRUE,
     clip.range = c(-sqrt(x = ncol(x = object) / 30), sqrt(x = ncol(x = object) / 30)),
     vst.flavor = 'v2',
-    conserve.memory = FALSE,
-    return.only.var.genes = TRUE,
-    seed.use = 1448145,
-    verbose = TRUE,
-    ...
+    seed.use = 1448145
 ) {
     set.seed(seed = seed.use)
     umi <- GetAssayData(object = object, layer = 'counts')
     vst.out <- SCTransform.default(object = umi,
                          cell.attr = cell.attr,
-                         reference.SCT.model = reference.SCT.model,
                          do.correct.umi = do.correct.umi,
                          ncells = ncells,
-                         residual.features = residual.features,
                          variable.features.n = variable.features.n,
-                         variable.features.rv.th = variable.features.rv.th,
-                         vars.to.regress = vars.to.regress,
                          latent.data = latent.data,
                          do.scale = do.scale,
                          do.center = do.center,
                          clip.range = clip.range,
                          vst.flavor = vst.flavor,
-                         conserve.memory = conserve.memory,
-                         return.only.var.genes = return.only.var.genes,
-                         seed.use = seed.use,
-                         verbose = verbose,
-                         ...)
+                         seed.use = seed.use)
     
     sct.method = NULL
 
@@ -265,25 +222,16 @@ SCTransform.Assay <- function(
 # commands/seurat-5.5.0/R/preprocessing5.R:1115
 SCTransform.StdAssay <- function(
   object,
-  layer = 'counts',
   cell.attr = NULL,
-  reference.SCT.model = NULL,
   do.correct.umi = TRUE,
   ncells = 5000,
-  residual.features = NULL,
   variable.features.n = 3000,
-  variable.features.rv.th = 1.3,
-  vars.to.regress = NULL,
   latent.data = NULL,
   do.scale = FALSE,
   do.center = TRUE,
   clip.range = c(-sqrt(x = ncol(x = object) / 30), sqrt(x = ncol(x = object) / 30)),
   vst.flavor = 'v2',
-  conserve.memory = FALSE,
-  return.only.var.genes = TRUE,
-  seed.use = 1448145,
-  verbose = TRUE,
-  ...
+  seed.use = 1448145
 ){
     # Extract TK and TK.
     layer_name = "counts"
@@ -296,23 +244,15 @@ SCTransform.StdAssay <- function(
     assay_out <- SCTransform.Assay(
         layer_object,
         cell.attr = .cell.attr,
-        reference.SCT.model = reference.SCT.model,
         do.correct.umi = do.correct.umi,
         ncells = ncells,
-        residual.features = residual.features,
         variable.features.n = variable.features.n,
-        variable.features.rv.th = variable.features.rv.th,
-        vars.to.regress = vars.to.regress,
         latent.data = latent.data,
         do.scale = do.scale,
         do.center = do.center,
         clip.range = clip.range,
         vst.flavor = vst.flavor,
-        conserve.memory = conserve.memory,
-        return.only.var.genes = return.only.var.genes,
-        seed.use = seed.use,
-        verbose = verbose,
-        ...
+        seed.use = seed.use
     )
 
     var_features_union <- VariableFeatures(assay_out)
@@ -346,24 +286,17 @@ SCTransform.StdAssay <- function(
 # commands/seurat-5.5.0/R/preprocessing.R:4235
 SCTransform.Seurat <- function(
     object,
-    assay = "RNA",
     new.assay.name = 'SCT',
-    reference.SCT.model = NULL,
     do.correct.umi = TRUE,
     ncells = 5000,
     residual.features = NULL,
     variable.features.n = 3000,
-    variable.features.rv.th = 1.3,
     vars.to.regress = NULL,
     do.scale = FALSE,
     do.center = TRUE,
     clip.range = c(-sqrt(x = ncol(x = object[[assay]]) / 30), sqrt(x = ncol(x = object[[assay]]) / 30)),
     vst.flavor = "v2",
-    conserve.memory = FALSE,
-    return.only.var.genes = TRUE,
-    seed.use = 1448145,
-    verbose = TRUE,
-    ...
+    seed.use = 1448145
 ){
     set.seed(seed = seed.use)
     vars.to.regress.subset <- vars.to.regress[vars.to.regress %in% colnames(x = object[[]])]
@@ -373,23 +306,15 @@ SCTransform.Seurat <- function(
     cell.attr <- slot(object = object, name = 'meta.data')[colnames(object[[assay]]),]
     assay.data <- SCTransform.StdAssay(object = object[[assay]],
                                 cell.attr = cell.attr,
-                                reference.SCT.model = reference.SCT.model,
                                 do.correct.umi = do.correct.umi,
                                 ncells = ncells,
-                                residual.features = residual.features,
                                 variable.features.n = variable.features.n,
-                                variable.features.rv.th = variable.features.rv.th,
-                                vars.to.regress = vars.to.regress,
                                 latent.data = latent.data,
                                 do.scale = do.scale,
                                 do.center = do.center,
                                 clip.range = clip.range,
                                 vst.flavor = vst.flavor,
-                                conserve.memory = conserve.memory,
-                                return.only.var.genes = return.only.var.genes,
-                                seed.use = seed.use,
-                                verbose = verbose,
-                                ...)
+                                seed.use = seed.use)
 
     object[[new.assay.name]] <- assay.data
     
@@ -404,7 +329,7 @@ pbmc <- CreateSeuratObject(counts = pbmc_data)
 pbmc <- PercentageFeatureSet(pbmc, pattern = "^MT-", col.name = "percent.mt")
 
 # run sctransform
-pbmc <- SCTransform.Seurat(pbmc, vars.to.regress = "percent.mt", verbose = FALSE)
+pbmc <- SCTransform.Seurat(pbmc, vars.to.regress = "percent.mt")
 
 
 ## Checking the result 
