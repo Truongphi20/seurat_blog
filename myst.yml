@@ -1,0 +1,29 @@
+version: 1
+project:
+  id: seurat-blog-docs
+  title: "Seurat Blog"
+  description: "From black box to glass box"
+  keywords: 
+    - seurat
+    - understanding
+    - tutorial
+  authors: 
+    - name: Phi Nguyen 
+  github: https://github.com/Truongphi20/seurat_blog
+  bibliography:
+    - docs/static/references.bib
+  numbering:
+    math: false
+  toc:
+    - title: Overview
+      file: docs/index.md
+    - title: Normalization
+      file: docs/normalization.md
+    
+site:
+  template: book-theme
+  options:
+    folders: true
+    favicon: docs/static/logo.png
+    logo: docs/static/logan.png
+    style: docs/static/styles.css
