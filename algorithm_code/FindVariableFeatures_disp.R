@@ -96,12 +96,8 @@ DISP <- function(
 # commands/seurat-5.5.0/R/preprocessing5.R:27
 FindVariableFeatures.default <- function(
   object,
-  nfeatures = 2000L,
-  verbose = TRUE,
-  selection.method = selection.method,
-  ...
+  nfeatures = 2000L
 ){
-    # debug(Seurat:::DISP)
     var.gene.ouput <- DISP(
         data = object,
         nselect = nfeatures
@@ -113,15 +109,7 @@ FindVariableFeatures.default <- function(
 # commands/seurat-5.5.0/R/preprocessing5.R:66
 FindVariableFeatures.StdAssay <- function(
   object,
-  method = NULL,
-  nfeatures = 2000L,
-  layer = NULL,
-  span = 0.3,
-  clip = NULL,
-  key = NULL,
-  verbose = TRUE,
-  selection.method = 'vst',
-  ...
+  nfeatures = 2000L
 ){
     layer <- "data"
     key <- 'disp'
@@ -131,11 +119,7 @@ FindVariableFeatures.StdAssay <- function(
 
     hvf.info <- FindVariableFeatures.default(
       object = data,
-      nfeatures = nfeatures,
-      span = span,
-      clip = clip,
-      verbose = verbose,
-      ...
+      nfeatures = nfeatures
     )
 
     colnames(x = hvf.info) <- paste(
@@ -152,42 +136,16 @@ FindVariableFeatures.StdAssay <- function(
     object[[names(x = hvf.info)]] <- NULL
     object[[names(x = hvf.info)]] <- hvf.info
 
-    VariableFeatures(object) <- VariableFeatures(object, nfeatures=nfeatures,method = key)
+    VariableFeatures(object) <- VariableFeatures(object, nfeatures=nfeatures, method = key)
     return(object)
 }
 
 # commands/seurat-5.5.0/R/preprocessing.R:4595
-FindVariableFeatures.Seurat <- function(
-  object,
-  assay = NULL,
-  selection.method = "vst",
-  loess.span = 0.3,
-  clip.max = 'auto',
-  mean.function = Seurat:::FastExpMean,
-  dispersion.function = Seurat:::FastLogVMR,
-  num.bin = 20,
-  binning.method = "equal_width",
-  nfeatures = 2000,
-  mean.cutoff = c(0.1, 8),
-  dispersion.cutoff = c(1, Inf),
-  verbose = TRUE,
-  ...
-) {
+FindVariableFeatures.Seurat <- function(object, nfeatures = 2000) {
     assay <- "RNA"
     assay.data <- FindVariableFeatures.StdAssay(
         object = object[[assay]],
-        selection.method = selection.method,
-        loess.span = loess.span,
-        clip.max = clip.max,
-        mean.function = mean.function,
-        dispersion.function = dispersion.function,
-        num.bin = num.bin,
-        binning.method = binning.method,
-        nfeatures = nfeatures,
-        mean.cutoff = mean.cutoff,
-        dispersion.cutoff = dispersion.cutoff,
-        verbose = verbose,
-        ...
+        nfeatures = nfeatures
     )
 
     object[[assay]] <- assay.data
@@ -206,7 +164,7 @@ pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor 
 
 
 ## Identification of highly variable features (feature selection)
-pbmc <- FindVariableFeatures.Seurat(pbmc, selection.method = "dispersion", nfeatures = 2000)
+pbmc <- FindVariableFeatures.Seurat(pbmc, nfeatures = 2000)
 
 ## Check output
 print(pbmc@assays$RNA@meta.data[1:10,1:3])
