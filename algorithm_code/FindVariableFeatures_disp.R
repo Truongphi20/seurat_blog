@@ -2,6 +2,97 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/src/data_manipulation.cpp:335
+FastLogVMR <- function(mat) {
+  
+  ncols <- ncol(mat)
+  
+  # 1. Transform the non-zero values to exp(x) - 1
+  mat_expm1 <- mat
+  mat_expm1@x <- expm1(mat_expm1@x)
+  
+  # 2. Compute the means of the untransformed data
+  rm_means <- Matrix::rowSums(mat_expm1) / ncols
+  
+  # 3. Compute the sample variances of the untransformed data
+  # Mathematically, Var(X) = (Sum(X^2) - n * Mean^2) / (n - 1)
+  # We square the non-zero elements directly to preserve structural sparsity
+  mat_expm1_sq <- mat_expm1
+  mat_expm1_sq@x <- (mat_expm1_sq@x)^2
+  
+  sum_squares <- Matrix::rowSums(mat_expm1_sq)
+  v_variances <- (sum_squares - ncols * (rm_means^2)) / (ncols - 1)
+  
+  # 4. Calculate the Log VMR
+  rowdisp <- log(v_variances / rm_means)
+  
+  return(rowdisp)
+}
+
+# commands/seurat-5.5.0/src/data_manipulation.cpp:255
+FastExpMean <- function(mat) {
+    
+  ncols <- ncol(mat)
+  
+  # 1. Transform the non-zero values to exp(x) - 1
+  # Operating directly on the x slot of a dgCMatrix preserves structural sparsity
+  mat_expm1 <- mat
+  mat_expm1@x <- expm1(mat_expm1@x)
+  
+  # 2. Sum up rows, divide by number of columns, and log1p the result
+  row_sums <- Matrix::rowSums(mat_expm1)
+  rm_means <- row_sums / ncols
+  rowmeans <- log1p(rm_means)
+  
+  return(rowmeans)
+}
+
+# commands/seurat-5.5.0/R/preprocessing5.R:629
+CalcDispersion <- function(object){
+
+  feature.mean <- FastExpMean(object)
+  feature.dispersion <- FastLogVMR(object)
+
+  names(x = feature.mean) <- names(
+  x = feature.dispersion) <- rownames(x = object)
+  feature.dispersion[is.na(x = feature.dispersion)] <- 0
+  feature.mean[is.na(x = feature.mean)] <- 0
+
+  data.x.breaks <- 20
+  data.x.bin <- cut(x = feature.mean, breaks = data.x.breaks,
+                  include.lowest = TRUE)
+  
+  names(x = data.x.bin) <- names(x = feature.mean)
+  mean.y <- tapply(X = feature.dispersion, INDEX = data.x.bin, FUN = mean)
+  sd.y <- tapply(X = feature.dispersion, INDEX = data.x.bin, FUN = sd)
+  feature.dispersion.scaled <- (feature.dispersion - mean.y[as.numeric(x = data.x.bin)]) /
+      sd.y[as.numeric(x = data.x.bin)]
+  names(x = feature.dispersion.scaled) <- names(x = feature.mean)
+  hvf.info <- data.frame(feature.mean, feature.dispersion, feature.dispersion.scaled)
+
+  rownames(x = hvf.info) <- rownames(x = object)
+  colnames(x = hvf.info) <- paste0('mvp.', c('mean', 'dispersion', 'dispersion.scaled'))
+  
+  return(hvf.info)
+}
+
+# commands/seurat-5.5.0/R/preprocessing5.R:704
+DISP <- function(
+  data,
+  nselect = 2000L
+) {
+  hvf.info <- CalcDispersion(object = data)
+  hvf.info$variable <- FALSE
+  hvf.info$rank <- NA
+  vf <- head(
+    x = order(hvf.info$mvp.dispersion, decreasing = TRUE),
+    n = nselect
+  )
+  hvf.info$variable[vf] <- TRUE
+  hvf.info$rank[vf] <- seq_along(along.with = vf)
+  return(hvf.info)
+}
+
 # commands/seurat-5.5.0/R/preprocessing5.R:27
 FindVariableFeatures.default <- function(
   object,
@@ -10,11 +101,10 @@ FindVariableFeatures.default <- function(
   selection.method = selection.method,
   ...
 ){
-    var.gene.ouput <- Seurat:::DISP(
+    # debug(Seurat:::DISP)
+    var.gene.ouput <- DISP(
         data = object,
-        nselect = nfeatures,
-        verbose = verbose,
-        ...
+        nselect = nfeatures
     )
     rownames(x = var.gene.ouput) <- rownames(x = object)
     return(var.gene.ouput)
