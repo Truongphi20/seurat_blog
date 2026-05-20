@@ -5,13 +5,12 @@ library(patchwork)
 # commands/seurat-5.5.0/R/preprocessing5.R:27
 FindVariableFeatures.default <- function(
   object,
-  method = VST,
   nfeatures = 2000L,
   verbose = TRUE,
   selection.method = selection.method,
   ...
 ){
-    var.gene.ouput <- method(
+    var.gene.ouput <- Seurat:::DISP(
         data = object,
         nselect = nfeatures,
         verbose = verbose,
@@ -35,7 +34,6 @@ FindVariableFeatures.StdAssay <- function(
   ...
 ){
     layer <- "data"
-    method <- Seurat:::DISP
     key <- 'disp'
 
     layer <- Layers(object = object, search = layer)
@@ -43,7 +41,6 @@ FindVariableFeatures.StdAssay <- function(
 
     hvf.info <- FindVariableFeatures.default(
       object = data,
-      method = method,
       nfeatures = nfeatures,
       span = span,
       clip = clip,
