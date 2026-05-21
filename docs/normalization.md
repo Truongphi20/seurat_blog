@@ -25,6 +25,10 @@ Relative count $\text{RC}_{ij}$ represents the expression proportion of a gene $
 
 $$\text{LN}_{ij} = \ln \left( \text{RC}_{ij} + 1 \right)$$
 
+In terms of gene expression, highly expressed genes usually dominate low-expression genes, even though the latter typically carry critical biological variance necessary for dimensionality reduction and downstream clustering. 
+
+Moreover, the logarithm transforms multiplicative biological relationships into an additive scale, making fold-change comparisons far more effective. Finally, the addition of a pseudo-count ($+1$) serves as a mathematical guardrail to prevent undefined values for zeros.
+
 ### Centered log ratio transformation (`CLR`)
 
 $$
