@@ -6,7 +6,7 @@ In scRNA-seq experiments, stochastic technical factors (e.g., purification, reve
 
 ## Methods
 
-There are three methods to normalise data in Seurat, which were used depends on data input.
+There are three methods to normalise data in Seurat, which were used depends on the analysis purpose.
 
 ```{image} ./static/count_matrix.png
 :alt: Count matrix
@@ -47,3 +47,9 @@ $X_{ij}$ is the shifted count guarding zero values when calculating the geometri
 Note that CLR can also be applied horizontally (across cells for an individual gene) by setting the `margin` value to 2.
 
 ## Summary
+
+| Method   |   Purpose    |   A-code    |
+| :------- | :----------- | :---------- |
+| Relative counts | Converts to gene expression proportion within a cell | [rc_normalise.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/rc_normalise.R) |
+| Log normalize   | Compresses the dynamic range to reduce the dominance of high-expression genes in relative counts | [log_normalise.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/log_normalise.R) |
+| Centered log ratio transformation | Measures the scaled value by the geometric mean  | [clr_normalise.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/clr_normalise.R) |
