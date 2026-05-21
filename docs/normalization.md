@@ -40,4 +40,8 @@ $$
 \end{equation*}
 $$
 
+While "Relative counts" and "Log normalize" introduce the proportion of gene expression in a cell, "Centered log ratio transformation" quantifies the scaled value by the geometric mean, which acts as the center data point. 
+
+$X_{ij}$ is the shifted count guarding zero values when calculating the geometric mean (the denominator). The guardrail natural logarithm is applied to compress the dynamic range and reduce the dominance of highly expressed genes.    
+
 ## Summary
