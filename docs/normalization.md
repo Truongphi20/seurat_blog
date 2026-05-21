@@ -8,7 +8,11 @@ In scRNA-seq experiments, stochastic technical factors (e.g., purification, reve
 
 There are three methods to normalise data in Seurat, which were used depends on data input.
 
-![](./static/count_matrix.png)
+```{image} ./static/count_matrix.png
+:alt: Count matrix
+:width: 60%
+:align: center
+```
 
 ### Relative counts (`RC`) 
 
