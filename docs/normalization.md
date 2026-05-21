@@ -12,7 +12,7 @@ There are three methods to normalise data in Seurat, which were used depends on 
 
 ### Relative counts (`RC`) 
 
-$$\text{RC}_{ij} = \frac{C_{ij}}{\sum_{i=1}^{M}{C_{ij}}} \times \text{Scale Factor}$$
+$$\text{RC}_{ij} = \frac{C_{ij}}{\sum_{k=1}^{M}{C_{kj}}} \times \text{Scale Factor}$$
 
 
 ### Log normalize (`LogNormalize`) 
@@ -21,8 +21,13 @@ $$\text{LN}_{ij} = \ln \left( \text{RC}_{ij} + 1 \right)$$
 
 ### Centered log ratio transformation (`CLR`)
 
-$$CLR_{ij} = \ln \left( 1 + \frac{C_{ij}}{\exp \left( \frac{1}{M} \sum_{k=1}^{M} \ln(1 + C_{kj}) \right)} \right)$$
-
-
+$$
+\begin{equation*}
+\begin{cases}
+    X_{ij} = C_{ij} + 1 \\[1ex]
+    \text{CLR}_{ij} = \ln \left[ 1 + \dfrac{X_{ij}}{\left(\prod_{k=1}^{M} X_{kj}\right)^{\frac{1}{M}}} \right]
+\end{cases}
+\end{equation*}
+$$
 
 ## Summary
