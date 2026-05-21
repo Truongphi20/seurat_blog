@@ -16,8 +16,10 @@ There are three methods to normalise data in Seurat, which were used depends on 
 
 ### Relative counts (`RC`) 
 
-$$\text{RC}_{ij} = \frac{C_{ij}}{\sum_{k=1}^{M}{C_{kj}}} \times \text{Scale Factor}$$
+$$\text{RC}_{ij} = \frac{C_{ij}}{\sum_{k=1}^{M}{C_{kj}}} \times F$$
 
+
+Relative count $\text{RC}_{ij}$ represents the expression proportion of a gene $i$ within an individual cell $j$. To improve interpretability, a scale factor $F$ (defaulting to 10,000) is integrated into the calculation.    
 
 ### Log normalize (`LogNormalize`) 
 
