@@ -29,7 +29,7 @@ $$
 \begin{equation*}
 \begin{cases}
     X_{ij} = C_{ij} + 1 \\[1ex]
-    \text{CLR}_{ij} = \ln \left[ 1 + \dfrac{X_{ij}}{\left(\prod_{k=1}^{M} X_{kj}\right)^{\frac{1}{M}}} \right]
+    \text{CLR}_{ij} = \ln \left[ 1 + \dfrac{C_{ij}}{\left(\prod_{k=1}^{M} X_{kj}\right)^{\frac{1}{M}}} \right]
 \end{cases}
 \end{equation*}
 $$
