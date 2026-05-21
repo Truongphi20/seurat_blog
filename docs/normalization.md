@@ -51,5 +51,8 @@ Note that CLR can also be applied horizontally (across cells for an individual g
 | Method   |   Purpose    |   A-code    |
 | :------- | :----------- | :---------- |
 | Relative counts | Converts to gene expression proportion within a cell | [rc_normalise.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/rc_normalise.R) |
-| Log normalize   | Compresses the dynamic range to reduce the dominance of high-expression genes in relative counts | [log_normalise.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/log_normalise.R) |
+| Log normalize (*default*)  | Compresses the dynamic range to reduce the dominance of high-expression genes in relative counts | [log_normalise.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/log_normalise.R) |
 | Centered log ratio transformation | Measures the scaled value by the geometric mean  | [clr_normalise.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/clr_normalise.R) |
+
+
+In the tutorial, "Log normalize" is applied just by default. 
