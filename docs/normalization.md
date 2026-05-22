@@ -55,4 +55,4 @@ Note that CLR can also be applied horizontally (across cells for an individual g
 | Centered log ratio transformation | Measures the scaled value by the geometric mean  | [clr_normalise.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/clr_normalise.R) |
 
 
-In the tutorial, "Log normalize" is applied just by default. Besides three above methods which force the evenness across cells in normalised data, the SCTransform is introduced as an alternative approach without making this assumption [@choudharyComparisonEvaluationStatistical2022].
+Besides three above methods which force the evenness across cells in normalised data, the SCTransform is introduced as an alternative approach by making statistic regression [@choudharyComparisonEvaluationStatistical2022].
