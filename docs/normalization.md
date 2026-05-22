@@ -27,7 +27,7 @@ $$\text{LN}_{ij} = \ln \left( \text{RC}_{ij} + 1 \right)$$
 
 In terms of gene expression, highly expressed genes usually dominate low-expression genes, even though the latter typically carry critical biological variance necessary for dimensionality reduction and downstream clustering. 
 
-Moreover, the logarithm transforms multiplicative biological relationships into an additive scale, making fold-change comparisons far more effective. Finally, the addition of a pseudo-count ($+1$) serves as a mathematical guardrail to prevent undefined values for zeros.
+Therefore logarithm transform is applied to convert multiplicative biological relationships into an additive scale, making fold-change comparisons far more effective. Noticeably, the addition of a pseudo-count ($+1$) serves as a mathematical guardrail to prevent undefined values for zeros.
 
 ### Centered log ratio transformation (`CLR`)
 
@@ -42,7 +42,7 @@ $$
 
 While "Relative counts" and "Log normalize" introduce the proportion of gene expression in a cell, "Centered log ratio transformation" quantifies the scaled value by the geometric mean, which acts as the center data point. 
 
-$X_{ij}$ is the shifted count guarding zero values when calculating the geometric mean (the denominator). The guardrail natural logarithm is applied to compress the dynamic range and reduce the dominance of highly expressed genes.
+$X_{ij}$ is the shifted count guarding zero values when calculating the geometric mean (the denominator). The $log(x+1)$ layer is applied to compress the dynamic range and reduce the dominance of highly expressed genes.
 
 Note that CLR can also be applied horizontally (across cells for an individual gene) by setting the `margin` value to 2.
 
