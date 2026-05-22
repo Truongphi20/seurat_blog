@@ -6,11 +6,11 @@ In scRNA-seq experiments, stochastic technical factors (e.g., purification, reve
 
 ## Methods
 
-There are three methods to normalise data in Seurat, which were used depends on the analysis purpose.
+There are three methods to technically normalize data in Seurat using the `NormalizeData()` command, which were used depends on the analysis purpose.
 
 ```{image} ./static/count_matrix.png
 :alt: Count matrix
-:width: 60%
+:width: 100%
 :align: center
 ```
 
@@ -25,7 +25,7 @@ Relative count $\text{RC}_{ij}$ represents the expression proportion of a gene $
 
 $$\text{LN}_{ij} = \ln \left( \text{RC}_{ij} + 1 \right)$$
 
-Hence the highly expressed genes possess mean, and variance much larger than low-expression genes [@ahlmann-eltzeComparisonTransformationsSinglecell2023], avoiding skewed data in individual cell, a logarithmic transformation is employed.  
+Hence the highly expressed genes possess mean, and variance much larger than low-expression genes [@ahlmann-eltzeComparisonTransformationsSinglecell2023]. To avoid data skewing in individual cell, a logarithmic transformation is employed.  
 
 Therefore logarithm transform is applied to convert multiplicative biological relationships into an additive scale, making fold-change comparisons far more effective. Noticeably, the addition of a pseudo-count ($+1$) serves as a mathematical guardrail to prevent undefined values for zeros.
 
@@ -55,4 +55,4 @@ Note that CLR can also be applied horizontally (across cells for an individual g
 | Centered log ratio transformation | Measures the scaled value by the geometric mean  | [clr_normalise.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/clr_normalise.R) |
 
 
-Besides three above methods which force the evenness across cells in normalised data, the SCTransform is introduced as an alternative approach by making statistic regression [@choudharyComparisonEvaluationStatistical2022].
+Besides three above methods which force the evenness across cells in normalised data, the SCTransform is introduced as an alternative approach by conducting statistic regression [@choudharyComparisonEvaluationStatistical2022].

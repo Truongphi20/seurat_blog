@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="66.375259mm"
-   height="52.759502mm"
-   viewBox="0 0 66.375259 52.7595"
+   width="126.98508mm"
+   height="54.170727mm"
+   viewBox="0 0 126.98508 54.170725"
    version="1.1"
    id="svg1"
    inkscape:version="1.4.4 (1:1.4.4+202605061432+dcaf3e7d9e)"
@@ -27,15 +27,16 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="2.889927"
-     inkscape:cx="137.89275"
-     inkscape:cy="106.05804"
+     inkscape:zoom="1.4449635"
+     inkscape:cx="247.41109"
+     inkscape:cy="68.167812"
      inkscape:window-width="1850"
      inkscape:window-height="1016"
      inkscape:window-x="70"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g61" />
+     inkscape:current-layer="g61"
+     inkscape:export-bgcolor="#ffffffff" />
   <defs
      id="defs1">
     <marker
@@ -925,22 +926,22 @@
          id="text71"><tspan
            x="-14.462693"
            y="55.440758"
-           id="tspan10">Gene<tspan
+           id="tspan15">Gene<tspan
    style="font-size:65%;baseline-shift:sub"
-   id="tspan7">M</tspan></tspan></text>
+   id="tspan1">M</tspan></tspan></text>
       <text
          xml:space="preserve"
          style="font-size:8.52389px;line-height:1.35;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;stroke-width:0.399557"
-         x="1.5055838"
-         y="-27.080318"
+         x="33.92802"
+         y="-24.764431"
          id="text73"><tspan
            sodipodi:role="line"
            id="tspan73"
            style="font-weight:bold;stroke-width:0.399557"
-           x="1.5055841"
-           y="-27.080318">Count matrix</tspan></text>
+           x="33.92802"
+           y="-24.764431">Count matrix</tspan></text>
       <g
-         transform="translate(29.728288,-35.0945)"
+         transform="translate(62.15072,-32.778612)"
          ns60:version="1.10.0"
          ns60:texconverter="pdflatex"
          ns60:pdfconverter="inkscape"
@@ -1088,7 +1089,7 @@
         </g>
       </g>
       <g
-         transform="translate(106.737, -8.40438)"
+         transform="translate(106.737,-8.40438)"
          ns60:version="1.10.0"
          ns60:texconverter="pdflatex"
          ns60:pdfconverter="inkscape"
@@ -1124,12 +1125,12 @@
         </defs>
         <g
            id="id-5cd516ab-1dc8-452f-8fa4-e21afd05cfaa"
-           transform="translate(-148.587, -128.171)">
+           transform="translate(-148.587,-128.171)">
           <g
              style="fill:#000000;fill-opacity:1"
              id="id-51ca116d-07d2-41c3-b79a-d19eb39e78c5">
             <g
-               transform="translate(148.712, 134.765)"
+               transform="translate(148.712,134.765)"
                id="g88">
               <path
                  style="stroke:none"
@@ -1140,7 +1141,7 @@
         </g>
       </g>
       <g
-         transform="translate(-2.32356, 65.8894)"
+         transform="translate(-2.32356,65.8894)"
          ns60:version="1.10.0"
          ns60:texconverter="pdflatex"
          ns60:pdfconverter="inkscape"
@@ -1176,12 +1177,12 @@
         </defs>
         <g
            id="id-931222b0-f94e-4a5a-9e85-aa850a547420"
-           transform="translate(-149.009, -128.171)">
+           transform="translate(-149.009,-128.171)">
           <g
              style="fill:#000000;fill-opacity:1"
              id="id-ada8fc63-66af-4d2e-889a-fa6831607a52">
             <g
-               transform="translate(148.712, 134.765)"
+               transform="translate(148.712,134.765)"
                id="g89">
               <path
                  style="stroke:none"
@@ -1204,6 +1205,68 @@
              id="path89" />
         </g>
       </g>
+      <path
+         style="fill:none;stroke:#cccccc;stroke-width:0.578972px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 128.91666,-27.564524 v 81.597772 h 9.34974"
+         id="path14" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1.4949;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker83)"
+         d="m 110.96992,-27.511533 h 42.94956"
+         id="path3"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-size:8.52389px;line-height:1.35;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;stroke-width:0.399557"
+         x="202.87407"
+         y="-24.529715"
+         id="text4"><tspan
+           sodipodi:role="line"
+           id="tspan4"
+           style="font-weight:bold;stroke-width:0.399557"
+           x="202.87407"
+           y="-24.529715">Normalized matrix</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:8.06767px;line-height:1.35;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;stroke-width:0.378172"
+         x="201.57228"
+         y="13.310179"
+         id="text12"><tspan
+           sodipodi:role="line"
+           id="tspan12"
+           style="font-size:6.86007px;line-height:1.35;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;stroke-width:0.321566"
+           x="202.52525"
+           y="13.310179">Relative counts </tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:8.06767px;line-height:1.35;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;stroke-width:0.378172"
+         x="180.88951"
+         y="35.126244"
+         id="text13"><tspan
+           sodipodi:role="line"
+           id="tspan13"
+           style="font-size:6.86007px;line-height:1.35;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;stroke-width:0.321566"
+           x="181.84248"
+           y="35.126244">Log normalize </tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:6.86007px;line-height:1.35;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;stroke-width:0.321566"
+         x="189.6891"
+         y="55.496498"
+         id="text14"><tspan
+           sodipodi:role="line"
+           id="tspan14"
+           style="stroke-width:0.321566"
+           x="189.6891"
+           y="55.496498">Centered log ratio transformation</tspan></text>
+      <path
+         style="fill:none;stroke:#cccccc;stroke-width:0.578972px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 128.91666,32.642166 h 28.47422"
+         id="path15" />
+      <path
+         style="fill:none;stroke:#cccccc;stroke-width:0.578972px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 128.91666,10.567411 h 47.88202"
+         id="path16"
+         sodipodi:nodetypes="cc" />
     </g>
   </g>
 </svg>
