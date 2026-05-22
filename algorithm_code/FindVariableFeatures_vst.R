@@ -98,82 +98,83 @@ SparseRowVar2_R <- function(mat, mu) {
 # commands/seurat-5.5.0/R/preprocessing5.R:542
 VST.dgCMatrix <- function(data, nselect = 2000L) {
 
-    nfeatures <- nrow(x = data)
-    hvf.info <- EmptyDF(n = nfeatures)
-    # Calculate feature means
-    hvf.info$mean <- Matrix::rowMeans(x = data)
-    # Calculate feature variance
-    hvf.info$variance <- SparseRowVar2_R(
-        mat = data,
-        mu = hvf.info$mean
-    )
-    hvf.info$variance.expected <- 0L
-    not.const <- hvf.info$variance > 0
-    fit <- loess(
-        formula = log10(x = variance) ~ log10(x = mean),
-        data = hvf.info[not.const, , drop = TRUE],
-        span = 0.3
-    )
-    hvf.info$variance.expected[not.const] <- 10 ^ fit$fitted
-    hvf.info$variance.standardized <- SparseRowVarStd_R(
-        mat = data,
-        mu = hvf.info$mean,
-        sd = sqrt(x = hvf.info$variance.expected),
-        vmax = sqrt(x = ncol(x = data))
-    )
-    # Set variable features
-    hvf.info$variable <- FALSE
-    hvf.info$rank <- NA
-    vf <- head(
-        x = order(hvf.info$variance.standardized, decreasing = TRUE),
-        n = nselect
-    )
-    hvf.info$variable[vf] <- TRUE
-    hvf.info$rank[vf] <- seq_along(along.with = vf)
-    return(hvf.info)
+  {nfeatures <- nrow(x = data)
+  hvf.info <- EmptyDF(n = nfeatures)
+  # Calculate feature means
+  hvf.info$mean <- Matrix::rowMeans(x = data)
+  # Calculate feature variance
+  hvf.info$variance <- SparseRowVar2_R(
+      mat = data,
+      mu = hvf.info$mean
+  )
+  hvf.info$variance.expected <- 0L
+  not.const <- hvf.info$variance > 0
+  fit <- loess(
+      formula = log10(x = variance) ~ log10(x = mean),
+      data = hvf.info[not.const, , drop = TRUE],
+      span = 0.3
+  )
+  hvf.info$variance.expected[not.const] <- 10 ^ fit$fitted
+  hvf.info$variance.standardized <- SparseRowVarStd_R(
+      mat = data,
+      mu = hvf.info$mean,
+      sd = sqrt(x = hvf.info$variance.expected),
+      vmax = sqrt(x = ncol(x = data))
+  )
+  # Set variable features
+  hvf.info$variable <- FALSE
+  hvf.info$rank <- NA
+  vf <- head(
+      x = order(hvf.info$variance.standardized, decreasing = TRUE),
+      n = nselect
+  )
+  hvf.info$variable[vf] <- TRUE
+  hvf.info$rank[vf] <- seq_along(along.with = vf)
+  return(hvf.info)}
 }
 
 # commands/seurat-5.5.0/R/preprocessing5.R:66
 FindVariableFeatures.StdAssay <- function(object, nfeatures = 2000L){
 
-    layer <- "counts"
-    key <- 'vst'
+  layer <- "counts"
+  key <- 'vst'
 
-    data <- LayerData(object = object, layer = layer, fast = TRUE)
+  browser()
+  data <- LayerData(object = object, layer = layer, fast = TRUE)
 
-    hvf.info <- VST.dgCMatrix(
-      data = data,
-      nselect = nfeatures
-    )
-    rownames(x = hvf.info) <- rownames(x = data)
+  hvf.info <- VST.dgCMatrix(
+    data = data,
+    nselect = nfeatures
+  )
+  rownames(x = hvf.info) <- rownames(x = data)
 
-    colnames(x = hvf.info) <- paste(
-      'vf',
-      key,
-      layer[1],
-      colnames(x = hvf.info),
-      sep = '_'
-    )
+  colnames(x = hvf.info) <- paste(
+    'vf',
+    key,
+    layer,
+    colnames(x = hvf.info),
+    sep = '_'
+  )
 
-    rownames(x = hvf.info) <- Features(x = object, layer = layer)
-    object[["var.features"]] <- NULL
-    object[["var.features.rank"]] <- NULL
-    object[[names(x = hvf.info)]] <- NULL
-    object[[names(x = hvf.info)]] <- hvf.info
+  rownames(x = hvf.info) <- Features(x = object, layer = layer)
+  object[["var.features"]] <- NULL
+  object[["var.features.rank"]] <- NULL
+  object[[names(x = hvf.info)]] <- NULL
+  object[[names(x = hvf.info)]] <- hvf.info
 
-    VariableFeatures(object) <- VariableFeatures(object, nfeatures=nfeatures,method = key)
-    return(object)
+  VariableFeatures(object) <- VariableFeatures(object, nfeatures=nfeatures,method = key)
+  return(object)
 }
 
 # commands/seurat-5.5.0/R/preprocessing.R:4595
 FindVariableFeatures.Seurat <- function(object, nfeatures = 2000) {
-    assay <- "RNA"
-    assay.data <- FindVariableFeatures.StdAssay(
-        object = object[[assay]],
-        nfeatures = nfeatures
-    )
-    object[[assay]] <- assay.data
-    return(object)
+  assay <- "RNA"
+  assay.data <- FindVariableFeatures.StdAssay(
+      object = object[[assay]],
+      nfeatures = nfeatures
+  )
+  object[[assay]] <- assay.data
+  return(object)
 }
 
 # Load the PBMC dataset
