@@ -139,8 +139,7 @@ FindVariableFeatures.StdAssay <- function(object, nfeatures = 2000L){
     layer <- "counts"
     key <- 'vst'
 
-    layer <- Layers(object = object, search = layer)
-    data <- LayerData(object = object, layer = layer[1], fast = TRUE)
+    data <- LayerData(object = object, layer = layer, fast = TRUE)
 
     hvf.info <- VST.dgCMatrix(
       data = data,
@@ -156,7 +155,7 @@ FindVariableFeatures.StdAssay <- function(object, nfeatures = 2000L){
       sep = '_'
     )
 
-    rownames(x = hvf.info) <- Features(x = object, layer = layer[1])
+    rownames(x = hvf.info) <- Features(x = object, layer = layer)
     object[["var.features"]] <- NULL
     object[["var.features.rank"]] <- NULL
     object[[names(x = hvf.info)]] <- NULL
