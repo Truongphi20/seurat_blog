@@ -19,6 +19,8 @@ project:
       file: docs/index.md
     - title: Normalization
       file: docs/normalization.md
+    - title: Feature selection
+      file: docs/variable_features.md
     
 site:
   template: book-theme
