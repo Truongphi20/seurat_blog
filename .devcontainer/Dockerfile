@@ -33,4 +33,6 @@ WORKDIR /workspace
 RUN Rscript -e "install.packages('languageserver', repos='https://cloud.r-project.org')"
 ENV R_HOME "/usr/local/bin/R"
 
+RUN apt-get update && apt-get install -y openssh-client
+
 ENTRYPOINT ["bash", "-l"]
