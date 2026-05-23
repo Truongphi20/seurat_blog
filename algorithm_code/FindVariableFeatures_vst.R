@@ -5,29 +5,30 @@ library(patchwork)
 # commands/seurat-5.5.0/src/data_manipulation.cpp:305
 SparseRowVarStd_R <- function(mat, mu, sd, vmax) {
   
-  n_cells <- ncol(mat)
-  n_genes <- nrow(mat)
+  # CRITICAL: Transpose the matrix first to match the C++ logic!
+  # This flips genes to columns so that mat@p maps directly to genes.
+  mat_t <- Matrix::t(mat)
   
-  # Extract standard dgCMatrix slots
-  x_vals <- mat@x
-  p_ptr  <- mat@p
+  n_cells <- nrow(mat_t) # Originally columns (cells)
+  n_genes <- ncol(mat_t) # Originally rows (genes)
   
-  # Pre-allocate output vector for standardized variances
+  # Extract slots from the TRANSPOSED matrix
+  x_vals <- mat_t@x
+  p_ptr  <- mat_t@p
+  
+  # Pre-allocate output vector
   allVars <- numeric(n_genes)
   
-  # Loop over each gene
+  # Loop over each gene (which are now the columns of mat_t)
   for (k in 1:n_genes) {
-    # If standard deviation is 0, skip to avoid division-by-zero (variance remains 0)
     if (is.na(sd[k]) || sd[k] == 0) {
       allVars[k] <- 0
       next
     }
-    
-    # Get internal column pointer boundaries
+
     start_idx <- p_ptr[k] + 1
     end_idx   <- p_ptr[k + 1]
     
-    # Catch cases where there are absolutely no non-zero elements for this feature
     if (is.na(start_idx) || is.na(end_idx) || (start_idx > end_idx)) {
       n_nonzero <- 0
     } else {
@@ -41,27 +42,21 @@ SparseRowVarStd_R <- function(mat, mu, sd, vmax) {
       # Grab the non-zero raw counts for this gene
       gene_nonzero_vals <- x_vals[start_idx:end_idx]
       
-      # Standardize the non-zero values: (value - mu) / sd
+      # Standardize and clip the non-zero values
       standardized_nonzero <- (gene_nonzero_vals - mu[k]) / sd[k]
-      
-      # Clip values using the vmax threshold: std::min(vmax, value)
-      # pmin() processes the vector element-wise against the scalar vmax
       clipped_nonzero <- pmin(vmax, standardized_nonzero)
       
-      # Sum of squared deviations for non-zero items
       colSum <- sum(clipped_nonzero^2)
     }
     
-    # Standardize the structural zeros: (0 - mu) / sd
+    # Standardize and clip the zero representation
     standardized_zero <- (0 - mu[k]) / sd[k]
-    
-    # Clip the zero-value representation as well
     clipped_zero <- pmin(vmax, standardized_zero)
     
-    # Add the mathematical contribution of the omitted zeros
+    # Add the contribution of the background structural zeros
     colSum <- colSum + (clipped_zero^2) * nZero
     
-    # Calculate sample variance of the standardized, clipped entries
+    # Calculate sample variance
     allVars[k] <- colSum / (n_cells - 1)
   }
   
