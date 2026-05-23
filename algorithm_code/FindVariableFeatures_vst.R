@@ -139,7 +139,6 @@ FindVariableFeatures.StdAssay <- function(object, nfeatures = 2000L){
   layer <- "counts"
   key <- 'vst'
 
-  browser()
   data <- LayerData(object = object, layer = layer, fast = TRUE)
 
   hvf.info <- VST.dgCMatrix(
