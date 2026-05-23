@@ -98,7 +98,7 @@ SparseRowVar2_R <- function(mat, mu) {
 # commands/seurat-5.5.0/R/preprocessing5.R:542
 VST.dgCMatrix <- function(data, nselect = 2000L) {
 
-  {nfeatures <- nrow(x = data)
+  nfeatures <- nrow(x = data)
   hvf.info <- EmptyDF(n = nfeatures)
   # Calculate feature means
   hvf.info$mean <- Matrix::rowMeans(x = data)
@@ -130,7 +130,7 @@ VST.dgCMatrix <- function(data, nselect = 2000L) {
   )
   hvf.info$variable[vf] <- TRUE
   hvf.info$rank[vf] <- seq_along(along.with = vf)
-  return(hvf.info)}
+  return(hvf.info)
 }
 
 # commands/seurat-5.5.0/R/preprocessing5.R:66
