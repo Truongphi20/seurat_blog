@@ -39,6 +39,12 @@ z_{ij} &= \frac{c_{ij} - \mu_{i}}{\hat{\sigma_{i}}} \\
 
 Finally, the standardized variance ($\bar{\sigma_{i}}^2$) for gene $i$ is computed by formula [](#compute-std-var), which represents the variance of the standardized values ($z_{ij}$) across all cells, capped at a maximum value of $\sigma_{\text{max}} = \sqrt{N}$. The genes are then ranked by their standardized variance in descending order to select the top highly variable features (default `nfeatures = 2000`).
 
+:::{tip}Why not utilize raw variance directly for sorting out features?
+
+Due to the fact that variance rapidly increases as expression values rise [@ahlmann-eltzeComparisonTransformationsSinglecell2023], even when utilizing variance calculated from log-normalized data, highly expressed genes will dominate the top rankings [@stuartComprehensiveIntegrationSingleCell2019]. By standardizing the variance instead, this effect is controlled while retaining relative, feature-specific variability.
+
+:::
+
 ### Mean variance plot (`mvp`)
 
 ### Dispersion (`disp`)
