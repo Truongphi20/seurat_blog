@@ -32,7 +32,7 @@ z_{ij} &= \frac{c_{ij} - \mu_{i}}{\hat{\sigma_{i}}} \\
 }
 ```
 
-Finally, the standardized variance ($\bar{\sigma_{i}}^2$) for gene $i$ is computed by formula [](#compute-std-var), which is the sum of square of standardized values ($z_{ij}$) clipped by $\sigma_{\text{max}} = \sqrt{N}$.
+Finally, the standardized variance ($\bar{\sigma_{i}}^2$) for gene $i$ is computed by formula [](#compute-std-var), which is the sum of square of standardized values ($z_{ij}$) across cells clipped by $\sigma_{\text{max}} = \sqrt{N}$. The genes are ranked by standardized variance decreasingly and getting the top 2000 most variable genes (default `nselect = 2000`). 
 
 ### Mean variance plot (`mvp`)
 
