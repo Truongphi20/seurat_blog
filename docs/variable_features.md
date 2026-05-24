@@ -20,7 +20,12 @@ This method computes standardized variance based on the layer input (the `count`
 
 Firstly, the variance ($\sigma_{i}^2$) corresponding to each gene is computed following the formula [](#compute-var), where $c_{ij}$ is an element of gene $i$ and cell $j$ in the count matrix; $\mu_{i}$ is the mean of expression count of gene $i$; and N is the number of cells.
 
-Subsequently, the expected variance ($\hat{\sigma_{i}}^2$) is estimated by the Local Polynomial Regression model (LOESS) [@cleveland2017local]. The model fits a smooth trend to capture the relationship between gene abundance and variance in log-log space ($\log_{10}(\sigma_i^2) \sim \log_{10}(\mu_i)$). Using local parabolic local fitting, the expected variance is estimated across the mean expression range to generate a continuous, smooth curve (See [briliant Josh's explaination](https://www.youtube.com/watch?v=Vf7oJ6z2LCc)).
+```{math}
+:label: loess
+\large \hat{\sigma_{i}}^2 = \text{LOESS} \left( \log_{10}(\sigma_i^2) \sim \log_{10}(\mu_i) \right)
+```
+
+Subsequently, the expected variance ($\hat{\sigma_{i}}^2$) is estimated by the Local Polynomial Regression model (LOESS) [@cleveland2017local]. The model fits a smooth trend to capture the relationship between gene abundance and variance in log-log space (the formula [](#loess)). Using local parabolic fitting, the expected variance is estimated across the mean expression range to generate a continuous, smooth curve (See [briliant Josh's explanation](https://www.youtube.com/watch?v=Vf7oJ6z2LCc)).
 
 ```{math}
 :label: compute-std-var
