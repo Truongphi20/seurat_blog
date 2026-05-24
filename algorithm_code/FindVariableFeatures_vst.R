@@ -119,7 +119,6 @@ VST.dgCMatrix <- function(data, nselect = 2000L) {
   # Set variable features
   hvf.info$variable <- FALSE
   hvf.info$rank <- NA
-  browser()
   vf <- head(
       x = order(hvf.info$variance.standardized, decreasing = TRUE),
       n = nselect
