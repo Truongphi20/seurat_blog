@@ -25,7 +25,7 @@ Firstly, the variance ($\sigma_{i}^2$) corresponding to each gene is computed fo
 \large \hat{\sigma_{i}}^2 = \text{LOESS} \left( \log_{10}(\sigma_i^2) \sim \log_{10}(\mu_i) \right)
 ```
 
-Subsequently, the expected variance ($\hat{\sigma_{i}}^2$) is estimated by the Local Polynomial Regression model (LOESS) [@cleveland2017local]. The model fits a smooth trend to capture the relationship between gene abundance and variance in log-log space (the formula [](#loess)). Using local parabolic fitting, the expected variance is estimated across the mean expression range to generate a continuous, smooth curve (See [briliant Josh's explanation](https://www.youtube.com/watch?v=Vf7oJ6z2LCc)).
+Subsequently, the expected variance ($\hat{\sigma_{i}}^2$) is estimated by the Local Polynomial Regression model (LOESS) [@cleveland2017local]. The model fits a smooth trend to capture the relationship between gene abundance and variance in log-log space (the formula [](#loess)). Using local parabolic fitting, the expected variance is estimated across the mean expression range to generate a continuous, smooth curve (See [brilliant Josh's explanation](https://www.youtube.com/watch?v=Vf7oJ6z2LCc)).
 
 ```{math}
 :label: compute-std-var
@@ -37,7 +37,9 @@ z_{ij} &= \frac{c_{ij} - \mu_{i}}{\hat{\sigma_{i}}} \\
 }
 ```
 
-Finally, the standardized variance ($\bar{\sigma_{i}}^2$) for gene $i$ is computed by formula [](#compute-std-var), which represents the variance of the standardized values ($z_{ij}$) across all cells, capped at a maximum value of $\sigma_{\text{max}} = \sqrt{N}$. The genes are then ranked by their standardized variance in descending order to select the top highly variable features (default `nfeatures = 2000`).
+Finally, the standardized variance ($\bar{\sigma_{i}}^2$) for gene $i$ is computed by formula [](#compute-std-var), which represents the variance of the standardized values ($z_{ij}$) across all cells, capped at a maximum value of $\sigma_{\text{max}} = \sqrt{N}$, which ensures the balanced distribution of variance, preventing outliers from overwhelmingly escalating the gene's overall variance.
+
+The genes are then ranked by their standardized variance in descending order to select the top highly variable features (default `nfeatures = 2000`).
 
 :::{tip}Why not utilize raw variance directly for sorting out features?
 
