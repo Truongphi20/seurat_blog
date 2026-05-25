@@ -67,9 +67,8 @@ The values of log-mean are utilized to divide the genes into distinct bins, wher
 \begin{cases}
 \begin{aligned}
   \mu_i   &= \frac{1}{N} \sum_{j=1}^{N} RC_{ij} \\
-  SS_i   &= \sum_{j=1}^{N} \left( RC_{ij} \right)^2 \\
-  var_i  &= \frac{1}{N - 1} \left( SS_i - N \cdot \mu_i^2 \right) \\
-  disp_i &= \ln \left( \frac{var_i}{\mu_i} \right)
+  \sigma_i^2  &= \frac{1}{N - 1} \sum_{j=1}^{N} \left( RC_{ij} - \mu_i \right)^2 \\
+  disp_i &= \ln \left( \frac{\sigma_i^2}{\mu_i} \right)
 \end{aligned}
 \end{cases}
 ```
