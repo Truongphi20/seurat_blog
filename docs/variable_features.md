@@ -54,6 +54,22 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 \Large \mu_{i} = ln \left( \frac{1}{N} \sum^{N}_{j=1}{e^{LN_{ij}}} \right)
 ```
 
+```{math}
+\Large rm_i = \frac{1}{N}\sum_{j=1}^{N}{\left(e^{LN_{ij}}-1\right)}
+```
+
+```{math}
+\Large SS_i = \sum_{j=1}^{N}{(e^{LN_{ij}}-1)^2}
+```
+
+```{math}
+\Large var_i = \frac{1}{N-1} (SS_i - N \cdot rm_i^2)
+```
+
+```{math}
+\Large disp_{i} = ln\left(\frac{var_i}{rm_i}\right)
+```
+
 ### Dispersion (`disp`)
 
 
