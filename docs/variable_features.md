@@ -29,12 +29,13 @@ Subsequently, the expected variance ($\hat{\sigma_{i}}^2$) is estimated by the L
 
 ```{math}
 :label: compute-std-var
-{\Large
+\Large
+\begin{cases}
 \begin{aligned}
 z_{ij} &= \frac{c_{ij} - \mu_{i}}{\hat{\sigma_{i}}} \\
 \bar{\sigma_{i}}^2 &= \frac{\sum_{j=1}^{N}{\left[\min(\sigma_{\text{max}}, z_{ij})\right]^2}}{N-1}
 \end{aligned}
-}
+\end{cases}
 ```
 
 Finally, the standardized variance ($\bar{\sigma_{i}}^2$) for gene $i$ is computed by formula [](#compute-std-var), which represents the variance of the standardized values ($z_{ij}$) across all cells, capped at a maximum value of $\sigma_{\text{max}} = \sqrt{N}$, which ensures the balanced distribution of variance, preventing outliers from overwhelmingly escalating the gene's overall variance.
@@ -54,21 +55,19 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 \Large \mu_{i} = ln \left( \frac{1}{N} \sum^{N}_{j=1}{e^{LN_{ij}}} \right)
 ```
 
-```{math}
-\Large rm_i = \frac{1}{N}\sum_{j=1}^{N}{\left(e^{LN_{ij}}-1\right)}
-```
 
 ```{math}
-\Large SS_i = \sum_{j=1}^{N}{(e^{LN_{ij}}-1)^2}
+\Large
+\begin{cases}
+\begin{aligned}
+  rm_i   &= \frac{1}{N} \sum_{j=1}^{N} \left( e^{LN_{ij}} - 1 \right) \\
+  SS_i   &= \sum_{j=1}^{N} \left( e^{LN_{ij}} - 1 \right)^2 \\
+  var_i  &= \frac{1}{N - 1} \left( SS_i - N \cdot rm_i^2 \right) \\
+  disp_i &= \ln \left( \frac{var_i}{rm_i} \right)
+\end{aligned}
+\end{cases}
 ```
 
-```{math}
-\Large var_i = \frac{1}{N-1} (SS_i - N \cdot rm_i^2)
-```
-
-```{math}
-\Large disp_{i} = ln\left(\frac{var_i}{rm_i}\right)
-```
 
 ### Dispersion (`disp`)
 
