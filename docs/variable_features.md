@@ -57,7 +57,7 @@ The [logorithmic normalized matrix](./normalization.md#log-normalize-lognormaliz
 \Large \text{log}_{\mu_{i}} = \ln \left( 1 + \frac{1}{N} \sum^{N}_{j=1}{\left(e^{LN_{ij}} - 1\right)} \right)
 ```
 
-The formula [](#mean-mvp) reverses the [log-normalization](#log-norm) step to recover relative count, calculates the arithmetic mean of these relative counts for each gene, and finally converts the resulting mean back to the log scale using the $\ln(1+x)$ transformation.
+The formula [](#mean-mvp) reverses the [log-normalization](#log-norm) step to recover relative count ($RC_{ij}$), calculates the arithmetic mean of these relative counts for each gene, and finally converts the resulting mean back to the log scale using the $\ln(1+x)$ transformation.
 
 The values of log-mean are utilized to divide the genes into distinct bins, where the total number of bins is controlled by the `num.bin` attribute (which defaults to 20).
 
@@ -66,8 +66,8 @@ The values of log-mean are utilized to divide the genes into distinct bins, wher
 \Large
 \begin{cases}
 \begin{aligned}
-  \mu_i   &= \frac{1}{N} \sum_{j=1}^{N} \left( e^{LN_{ij}} - 1 \right) \\
-  SS_i   &= \sum_{j=1}^{N} \left( e^{LN_{ij}} - 1 \right)^2 \\
+  \mu_i   &= \frac{1}{N} \sum_{j=1}^{N} RC_{ij} \\
+  SS_i   &= \sum_{j=1}^{N} \left( RC_{ij} \right)^2 \\
   var_i  &= \frac{1}{N - 1} \left( SS_i - N \cdot \mu_i^2 \right) \\
   disp_i &= \ln \left( \frac{var_i}{\mu_i} \right)
 \end{aligned}
