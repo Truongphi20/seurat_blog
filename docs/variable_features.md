@@ -69,6 +69,11 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 ```
 
 
+```{math}
+\Large
+\overline{disp}_i = \frac{disp_i - \mu_{\text{bin}_k}}{\sigma_{\text{bin}_k}}
+```
+
 ### Dispersion (`disp`)
 
 
