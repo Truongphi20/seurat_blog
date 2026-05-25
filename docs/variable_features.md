@@ -52,7 +52,7 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 
 ```{math}
 :label: mean-mvp
-\Large \mu_{i} = ln \left( \frac{1}{N} \sum^{N}_{j=1}{e^{LN_{ij}}} \right)
+\Large \mu_{i} = ln \left( 1 + \frac{1}{N} \sum^{N}_{j=1}{e^{LN_{ij}}} \right)
 ```
 
 
