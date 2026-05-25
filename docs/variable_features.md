@@ -50,11 +50,11 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 
 ### Mean variance plot (`mvp`)
 
-The [logorithmic normalized matrix](./normalization.md#log-normalize-lognormalize) is utilized to execute this approach. The workflow begins by computing log-mean ($\mu_i$) via equation [](#mean-mvp) to divide the features into discrete computational bins. Next, dispersion value for each gene ($disp_i$) is calculated using the system of equations defined in [](#disp-comp). Finally, equation [](#disp-std) standardizes dispersion based on the mean and standard deviation of its assigned bin. These standardized dispersion values are ultimately used alongside the log-mean values to sort and select the most highly variable features.
+The [logorithmic normalized matrix](./normalization.md#log-normalize-lognormalize) is utilized to execute this approach. The workflow begins by computing log-mean ($\text{log}_{\mu_{i}}$) via equation [](#mean-mvp) to divide the features into discrete computational bins. Next, dispersion value for each gene ($disp_i$) is calculated using the system of equations defined in [](#disp-comp). Finally, equation [](#disp-std) standardizes dispersion based on the mean and standard deviation of its assigned bin. These standardized dispersion values are ultimately used alongside the log-mean values to sort and select the most highly variable features.
 
 ```{math}
 :label: mean-mvp
-\Large \mu_{i} = \ln \left( 1 + \frac{1}{N} \sum^{N}_{j=1}{\left(e^{LN_{ij}} - 1\right)} \right)
+\Large \text{log}_{\mu_{i}} = \ln \left( 1 + \frac{1}{N} \sum^{N}_{j=1}{\left(e^{LN_{ij}} - 1\right)} \right)
 ```
 
 The formula [](#mean-mvp) reverses the [log-normalization](#log-norm) step to recover relative count, calculates the arithmetic mean of these relative counts for each gene, and finally converts the resulting mean back to the log scale using the $\ln(1+x)$ transformation.
@@ -66,10 +66,10 @@ The values of log-mean are utilized to divide the genes into distinct bins, wher
 \Large
 \begin{cases}
 \begin{aligned}
-  rm_i   &= \frac{1}{N} \sum_{j=1}^{N} \left( e^{LN_{ij}} - 1 \right) \\
+  \mu_i   &= \frac{1}{N} \sum_{j=1}^{N} \left( e^{LN_{ij}} - 1 \right) \\
   SS_i   &= \sum_{j=1}^{N} \left( e^{LN_{ij}} - 1 \right)^2 \\
-  var_i  &= \frac{1}{N - 1} \left( SS_i - N \cdot rm_i^2 \right) \\
-  disp_i &= \ln \left( \frac{var_i}{rm_i} \right)
+  var_i  &= \frac{1}{N - 1} \left( SS_i - N \cdot \mu_i^2 \right) \\
+  disp_i &= \ln \left( \frac{var_i}{\mu_i} \right)
 \end{aligned}
 \end{cases}
 ```
