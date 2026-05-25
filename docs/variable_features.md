@@ -11,7 +11,7 @@ numbering:
 
 ### Variance Stabilizing Transformation (`vst`)
 
-This method computes standardized variance based on the layer input (the `count` matrix according the tutorial).
+This method computes standardized variance based on the raw layer input (the `count` matrix).
 
 ```{math}
 :label: compute-var
@@ -50,13 +50,16 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 
 ### Mean variance plot (`mvp`)
 
+The [logorithmic normalized matrix](./normalization.md#log-normalize-lognormalize) is utilized to execute this approach. The workflow begins by computing log-mean ($\mu_i$) via equation [](#mean-mvp) to divide the features into discrete computational bins. Next, dispersion value for each gene ($disp_i$) is calculated using the system of equations defined in [](#disp-comp). Finally, equation [](#disp-std) standardizes dispersion based on the mean and standard deviation of its assigned bin. These standardized dispersion values are ultimately used alongside the log-mean values to sort and select the most highly variable features.
+
 ```{math}
 :label: mean-mvp
-\Large \mu_{i} = ln \left( 1 + \frac{1}{N} \sum^{N}_{j=1}{e^{LN_{ij}}} \right)
+\Large \mu_{i} = \ln \left( 1 + \frac{1}{N} \sum^{N}_{j=1}{\left(e^{LN_{ij}} - 1\right)} \right)
 ```
 
 
 ```{math}
+:label: disp-comp
 \Large
 \begin{cases}
 \begin{aligned}
@@ -70,6 +73,7 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 
 
 ```{math}
+:label: disp-std
 \Large
 \overline{disp}_i = \frac{disp_i - \mu_{\text{bin}_k}}{\sigma_{\text{bin}_k}}
 ```
