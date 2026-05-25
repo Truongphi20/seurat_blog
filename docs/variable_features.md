@@ -57,7 +57,9 @@ The [logorithmic normalized matrix](./normalization.md#log-normalize-lognormaliz
 \Large \mu_{i} = \ln \left( 1 + \frac{1}{N} \sum^{N}_{j=1}{\left(e^{LN_{ij}} - 1\right)} \right)
 ```
 
-The formula [](#mean-mvp) comes from the reverses the [log-normalization](#log-norm) step to recover relative count, calculates the arithmetic mean of these relative counts for each gene, and finally converts the resulting mean back to the log scale using the $\ln(1+x)$ transformation.  
+The formula [](#mean-mvp) reverses the [log-normalization](#log-norm) step to recover relative count, calculates the arithmetic mean of these relative counts for each gene, and finally converts the resulting mean back to the log scale using the $\ln(1+x)$ transformation.
+
+The values of log-mean are utilized to divide the genes into distinct bins, where the total number of bins is controlled by the `num.bin` attribute (which defaults to 20).
 
 ```{math}
 :label: disp-comp
