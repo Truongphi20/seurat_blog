@@ -23,7 +23,10 @@ Relative count $\text{RC}_{ij}$ represents the expression proportion of a gene $
 
 ### Log normalize (`LogNormalize`) 
 
-$$\text{LN}_{ij} = \ln \left( \text{RC}_{ij} + 1 \right)$$
+```{math}
+:label: log-norm
+\text{LN}_{ij} = \ln \left( \text{RC}_{ij} + 1 \right)
+```
 
 Hence the highly expressed genes possess mean, and variance much larger than low-expression genes [@ahlmann-eltzeComparisonTransformationsSinglecell2023]. To avoid data skewing in individual cell, a logarithmic transformation is employed.  
 
