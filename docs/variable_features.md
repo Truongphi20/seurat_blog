@@ -49,6 +49,11 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 
 ### Mean variance plot (`mvp`)
 
+```{math}
+:label: mean-mvp
+\Large \mu_{i} = ln \left( \frac{1}{N} \sum^{N}_{j=1}{e^{LN_{ij}}} \right)
+```
+
 ### Dispersion (`disp`)
 
 

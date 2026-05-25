@@ -33,7 +33,7 @@ FastLogVMR <- function(mat) {
 FastExpMean <- function(mat) {
     
   ncols <- ncol(mat)
-  
+  browser()
   # 1. Transform the non-zero values to exp(x) - 1
   # Operating directly on the x slot of a dgCMatrix preserves structural sparsity
   mat_expm1 <- mat
