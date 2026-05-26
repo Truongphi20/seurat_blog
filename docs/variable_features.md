@@ -84,6 +84,8 @@ Hence, the relationship between the mean and variance of background genes is exp
 
 Next, the formula [](#disp-std) standardizes the dispersion values using the mean and standard deviation of the specific computational bin ($\text{bin}_k$) assigned to each gene based on its log-mean expression. Finally, the genes are sorted in descending order according to these scaled values, and the top features are selected (determined by the `nfeatures` attribute).
 
+Additionally, these features are filtered based on default threshold ranges: the log-mean expression must fall between 0.1 and 8 (`mean.cutoff`), and the standardized dispersion must be greater than 1 (`dispersion.cutoff`).   
+
 :::{tip} Why should we divide features into bins?
 
 Because variance naturally increases with mean expression, highly expressed genes tend to dominate the dispersion rankings. Dividing features into localized bins ensures that variability of each gene is evaluated exclusively against peers with a similar expression level.
