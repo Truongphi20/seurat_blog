@@ -84,6 +84,8 @@ Hence, the relationship between the mean and variance of background genes is exp
 
 Next, the formular [](#disp-std) standardizes the dispersion values using mean and standard deviation of the computational bin it belonging ($\text{bin}_k$) assigned based on the log-mean value of each gene. 
 
+Finally, the standardized dispersion values are scaled by computing the dispersion ratio across all genes, after which the genes are sorted in descending order based on the scaled values, and the top features are selected (defined by `nfeatures`).
+
 ### Dispersion (`disp`)
 
 
