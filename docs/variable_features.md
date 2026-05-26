@@ -82,6 +82,8 @@ Hence, the relationship between the mean and variance of background genes is exp
 \overline{disp}_i = \frac{disp_i - \mu_{\text{bin}_k}}{\sigma_{\text{bin}_k}}
 ```
 
+Next, the formular [](#disp-std) standardizes the dispersion values using mean and standard deviation of the computational bin it belonging ($\text{bin}_k$) assigned based on the log-mean value of each gene. 
+
 ### Dispersion (`disp`)
 
 
