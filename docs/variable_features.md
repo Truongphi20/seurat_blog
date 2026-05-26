@@ -73,6 +73,8 @@ The values of log-mean are utilized to divide the genes into distinct bins, wher
 \end{cases}
 ```
 
+Hence, the relationship between the mean and variance of background genes is expected to approximately follow a Poisson distribution, where $\mu_i = \sigma_i^2$. Consequently, the variance-to-mean ratio (VMR), or Fano factor, for these background features should equal 1. A VMR greater than 1 indicates that a gene exhibits overdispersion, capturing meaningful biological variability across cells rather than just technical noise. The system of equations in [](#disp-comp) models this by calculating dispersion ($disp_i$), defined as the natural logarithm of the VMR of the relative counts.
+
 
 ```{math}
 :label: disp-std
