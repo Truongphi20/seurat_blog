@@ -9,6 +9,8 @@ numbering:
 
 ## Methods
 
+![feature-selection-workflow](./static/feature-selection-workflow.png)
+
 ### Variance Stabilizing Transformation (`vst`)
 
 This method computes standardized variance based on the raw layer input (the `count` matrix).
