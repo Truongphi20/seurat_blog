@@ -73,7 +73,7 @@ The values of log-mean are utilized to divide the genes into distinct bins, wher
 \end{cases}
 ```
 
-Hence, the relationship between the mean and variance of background genes is expected to follow a Poisson distribution [@obergTechnicalBiologicalVariance2012], where $\mu_i = \sigma_i^2$. Consequently, the variance-to-mean ratio (VMR), or Fano factor, for these background features should equal 1. A larger VMR indicates that a gene exhibits greater overdispersion, thereby capturing meaningful biological variability across cells [@obergTechnicalBiologicalVariance2012;@willsSinglecellGeneExpression2013]. The system of equations in [](#disp-comp) models this by calculating dispersion ($disp_i$), defined as the natural logarithm of the VMR of the relative counts.
+Hence, the relationship between the mean and variance of background genes is expected to follow a Poisson distribution, where $\mu_i = \sigma_i^2$. Consequently, the variance-to-mean ratio (VMR), or Fano factor, for these background features should equal 1. A larger VMR indicates that a gene exhibits greater overdispersion, thereby capturing meaningful biological variability across cells [@obergTechnicalBiologicalVariance2012;@willsSinglecellGeneExpression2013]. The system of equations in [](#disp-comp) models this by calculating dispersion ($disp_i$), defined as the natural logarithm of the VMR of the relative counts.
 
 
 ```{math}
@@ -83,6 +83,12 @@ Hence, the relationship between the mean and variance of background genes is exp
 ```
 
 Next, the formula [](#disp-std) standardizes the dispersion values using the mean and standard deviation of the specific computational bin ($\text{bin}_k$) assigned to each gene based on its log-mean expression. Finally, the genes are sorted in descending order according to these scaled values, and the top features are selected (determined by the `nfeatures` attribute).
+
+:::{tip} Why should we divide features into bins?
+
+Because variance naturally increases with mean expression, highly expressed genes tend to dominate the dispersion rankings. Dividing features into localized bins ensures that variability of each gene is evaluated exclusively against peers with a similar expression level.
+
+:::
 
 ### Dispersion (`disp`)
 
