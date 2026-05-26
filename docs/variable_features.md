@@ -11,6 +11,12 @@ numbering:
 
 ![feature-selection-workflow](./static/feature-selection-workflow.png)
 
+There are three available methods based on two distinct strategies for selecting highly variable features:
+
+- [](#variance-stablilizing), which operates directly on the count matrix to estimate and standardize variance for feature ranking.
+- [](#mean-var-plot) / [](#dispersion), which utilize the [log-normalized matrix](#log-norm) to compute and standardize dispersion values. These dispersion values are subsequently used for gene ranking, while the mvp method additionally incorporates log-mean values to filter qualified features.  
+
+(variance-stablilizing)=
 ### Variance Stabilizing Transformation (`vst`)
 
 This method computes standardized variance based on the raw layer input (the `count` matrix).
@@ -96,6 +102,7 @@ Because variance naturally increases with mean expression, highly expressed gene
 
 :::
 
+(dispersion)=
 ### Dispersion (`disp`)
 
 The dispersion mode follows the same procedure as [](#mean-var-plot), except that features are not filtered according to log-mean and standardized dispersion at the end of the workflow. 

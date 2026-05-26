@@ -28,14 +28,14 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="1.4449635"
-     inkscape:cx="296.89331"
+     inkscape:cx="296.54728"
      inkscape:cy="534.61558"
      inkscape:window-width="1850"
      inkscape:window-height="1016"
      inkscape:window-x="70"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g19"
+     inkscape:current-layer="g62"
      inkscape:export-bgcolor="#ffffffff">
     <inkscape:page
        x="0"
@@ -1048,9 +1048,9 @@
          id="text71"><tspan
            x="-14.462693"
            y="55.440758"
-           id="tspan21">Gene<tspan
+           id="tspan15">Gene<tspan
    style="font-size:65%;baseline-shift:sub"
-   id="tspan20">M</tspan></tspan></text>
+   id="tspan1">M</tspan></tspan></text>
       <text
          xml:space="preserve"
          style="font-size:8.52389px;line-height:1.35;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;stroke-width:0.399557"
@@ -1502,7 +1502,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,12.286675,26.526407)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan22">Compute variance</tspan></text>
+             id="tspan17">Compute variance</tspan></text>
       </g>
       <g
          id="g60"
@@ -1524,12 +1524,12 @@
            transform="matrix(0.88834823,0,0,0.88834823,13.136652,65.058688)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan23">Compute estimated<tspan
+             id="tspan18">Compute estimated<tspan
    y="187.7133"
-   id="tspan24"> </tspan></tspan><tspan
+   id="tspan19"> </tspan></tspan><tspan
              x="10.615968"
              y="197.28593"
-             id="tspan25">variance</tspan></text>
+             id="tspan20">variance</tspan></text>
       </g>
       <g
          id="g62"
@@ -1548,10 +1548,14 @@
            x="10.615968"
            y="187.7133"
            id="text19"
-           transform="matrix(0.88834823,0,0,0.88834823,13.703304,109.25748)"><tspan
+           transform="matrix(0.88834823,0,0,0.88834823,12.501255,106.4527)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan26">Standardize count</tspan></text>
+             id="tspan21">Standardize 
+</tspan><tspan
+             x="10.615968"
+             y="197.28593"
+             id="tspan22">variance</tspan></text>
       </g>
       <path
          style="fill:none;stroke:#000000;stroke-width:0.578972px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker83)"
@@ -1621,7 +1625,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,153.22605,28.270086)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan27">Compute log-mean</tspan></text>
+             id="tspan23">Compute log-mean</tspan></text>
       </g>
       <g
          id="g86"
@@ -1643,7 +1647,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,153.22605,70.368243)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan28">Compute dispersion</tspan></text>
+             id="tspan24">Compute dispersion</tspan></text>
       </g>
       <g
          id="g92"
@@ -1665,11 +1669,11 @@
            transform="matrix(0.88834823,0,0,0.88834823,154.67638,105.88116)"><tspan
              x="10.615967"
              y="187.7133"
-             id="tspan29">Standardize
+             id="tspan25">Standardize
 </tspan><tspan
              x="10.615967"
              y="197.28593"
-             id="tspan30">dispersion</tspan></text>
+             id="tspan26">dispersion</tspan></text>
       </g>
       <g
          id="g93"
@@ -1691,7 +1695,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,152.99497,196.15015)"><tspan
              x="10.615967"
              y="187.7133"
-             id="tspan31">Filtering features</tspan></text>
+             id="tspan27">Filtering features</tspan></text>
       </g>
       <g
          id="g76"
@@ -1713,7 +1717,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,11.699889,89.223335)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan32">Ranking</tspan></text>
+             id="tspan28">Ranking</tspan></text>
       </g>
       <path
          style="fill:none;stroke:#000000;stroke-width:0.578972px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker83)"
@@ -1739,7 +1743,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,11.699889,89.223335)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan33">Ranking</tspan></text>
+             id="tspan29">Ranking</tspan></text>
       </g>
       <path
          style="fill:none;stroke:#000000;stroke-width:0.578972px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker83)"
