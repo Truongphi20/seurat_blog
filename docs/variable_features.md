@@ -48,6 +48,8 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 
 :::
 
+(mean-var-plot)=
+
 ### Mean variance plot (`mvp`)
 
 The [log-normalized matrix](./normalization.md#log-normalize-lognormalize) is utilized to execute this approach. The workflow begins by computing log-mean ($\text{log}_{\mu_{i}}$) via equation [](#mean-mvp) to divide the features into discrete computational bins. Next, the dispersion value for each gene ($disp_i$) is calculated using the system of equations defined in [](#disp-comp). Finally, equation [](#disp-std) standardizes dispersion based on the mean and standard deviation of its assigned bin. These standardized dispersion values are ultimately used alongside the log-mean values to sort and select the most highly variable features.
@@ -93,6 +95,8 @@ Because variance naturally increases with mean expression, highly expressed gene
 :::
 
 ### Dispersion (`disp`)
+
+The dispersion mode follows the same procedure as [](#mean-var-plot), except that features are not filtered according to log-mean and standardized dispersion at the end of the workflow. 
 
 
 ## Summary
