@@ -50,7 +50,7 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 
 ### Mean variance plot (`mvp`)
 
-The [logorithmic normalized matrix](./normalization.md#log-normalize-lognormalize) is utilized to execute this approach. The workflow begins by computing log-mean ($\text{log}_{\mu_{i}}$) via equation [](#mean-mvp) to divide the features into discrete computational bins. Next, dispersion value for each gene ($disp_i$) is calculated using the system of equations defined in [](#disp-comp). Finally, equation [](#disp-std) standardizes dispersion based on the mean and standard deviation of its assigned bin. These standardized dispersion values are ultimately used alongside the log-mean values to sort and select the most highly variable features.
+The [log-normalized matrix](./normalization.md#log-normalize-lognormalize) is utilized to execute this approach. The workflow begins by computing log-mean ($\text{log}_{\mu_{i}}$) via equation [](#mean-mvp) to divide the features into discrete computational bins. Next, the dispersion value for each gene ($disp_i$) is calculated using the system of equations defined in [](#disp-comp). Finally, equation [](#disp-std) standardizes dispersion based on the mean and standard deviation of its assigned bin. These standardized dispersion values are ultimately used alongside the log-mean values to sort and select the most highly variable features.
 
 ```{math}
 :label: mean-mvp
@@ -82,9 +82,7 @@ Hence, the relationship between the mean and variance of background genes is exp
 \overline{disp}_i = \frac{disp_i - \mu_{\text{bin}_k}}{\sigma_{\text{bin}_k}}
 ```
 
-Next, the formular [](#disp-std) standardizes the dispersion values using mean and standard deviation of the computational bin it belonging ($\text{bin}_k$) assigned based on the log-mean value of each gene. 
-
-Finally, the standardized dispersion values are scaled by computing the dispersion ratio across all genes, after which the genes are sorted in descending order based on the scaled values, and the top features are selected (defined by `nfeatures`).
+Next, the formula [](#disp-std) standardizes the dispersion values using the mean and standard deviation of the specific computational bin ($\text{bin}_k$) assigned to each gene based on its log-mean expression. Finally, the genes are sorted in descending order according to these scaled values, and the top features are selected (determined by the `nfeatures` attribute).
 
 ### Dispersion (`disp`)
 
