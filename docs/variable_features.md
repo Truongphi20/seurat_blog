@@ -7,6 +7,8 @@ numbering:
 
 ## Introduction
 
+Feature selection is the process of identifying genes that exhibit meaningful biological variability across cells. In scRNA-seq analysis, selecting highly variable genes helps reduce technical noise, improve computational efficiency, and enhance downstream analyses [@lueckenCurrentBestPractices2019;@stuartComprehensiveIntegrationSingleCell2019].
+
 ## Methods
 
 ![feature-selection-workflow](./static/feature-selection-workflow.png)
