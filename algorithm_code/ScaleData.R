@@ -9,7 +9,7 @@ FastSparseRowScale <- function(mat) {
   scale = TRUE
   center = TRUE
   scale_max = 10
-   
+
   # Get dimensions of original matrix
   n_rows <- nrow(mat)
   n_cols <- ncol(mat)
@@ -21,14 +21,14 @@ FastSparseRowScale <- function(mat) {
   for (k in 1:n_rows) {
     
     # Extract the row as a sparse vector
-    row_vals <- mat[k, , drop = TRUE] # numeric vector, mostly zeros
+    row_vals <- mat[k, , drop = TRUE]
     
     # Count non-zero elements
     nz_indices <- which(row_vals != 0)
     nnZero <- length(nz_indices)
     
-    # Calculate Mean (colMean in C++)
-    # C++ loops through non-zero values to sum them, then divides by total rows of transposed (cols of original)
+    # Calculate Mean
+    # loops through non-zero values to sum them, then divides by total rows of transposed (cols of original)
     row_sum <- sum(row_vals[nz_indices])
     colMean <- row_sum / n_cols
     
