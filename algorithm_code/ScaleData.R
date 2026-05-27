@@ -1,6 +1,76 @@
 library(dplyr)
 library(Seurat)
 library(patchwork)
+library(Matrix)
+
+# commands/seurat-5.5.0/src/data_manipulation.cpp:148
+FastSparseRowScale <- function(mat, scale = TRUE, center = TRUE, scale_max = 10, display_progress = TRUE) {
+   
+  # Get dimensions of original matrix
+  n_rows <- nrow(mat)
+  n_cols <- ncol(mat)
+  
+  # Pre-allocate the dense matrix for the output
+  scaled_mat <- matrix(0, nrow = n_rows, ncol = n_cols)
+  
+  # Loop through each row
+  for (k in 1:n_rows) {
+    
+    # Extract the row as a sparse vector
+    row_vals <- mat[k, , drop = TRUE] # numeric vector, mostly zeros
+    
+    # Count non-zero elements
+    nz_indices <- which(row_vals != 0)
+    nnZero <- length(nz_indices)
+    
+    # Calculate Mean (colMean in C++)
+    # C++ loops through non-zero values to sum them, then divides by total rows of transposed (cols of original)
+    row_sum <- sum(row_vals[nz_indices])
+    colMean <- row_sum / n_cols
+    
+    # Calculate Standard Deviation
+    if (scale) {
+      colSdev <- 0
+      if (center) {
+        # Sum squared differences for non-zero elements
+        if (nnZero > 0) {
+          colSdev <- sum((row_vals[nz_indices] - colMean)^2)
+        }
+        # Add the contribution of the implicit zeros: (0 - colMean)^2 * (total_cells - nnZero)
+        colSdev <- colSdev + (colMean^2) * (n_cols - nnZero)
+      } else {
+        # If not centering, just sum the squares of non-zero elements
+        if (nnZero > 0) {
+          colSdev <- sum(row_vals[nz_indices]^2)
+        }
+      }
+      # Calculate sample standard deviation (denominator is N - 1)
+      colSdev <- sqrt(colSdev / (n_cols - 1))
+    } else {
+      colSdev <- 1
+    }
+    
+    # If center is FALSE, the mean subtraction is skipped (colMean set to 0)
+    if (!center) {
+      colMean <- 0
+    }
+    
+    # Scale, Center, and Clip (scale_max)
+    if (colSdev == 0) {
+      scaled_row <- rep(0, n_cols)
+    } else {
+      scaled_row <- (row_vals - colMean) / colSdev
+    }
+    
+    # Apply max clipping threshold (scale_max)
+    scaled_row[scaled_row > scale_max] <- scale_max
+    
+    # Store into output matrix
+    scaled_mat[k, ] <- scaled_row
+  }
+  
+  return(scaled_mat)
+}
 
 # commands/seurat-5.5.0/R/preprocessing.R:5111
 ScaleData.default <- function(
@@ -27,7 +97,7 @@ ScaleData.default <- function(
     split.by <- TRUE
     split.cells <- split(x = colnames(x = object), f = split.by)
 
-    scale.function <- Seurat:::FastSparseRowScale
+    scale.function <- FastSparseRowScale
 
     scaled.data <- matrix(
       data = NA_real_,
