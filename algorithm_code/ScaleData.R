@@ -2,6 +2,47 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing.R:5520
+ScaleData.Seurat <- function(
+  object,
+  features = NULL,
+  assay = NULL,
+  vars.to.regress = NULL,
+  split.by = NULL,
+  model.use = 'linear',
+  use.umi = FALSE,
+  do.scale = TRUE,
+  do.center = TRUE,
+  scale.max = 10,
+  block.size = 1000,
+  min.cells.to.block = 3000,
+  verbose = TRUE,
+  ...
+) {
+    assay <- "RNA"
+    latent.data <- NULL
+
+    assay.data <- ScaleData(
+        # object = assay.data,
+        object = object[[assay]],
+        features = features,
+        vars.to.regress = vars.to.regress,
+        latent.data = latent.data,
+        split.by = split.by,
+        model.use = model.use,
+        use.umi = use.umi,
+        do.scale = do.scale,
+        do.center = do.center,
+        scale.max = scale.max,
+        block.size = block.size,
+        min.cells.to.block = min.cells.to.block,
+        verbose = verbose,
+        ...
+    )
+    object[[assay]] <- assay.data
+    return(object)
+}
+
 
 # Load the PBMC dataset
 pbmc.data <- Read10X(data.dir = "test_data/pbmc3k_filtered_gene_bc_matrices/filtered_gene_bc_matrices/hg19")
@@ -16,7 +57,7 @@ pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
 
 # Scale data
 all.genes <- rownames(pbmc)
-pbmc <- ScaleData(pbmc, features = all.genes)
+pbmc <- ScaleData.Seurat(pbmc, features = all.genes)
 
 ## Checking the result 
 print(pbmc[["RNA"]]$scale.data[1:5,1:5])
