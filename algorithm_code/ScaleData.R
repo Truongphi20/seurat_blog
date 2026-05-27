@@ -4,7 +4,7 @@ library(patchwork)
 library(Matrix)
 
 # commands/seurat-5.5.0/src/data_manipulation.cpp:148
-FastSparseRowScale <- function(mat, scale = TRUE, center = TRUE, scale_max = 10) {
+FastSparseRowScale <- function(mat) {
 
   scale = TRUE
   center = TRUE
