@@ -5,29 +5,30 @@ library(patchwork)
 # commands/seurat-5.5.0/src/data_manipulation.cpp:305
 SparseRowVarStd_R <- function(mat, mu, sd, vmax) {
   
-  n_cells <- ncol(mat)
-  n_genes <- nrow(mat)
+  # CRITICAL: Transpose the matrix first to match the C++ logic!
+  # This flips genes to columns so that mat@p maps directly to genes.
+  mat_t <- Matrix::t(mat)
   
-  # Extract standard dgCMatrix slots
-  x_vals <- mat@x
-  p_ptr  <- mat@p
+  n_cells <- nrow(mat_t) # Originally columns (cells)
+  n_genes <- ncol(mat_t) # Originally rows (genes)
   
-  # Pre-allocate output vector for standardized variances
+  # Extract slots from the TRANSPOSED matrix
+  x_vals <- mat_t@x
+  p_ptr  <- mat_t@p
+  
+  # Pre-allocate output vector
   allVars <- numeric(n_genes)
   
-  # Loop over each gene
+  # Loop over each gene (which are now the columns of mat_t)
   for (k in 1:n_genes) {
-    # If standard deviation is 0, skip to avoid division-by-zero (variance remains 0)
     if (is.na(sd[k]) || sd[k] == 0) {
       allVars[k] <- 0
       next
     }
-    
-    # Get internal column pointer boundaries
+
     start_idx <- p_ptr[k] + 1
     end_idx   <- p_ptr[k + 1]
     
-    # Catch cases where there are absolutely no non-zero elements for this feature
     if (is.na(start_idx) || is.na(end_idx) || (start_idx > end_idx)) {
       n_nonzero <- 0
     } else {
@@ -41,27 +42,21 @@ SparseRowVarStd_R <- function(mat, mu, sd, vmax) {
       # Grab the non-zero raw counts for this gene
       gene_nonzero_vals <- x_vals[start_idx:end_idx]
       
-      # Standardize the non-zero values: (value - mu) / sd
+      # Standardize and clip the non-zero values
       standardized_nonzero <- (gene_nonzero_vals - mu[k]) / sd[k]
-      
-      # Clip values using the vmax threshold: std::min(vmax, value)
-      # pmin() processes the vector element-wise against the scalar vmax
       clipped_nonzero <- pmin(vmax, standardized_nonzero)
       
-      # Sum of squared deviations for non-zero items
       colSum <- sum(clipped_nonzero^2)
     }
     
-    # Standardize the structural zeros: (0 - mu) / sd
+    # Standardize and clip the zero representation
     standardized_zero <- (0 - mu[k]) / sd[k]
-    
-    # Clip the zero-value representation as well
     clipped_zero <- pmin(vmax, standardized_zero)
     
-    # Add the mathematical contribution of the omitted zeros
+    # Add the contribution of the background structural zeros
     colSum <- colSum + (clipped_zero^2) * nZero
     
-    # Calculate sample variance of the standardized, clipped entries
+    # Calculate sample variance
     allVars[k] <- colSum / (n_cells - 1)
   }
   
@@ -70,44 +65,27 @@ SparseRowVarStd_R <- function(mat, mu, sd, vmax) {
 
 # commands/seurat-5.5.0/src/data_manipulation.cpp:278
 SparseRowVar2_R <- function(mat, mu) {
-    
-  n_cells <- ncol(mat)
-  n_genes <- nrow(mat)
   
-  # Extract standard dgCMatrix slots
-  x_vals <- mat@x
-  p_ptr  <- mat@p
+  # mat is a dgCMatrix (genes/features as rows, cells/samples as columns)
+  N <- ncol(mat) # Equivalent to mat.rows() in the C++ loop after transpose
   
-  # Pre-allocate output vector for variances
-  allVars <- numeric(n_genes)
+  # Square the non-zero elements of the sparse matrix
+  mat_squared <- mat
+  mat_squared@x <- mat_squared@x^2
   
-  # Loop over each gene
-  for (k in 1:n_genes) {
-    # 0-indexed adjustment for R's 1-indexed vectors
-    start_idx <- p_ptr[k] + 1
-    end_idx   <- p_ptr[k + 1]
-    
-    # Catch cases where there are absolutely no non-zero elements for this feature
-    if (is.na(start_idx) || is.na(end_idx) || (start_idx > end_idx)) {
-      allVars[k] <- 0
-      next
-    }
-    
-    n_nonzero <- end_idx - start_idx + 1
-    nZero <- n_cells - n_nonzero
-    
-    # Grab just the non-zero raw counts for this gene
-    gene_nonzero_vals <- x_vals[start_idx:end_idx]
-    
-    # Sum of squared deviations for non-zero items: (value - mu_k)^2
-    colSum <- sum((gene_nonzero_vals - mu[k])^2)
-    
-    # Add the mathematical contribution of the structural zeros: (0 - mu_k)^2 * nZero
-    colSum <- colSum + (mu[k]^2) * nZero
-    
-    # Calculate sample variance (divide by N - 1)
-    allVars[k] <- colSum / (n_cells - 1)
-  }
+  # Calculate the row sums of the squared elements: sum(x^2)
+  sum_x_squared <- Matrix::rowSums(mat_squared)
+  
+  # Calculate the sum of the non-zero elements: sum(x)
+  sum_x <- Matrix::rowSums(mat)
+  
+  # Apply the algebraic expansion of variance: 
+  # sum((x - mu)^2) = sum(x^2) - 2 * mu * sum(x) + N * mu^2
+  # This automatically accounts for implicit zeros!
+  sum_squares_centered <- sum_x_squared - (2 * mu * sum_x) + (N * (mu^2))
+  
+  # Divide by (N - 1) for sample variance
+  allVars <- sum_squares_centered / (N - 1)
   
   return(allVars)
 }
@@ -115,83 +93,82 @@ SparseRowVar2_R <- function(mat, mu) {
 # commands/seurat-5.5.0/R/preprocessing5.R:542
 VST.dgCMatrix <- function(data, nselect = 2000L) {
 
-    nfeatures <- nrow(x = data)
-    hvf.info <- EmptyDF(n = nfeatures)
-    # Calculate feature means
-    hvf.info$mean <- Matrix::rowMeans(x = data)
-    # Calculate feature variance
-    hvf.info$variance <- SparseRowVar2_R(
-        mat = data,
-        mu = hvf.info$mean
-    )
-    hvf.info$variance.expected <- 0L
-    not.const <- hvf.info$variance > 0
-    fit <- loess(
-        formula = log10(x = variance) ~ log10(x = mean),
-        data = hvf.info[not.const, , drop = TRUE],
-        span = 0.3
-    )
-    hvf.info$variance.expected[not.const] <- 10 ^ fit$fitted
-    hvf.info$variance.standardized <- SparseRowVarStd_R(
-        mat = data,
-        mu = hvf.info$mean,
-        sd = sqrt(x = hvf.info$variance.expected),
-        vmax = sqrt(x = ncol(x = data))
-    )
-    # Set variable features
-    hvf.info$variable <- FALSE
-    hvf.info$rank <- NA
-    vf <- head(
-        x = order(hvf.info$variance.standardized, decreasing = TRUE),
-        n = nselect
-    )
-    hvf.info$variable[vf] <- TRUE
-    hvf.info$rank[vf] <- seq_along(along.with = vf)
-    return(hvf.info)
+  nfeatures <- nrow(x = data)
+  hvf.info <- EmptyDF(n = nfeatures)
+  # Calculate feature means
+  hvf.info$mean <- Matrix::rowMeans(x = data)
+  # Calculate feature variance
+  hvf.info$variance <- SparseRowVar2_R(
+      mat = data,
+      mu = hvf.info$mean
+  )
+  hvf.info$variance.expected <- 0L
+  not.const <- hvf.info$variance > 0
+  fit <- loess(
+      formula = log10(x = variance) ~ log10(x = mean),
+      data = hvf.info[not.const, , drop = TRUE],
+      span = 0.3
+  )
+  hvf.info$variance.expected[not.const] <- 10 ^ fit$fitted
+  hvf.info$variance.standardized <- SparseRowVarStd_R(
+      mat = data,
+      mu = hvf.info$mean,
+      sd = sqrt(x = hvf.info$variance.expected),
+      vmax = sqrt(x = ncol(x = data))
+  )
+  # Set variable features
+  hvf.info$variable <- FALSE
+  hvf.info$rank <- NA
+  vf <- head(
+      x = order(hvf.info$variance.standardized, decreasing = TRUE),
+      n = nselect
+  )
+  hvf.info$variable[vf] <- TRUE
+  hvf.info$rank[vf] <- seq_along(along.with = vf)
+  return(hvf.info)
 }
 
 # commands/seurat-5.5.0/R/preprocessing5.R:66
 FindVariableFeatures.StdAssay <- function(object, nfeatures = 2000L){
 
-    layer <- "counts"
-    key <- 'vst'
+  layer <- "counts"
+  key <- 'vst'
 
-    layer <- Layers(object = object, search = layer)
-    data <- LayerData(object = object, layer = layer[1], fast = TRUE)
+  data <- LayerData(object = object, layer = layer, fast = TRUE)
 
-    hvf.info <- VST.dgCMatrix(
-      data = data,
-      nselect = nfeatures
-    )
-    rownames(x = hvf.info) <- rownames(x = data)
+  hvf.info <- VST.dgCMatrix(
+    data = data,
+    nselect = nfeatures
+  )
+  rownames(x = hvf.info) <- rownames(x = data)
 
-    colnames(x = hvf.info) <- paste(
-      'vf',
-      key,
-      layer[1],
-      colnames(x = hvf.info),
-      sep = '_'
-    )
+  colnames(x = hvf.info) <- paste(
+    'vf',
+    key,
+    layer,
+    colnames(x = hvf.info),
+    sep = '_'
+  )
 
-    rownames(x = hvf.info) <- Features(x = object, layer = layer[1])
-    object[["var.features"]] <- NULL
-    object[["var.features.rank"]] <- NULL
-    object[[names(x = hvf.info)]] <- NULL
-    object[[names(x = hvf.info)]] <- hvf.info
+  rownames(x = hvf.info) <- Features(x = object, layer = layer)
+  object[["var.features"]] <- NULL
+  object[["var.features.rank"]] <- NULL
+  object[[names(x = hvf.info)]] <- NULL
+  object[[names(x = hvf.info)]] <- hvf.info
 
-    VariableFeatures(object) <- VariableFeatures(object, nfeatures=nfeatures,method = key)
-    return(object)
+  VariableFeatures(object) <- VariableFeatures(object, nfeatures=nfeatures,method = key)
+  return(object)
 }
 
 # commands/seurat-5.5.0/R/preprocessing.R:4595
 FindVariableFeatures.Seurat <- function(object, nfeatures = 2000) {
-    assay <- "RNA"
-    assay.data <- FindVariableFeatures.StdAssay(
-        object = object[[assay]],
-        nfeatures = nfeatures
-    )
-    object[[assay]] <- assay.data
-    return(object)
+  assay <- "RNA"
+  assay.data <- FindVariableFeatures.StdAssay(
+      object = object[[assay]],
+      nfeatures = nfeatures
+  )
+  object[[assay]] <- assay.data
+  return(object)
 }
 
 # Load the PBMC dataset

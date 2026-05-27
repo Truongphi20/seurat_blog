@@ -21,9 +21,13 @@ $$\text{RC}_{ij} = \frac{C_{ij}}{\sum_{k=1}^{M}{C_{kj}}} \times F$$
 
 Relative count $\text{RC}_{ij}$ represents the expression proportion of a gene $i$ within an individual cell $j$. To improve interpretability, a scale factor $F$ (defaulting to 10,000) is integrated into the calculation.    
 
+(log-normalize)=
 ### Log normalize (`LogNormalize`) 
 
-$$\text{LN}_{ij} = \ln \left( \text{RC}_{ij} + 1 \right)$$
+```{math}
+:label: log-norm
+\text{LN}_{ij} = \ln \left( \text{RC}_{ij} + 1 \right)
+```
 
 Hence the highly expressed genes possess mean, and variance much larger than low-expression genes [@ahlmann-eltzeComparisonTransformationsSinglecell2023]. To avoid data skewing in individual cell, a logarithmic transformation is employed.  
 
