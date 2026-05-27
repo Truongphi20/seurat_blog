@@ -155,9 +155,6 @@ pbmc <- CreateSeuratObject(counts = pbmc.data, project = "pbmc3k", min.cells = 3
 # Normalization
 pbmc <- NormalizeData(pbmc)
 
-# Find highly variable features
-pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
-
 # Scale data
 all.genes <- rownames(pbmc)
 pbmc <- ScaleData.Seurat(pbmc, features = all.genes)
