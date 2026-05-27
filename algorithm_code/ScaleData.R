@@ -88,8 +88,6 @@ ScaleData.default <- function(object, features = NULL)
     split.by <- TRUE
     split.cells <- split(x = colnames(x = object), f = split.by)
 
-    scale.function <- FastSparseRowScale
-
     scaled.data <- matrix(
       data = NA_real_,
       nrow = nrow(x = object),
@@ -101,9 +99,8 @@ ScaleData.default <- function(object, features = NULL)
     for (i in 1:max.block) {
         my.inds <- ((block.size * (i - 1)):(block.size * i - 1)) + 1
         my.inds <- my.inds[my.inds <= length(x = features)]
-        arg.list <- list(mat = object[features[my.inds], split.cells[["TRUE"]], drop = FALSE])
-        arg.list <- arg.list[intersect(x = names(x = arg.list), y = names(x = formals(fun = scale.function)))]
-        data.scale <- do.call(what = scale.function, args = arg.list)
+
+        data.scale <- FastSparseRowScale(mat=object[features[my.inds], split.cells[["TRUE"]], drop = FALSE])
         dimnames(x = data.scale) <- dimnames(x = object[features[my.inds], split.cells[["TRUE"]]])
         scaled.data[features[my.inds], split.cells[["TRUE"]]] <- data.scale
     }
