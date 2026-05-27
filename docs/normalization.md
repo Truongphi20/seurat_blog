@@ -46,7 +46,7 @@ $$
 
 While "Relative counts" and "Log normalize" introduce the proportion of gene expression in a cell, "Centered log ratio transformation" quantifies the scaled value by the geometric mean, which acts as the center data point. 
 
-$X_{ij}$ is the shifted count guarding zero values when calculating the geometric mean (the denominator). The $log(x+1)$ layer is applied to compress the dynamic range and reduce the dominance of highly expressed genes.
+$X_{ij}$ is the shifted count guarding zero values when calculating the geometric mean (the denominator). The $\ln(x+1)$ layer is applied to compress the dynamic range and reduce the dominance of highly expressed genes.
 
 Note that CLR can also be applied horizontally (across cells for an individual gene) by setting the `margin` value to 2.
 
