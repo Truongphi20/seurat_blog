@@ -17,7 +17,7 @@ There are three available methods based on two distinct strategies for selecting
 - [](#mean-var-plot) / [](#dispersion), which utilize the [log-normalized matrix](#log-normalize) to compute and standardize dispersion values. These dispersion values are subsequently used for gene ranking, while the mvp method additionally incorporates log-mean values to filter qualified features.  
 
 (variance-stablilizing)=
-### Variance Stabilizing Transformation (`vst`)
+### Variance stabilizing transformation (`vst`)
 
 This method computes standardized variance based on the raw layer input (the `count` matrix).
 
@@ -109,3 +109,9 @@ The dispersion mode follows the same procedure as [](#mean-var-plot), except tha
 
 
 ## Summary
+
+| Method                                        |  Purpose         |  A-code    |
+| :--------------------------------------------  | :---------------- | :--------- |
+| Variance stabilizing transformation (*default*) |                  | [FindVariableFeatures_vst.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/FindVariableFeatures_vst.R)  |
+| Mean variance plot                            |                    | [FindVariableFeatures_mvp.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/FindVariableFeatures_mvp.R) |
+| Dispersion                                    |                    | [FindVariableFeatures_disp.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/FindVariableFeatures_disp.R) |
