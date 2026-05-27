@@ -2,6 +2,53 @@ library(dplyr)
 library(Seurat)
 library(patchwork)
 
+# commands/seurat-5.5.0/R/preprocessing5.R:359
+ScaleData.StdAssay <- function(
+  object,
+  features = NULL,
+  layer = 'data',
+  vars.to.regress = NULL,
+  latent.data = NULL,
+  by.layer = FALSE,
+  split.by = NULL,
+  model.use = 'linear',
+  use.umi = FALSE,
+  do.scale= TRUE,
+  do.center = TRUE,
+  scale.max = 10,
+  block.size = 1000,
+  min.cells.to.block = 3000,
+  save = 'scale.data',
+  verbose = TRUE,
+  ...
+){
+    use.umi <- FALSE
+    olayer <- layer <- 'data'
+
+    ldata <- LayerData(object = object, layer = layer, features = features)
+
+    ldata <- ScaleData(
+      object = ldata,
+      features = features,
+      vars.to.regress = vars.to.regress,
+      latent.data = latent.data,
+      split.by = split.by,
+      model.use = model.use,
+      use.umi = use.umi,
+      do.scale = do.scale,
+      do.center = do.center,
+      scale.max = scale.max,
+      block.size = block.size,
+      min.cells.to.block = min.cells.to.block,
+      verbose = verbose,
+      ...
+    )
+
+    LayerData(object = object, layer = save, features = rownames(ldata)) <- ldata
+
+    return(object)
+}
+
 # commands/seurat-5.5.0/R/preprocessing.R:5520
 ScaleData.Seurat <- function(
   object,
@@ -22,7 +69,7 @@ ScaleData.Seurat <- function(
     assay <- "RNA"
     latent.data <- NULL
 
-    assay.data <- ScaleData(
+    assay.data <- ScaleData.StdAssay(
         # object = assay.data,
         object = object[[assay]],
         features = features,
