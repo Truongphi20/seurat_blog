@@ -14,7 +14,7 @@ numbering:
 There are three available methods based on two distinct strategies for selecting highly variable features:
 
 - [](#variance-stablilizing), which operates directly on the count matrix to estimate and standardize variance for feature ranking.
-- [](#mean-var-plot) / [](#dispersion), which utilize the [log-normalized matrix](#log-norm) to compute and standardize dispersion values. These dispersion values are subsequently used for gene ranking, while the mvp method additionally incorporates log-mean values to filter qualified features.  
+- [](#mean-var-plot) / [](#dispersion), which utilize the [log-normalized matrix](#log-normalize) to compute and standardize dispersion values. These dispersion values are subsequently used for gene ranking, while the mvp method additionally incorporates log-mean values to filter qualified features.  
 
 (variance-stablilizing)=
 ### Variance Stabilizing Transformation (`vst`)
@@ -60,7 +60,7 @@ Due to the fact that variance rapidly increases as expression values rise [@ahlm
 
 ### Mean variance plot (`mvp`)
 
-The [log-normalized matrix](./normalization.md#log-normalize-lognormalize) is utilized to execute this approach. The workflow begins by computing log-mean ($\text{log}_{\mu_{i}}$) via equation [](#mean-mvp) to divide the features into discrete computational bins. Next, the dispersion value for each gene ($disp_i$) is calculated using the system of equations defined in [](#disp-comp). Finally, equation [](#disp-std) standardizes dispersion based on the mean and standard deviation of its assigned bin. These standardized dispersion values are ultimately used alongside the log-mean values to sort and select the most highly variable features.
+The [log-normalized matrix](./normalization.md#log-normalize) is utilized to execute this approach. The workflow begins by computing log-mean ($\text{log}_{\mu_{i}}$) via equation [](#mean-mvp) to divide the features into discrete computational bins. Next, the dispersion value for each gene ($disp_i$) is calculated using the system of equations defined in [](#disp-comp). Finally, equation [](#disp-std) standardizes dispersion based on the mean and standard deviation of its assigned bin. These standardized dispersion values are ultimately used alongside the log-mean values to sort and select the most highly variable features.
 
 ```{math}
 :label: mean-mvp
