@@ -112,6 +112,6 @@ The dispersion mode follows the same procedure as [](#mean-var-plot), except tha
 
 | Method                                        |  Purpose         |  A-code    |
 | :--------------------------------------------  | :---------------- | :--------- |
-| Variance stabilizing transformation (*default*) |                  | [FindVariableFeatures_vst.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/FindVariableFeatures_vst.R)  |
-| Mean variance plot                            |                    | [FindVariableFeatures_mvp.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/FindVariableFeatures_mvp.R) |
-| Dispersion                                    |                    | [FindVariableFeatures_disp.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/FindVariableFeatures_disp.R) |
+| Variance stabilizing transformation (*default*) | Compares standardized variance across genes  | [FindVariableFeatures_vst.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/FindVariableFeatures_vst.R)  |
+| Mean variance plot                            |  Identifies genes exhibiting strong overdispersion relative to a Poisson distribution  | [FindVariableFeatures_mvp.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/FindVariableFeatures_mvp.R) |
+| Dispersion                                    |  Selects overdispersed genes using the same approach as the mean variance plot method, without feature filtering  | [FindVariableFeatures_disp.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/FindVariableFeatures_disp.R) |
