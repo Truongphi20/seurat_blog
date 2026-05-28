@@ -23,6 +23,8 @@ project:
       file: docs/variable_features.md
     - title: Scaling data
       file: docs/scaling.md
+    - title: SCTransform
+      file: docs/sctransform.md
     
 site:
   template: book-theme
