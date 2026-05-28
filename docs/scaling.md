@@ -2,9 +2,11 @@
 
 ## Introduction
 
+As the tutorial mentioned, scaling data is a prerequisite step for dimensional reduction like Principal Component Analysis (PCA), where data per gene across cells is centered and standardized. 
+
 ## Methods
 
-The scaled-row value ($SR_{ij}$) is calculated for each gene $i$ and cell $j$. The data is scaled vertically by gene across all cells, using values from the normalized matrix ([log-normalize matrix](#log-normalize) in the case of tutorial).
+The scaled-row value ($SR_{ij}$) is calculated for each gene $i$ and cell $j$. The data is scaled vertically by gene across all cells, using values from the normalized matrix ([log-normalize matrix](#log-normalize) in the case of the tutorial).
 
 ```{math}
 :label: scaling-func
