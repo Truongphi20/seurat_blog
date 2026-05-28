@@ -2,7 +2,9 @@
 
 ## Introduction
 
-As the tutorial mentioned, scaling data is a prerequisite step for dimensional reduction like Principal Component Analysis (PCA), where data per gene across cells is centered and standardized. 
+As the tutorial mentioned, scaling data is a prerequisite step for dimensionality reduction like Principal Component Analysis (PCA), where data per gene across cells is centered and standardized. 
+
+This method ensures that all genes are given equal weight and are placed on the same scale (z-scores), allowing for accurate downstream comparisons.  
 
 ## Methods
 
