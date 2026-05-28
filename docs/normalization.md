@@ -4,6 +4,40 @@
 
 In scRNA-seq experiments, stochastic technical factors (e.g., purification, reverse transcription, and sequencing) introduce non-biological variation in cell sequencing depth. Since this noise obscures true biological signals, normalization is a critical preprocessing step to scale raw counts and enable meaningful cell-to-cell comparisons [@heumosBestPracticesSinglecell2023].
 
+:::::{tip} Seurat command
+:class: dropdown
+:open: true
+
+::::{tab-set}
+:::{tab-item} Relative counts
+```R
+pbmc <- NormalizeData(
+    pbmc, 
+    normalization.method = "RC", 
+    scale.factor = 10000
+)
+```
+:::
+
+:::{tab-item} Log normalize
+```R
+pbmc <- NormalizeData(
+    pbmc, 
+    normalization.method = "LogNormalize", 
+    scale.factor = 10000
+)
+```
+:::
+
+:::{tab-item} Centered log ratio transformation
+```R
+pbmc <- NormalizeData(pbmc, normalization.method = "CLR")
+```
+:::
+
+::::
+:::::
+
 ## Methods
 
 There are three methods to technically normalize data in Seurat using the `NormalizeData()` command, which were used depends on the analysis purpose.
