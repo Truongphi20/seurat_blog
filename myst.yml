@@ -21,6 +21,8 @@ project:
       file: docs/normalization.md
     - title: Feature selection
       file: docs/variable_features.md
+    - title: Scaling data
+      file: docs/scaling.md
     
 site:
   template: book-theme
