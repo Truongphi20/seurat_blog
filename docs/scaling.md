@@ -5,15 +5,17 @@
 ## Methods
 
 ```{math}
-\Large \mu_i = \frac{1}{N}\sum_{k=1}^{N}{RC_{ik}}
-```
+:label: scaling-func
+\Large
+\begin{cases}
+\begin{aligned}
 
-```{math}
-\Large \sigma_i = \sqrt{\frac{\sum_{k=1}^{N}{ (RC_{ik} - \mu_i)^2 }}{N-1}} 
-```
+\mu_i &= \frac{1}{N}\sum_{k=1}^{N}{RC_{ik}} \\
+\sigma_i &= \sqrt{\frac{\sum_{k=1}^{N}{ (RC_{ik} - \mu_i)^2 }}{N-1}} \\
+SR_{ij} &= min \left(\frac{RC_{ik} - \mu_i}{\sigma_i}, SR_{\text{max}} \right) 
 
-```{math}
-\Large SR_{ij} = min \left(\frac{RC_{ik} - \mu_i}{\sigma_i}, SR_{\text{max}} \right)
+\end{aligned}
+\end{cases}
 ```
 
 ## Summary
