@@ -27,3 +27,5 @@ SR_{ij} &= min \left(\frac{LN_{ij} - \mu_i}{\sigma_i}, SR_{\text{max}} \right)
 First, the mean value of each gene ($\mu_i$) is computed as the average of log-normalized values across all cells for gene $i$, where $N$ is the total number of cells. From that, standard deviation $\sigma_i$ is calculated for each gene. The normalized values are standardized using the mean and the standard deviation of each gene and clipped at a maximum threshold ($SR_{\max}$), which defaults to 10, controlled by the `scale.max` argument.        
 
 ## Summary
+
+While [](./normalization.md) minimizes technical noise to enable accurate cell-to-cell comparisons, scaling standardizes the data to allow for direct comparisons across different genes. See [ScaleData.R](https://raw.githubusercontent.com/Truongphi20/seurat_blog/refs/heads/main/algorithm_code/ScaleData.R) for more details.
