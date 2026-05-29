@@ -27,11 +27,6 @@ RUN apt-get update && apt-get install -y build-essential texinfo wget \
     && cd bashdb-5.2-1.2.0 && ./configure && make && make install \
     && cd .. && rm -rf bashdb-5.2-1.2.0*
 
-USER $USERNAME
-WORKDIR /workspace
-
-RUN Rscript -e "install.packages('languageserver', repos='https://cloud.r-project.org')"
-ENV R_HOME "/usr/local/bin/R"
 
 RUN apt-get update && apt-get install -y openssh-client
 
@@ -43,5 +38,12 @@ RUN Rscript -e 'options(timeout = 2400); \
     if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes"); \
     BiocManager::install("BSgenome.Hsapiens.UCSC.hg38", update = FALSE, ask = FALSE); \
     remotes::install_github("satijalab/azimuth", ref = "master", upgrade = "never")'
+
+
+USER $USERNAME
+WORKDIR /workspace
+
+RUN Rscript -e "install.packages('languageserver', repos='https://cloud.r-project.org')"
+ENV R_HOME "/usr/local/bin/R"
 
 ENTRYPOINT ["bash", "-l"]
