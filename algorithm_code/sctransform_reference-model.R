@@ -62,11 +62,7 @@ SCTransform.default <- function(
     names(x = feature.variance) <- rownames(x = vst.out$gene_attr)
 
     feature.variance <- sort(x = feature.variance, decreasing = TRUE)
-    if (!is.null(x = variable.features.n)) {
-        top.features <- names(x = feature.variance)[1:min(variable.features.n, length(x = feature.variance))]
-    } else {
-        top.features <- names(x = feature.variance)[feature.variance >= variable.features.rv.th]
-    }
+    top.features <- names(x = feature.variance)[1:min(variable.features.n, length(x = feature.variance))]
 
     # get residuals
     residual.features <- Reduce(
@@ -108,7 +104,7 @@ SCTransform.default <- function(
     )
     vst.out$y <- scale.data
     vst.out$variable_features <- residual.features %||% top.features
-    
+    vst.out$umi_corrected <- umi
     return(vst.out)
 }
 
