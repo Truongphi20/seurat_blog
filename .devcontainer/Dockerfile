@@ -35,4 +35,13 @@ ENV R_HOME "/usr/local/bin/R"
 
 RUN apt-get update && apt-get install -y openssh-client
 
+# Install Azimuth
+RUN apt-get update && sudo apt-get install -y libgsl-dev
+RUN Rscript -e 'options(timeout = 2400); \
+    options(BioC_mirror = "https://packagemanager.posit.co/bioconductor"); \
+    if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager"); \
+    if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes"); \
+    BiocManager::install("BSgenome.Hsapiens.UCSC.hg38", update = FALSE, ask = FALSE); \
+    remotes::install_github("satijalab/azimuth", ref = "master", upgrade = "never")'
+
 ENTRYPOINT ["bash", "-l"]
