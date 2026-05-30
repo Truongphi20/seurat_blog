@@ -3,6 +3,64 @@ library(SeuratObject)
 library(ggplot2)
 library(sctransform)
 
+# commands/seurat-5.5.0/R/preprocessing.R:5111
+ScaleData.default <- function(
+  object,
+  features = NULL,
+  vars.to.regress = NULL,
+  latent.data = NULL,
+  split.by = NULL,
+  model.use = 'linear',
+  use.umi = FALSE,
+  do.scale = TRUE,
+  do.center = TRUE,
+  scale.max = 10,
+  block.size = 1000,
+  min.cells.to.block = 3000,
+  verbose = TRUE,
+  ...
+) {
+    features <- rownames(x = object)
+    features <- as.vector(x = intersect(x = features, y = rownames(x = object)))
+    object <- object[features, , drop = FALSE]
+    object.names <- dimnames(x = object)
+    min.cells.to.block <- min(min.cells.to.block, ncol(x = object))
+    split.by <- TRUE
+    split.cells <- split(x = colnames(x = object), f = split.by)
+
+    object <- as.matrix(x = object)
+    scale.function <- FastRowScale
+
+    scaled.data <- matrix(
+      data = NA_real_,
+      nrow = nrow(x = object),
+      ncol = ncol(x = object),
+      dimnames = object.names
+    )
+
+    max.block <- ceiling(x = length(x = features) / block.size)
+
+    for (i in 1:max.block) {
+        my.inds <- ((block.size * (i - 1)):(block.size * i - 1)) + 1
+        my.inds <- my.inds[my.inds <= length(x = features)]
+        arg.list <- list(
+          mat = object[features[my.inds], split.cells[["TRUE"]], drop = FALSE],
+          scale = do.scale,
+          center = do.center,
+          scale_max = scale.max,
+          display_progress = FALSE
+        )
+        arg.list <- arg.list[intersect(x = names(x = arg.list), y = names(x = formals(fun = scale.function)))]
+        data.scale <- do.call(what = scale.function, args = arg.list)
+        dimnames(x = data.scale) <- dimnames(x = object[features[my.inds], split.cells[["TRUE"]]])
+        scaled.data[features[my.inds], split.cells[["TRUE"]]] <- data.scale
+    }
+
+    dimnames(x = scaled.data) <- object.names
+    scaled.data[is.na(x = scaled.data)] <- 0
+    return(scaled.data)
+}
+
 # commands/seurat-5.5.0/R/preprocessing.R:3863
 SCTransform.default <- function(
   object,
@@ -75,7 +133,7 @@ SCTransform.default <- function(
     scale.data[scale.data < clip.range[1]] <- clip.range[1]
     scale.data[scale.data > clip.range[2]] <- clip.range[2]
     # 2nd regression
-    scale.data <- ScaleData(
+    scale.data <- ScaleData.default(
         scale.data,
         features = NULL,
         vars.to.regress = vars.to.regress,
