@@ -36,6 +36,18 @@ get_nz_median2 <- function(umi, genes = NULL){
   }
 }
 
+# commands/sctransform-0.4.3/R/utils.R:473
+prepare_regressor_data <- function(vst_out, cell_attr) {
+  regressor_data <- model.matrix(get_model_formula(vst_out$model_str), cell_attr)
+
+  if (!is.null(dim(vst_out$model_pars_nonreg))) {
+    regressor_data_nonreg <- model.matrix(get_model_formula(vst_out$model_str_nonreg), cell_attr)
+    regressor_data <- cbind(regressor_data, regressor_data_nonreg)
+  }
+
+  return(regressor_data)
+}
+
 # commands/sctransform-0.4.3/R/utils.R:215
 get_residuals <- function(vst_out, umi, residual_type = 'pearson',
                           res_clip_range = c(-sqrt(ncol(umi)), sqrt(ncol(umi))),
@@ -46,7 +58,7 @@ get_residuals <- function(vst_out, umi, residual_type = 'pearson',
     # Maximum pearson residual for non-zero median UMI is 5
     min_var <- (get_nz_median2(umi) / 5)^2
 
-    regressor_data <- sctransform:::prepare_regressor_data(vst_out, cell_attr)
+    regressor_data <- prepare_regressor_data(vst_out, cell_attr)
     model_pars <- vst_out$model_pars_fit
 
     genes <- rownames(umi)[rownames(umi) %in% rownames(model_pars)]
