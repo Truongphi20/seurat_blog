@@ -3,6 +3,81 @@ library(SeuratObject)
 library(ggplot2)
 library(sctransform)
 
+# commands/seurat-5.5.0/R/preprocessing.R:4136
+SCTransform.Assay <- function(
+    object,
+    cell.attr,
+    reference.SCT.model = NULL,
+    do.correct.umi = TRUE,
+    ncells = 5000,
+    residual.features = NULL,
+    variable.features.n = 3000,
+    variable.features.rv.th = 1.3,
+    vars.to.regress = NULL,
+    latent.data = NULL,
+    do.scale = FALSE,
+    do.center = TRUE,
+    clip.range = c(-sqrt(x = ncol(x = object) / 30), sqrt(x = ncol(x = object) / 30)),
+    vst.flavor = 'v2',
+    conserve.memory = FALSE,
+    return.only.var.genes = TRUE,
+    seed.use = 1448145,
+    verbose = TRUE,
+    ...
+){
+    set.seed(seed = seed.use)
+    do.correct.umi <- FALSE
+    do.center <- FALSE
+
+    umi <- GetAssayData(object = object, layer = 'counts')
+    vst.out <- SCTransform(object = umi,
+                         cell.attr = cell.attr,
+                         reference.SCT.model = reference.SCT.model,
+                         do.correct.umi = do.correct.umi,
+                         ncells = ncells,
+                         residual.features = residual.features,
+                         variable.features.n = variable.features.n,
+                         variable.features.rv.th = variable.features.rv.th,
+                         vars.to.regress = vars.to.regress,
+                         latent.data = latent.data,
+                         do.scale = do.scale,
+                         do.center = do.center,
+                         clip.range = clip.range,
+                         vst.flavor = vst.flavor,
+                         conserve.memory = conserve.memory,
+                         return.only.var.genes = return.only.var.genes,
+                         seed.use = seed.use,
+                         verbose = verbose,
+                         ...)
+        
+  sct.method <- NULL
+
+  assay.out <- CreateAssayObject(counts = vst.out$umi_corrected)
+  vst.out$umi_corrected <- NULL
+
+  # set the variable genes
+  VariableFeatures(object = assay.out) <- vst.out$variable_features
+  # put log1p transformed counts in data
+  assay.out <- SetAssayData(
+    object = assay.out,
+    layer = 'data',
+    new.data = log1p(x = GetAssayData(object = assay.out, layer = 'counts'))
+  )
+  scale.data <- vst.out$y
+  assay.out <- SetAssayData(
+    object = assay.out,
+    layer = 'scale.data',
+    new.data = scale.data
+  )
+  vst.out$y <- NULL
+  # save clip.range into vst model
+  vst.out$arguments$sct.clip.range <- clip.range
+  vst.out$arguments$sct.method <- sct.method
+  Misc(object = assay.out, slot = 'vst.out') <- vst.out
+  assay.out <- as(object = assay.out, Class = "SCTAssay")
+  return(assay.out)
+}
+
 # commands/seurat-5.5.0/R/preprocessing5.R:1115 
 SCTransform.StdAssay <- function(
   object,
@@ -34,7 +109,7 @@ SCTransform.StdAssay <- function(
 
     # Apply SCTransform to each assay in `input_list`.
     .cell.attr <- cell.attr[Cells(layer_object), ]
-    assay_out <- SCTransform(
+    assay_out <- SCTransform.Assay(
         layer_object,
         cell.attr = .cell.attr,
         reference.SCT.model = reference.SCT.model,
