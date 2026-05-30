@@ -246,6 +246,19 @@ get_model_pars <- function(genes_step1, bin_size, umi, model_str, cells_step1,
   return(model_pars)
 }
 
+# commands/sctransform-0.4.3/R/utils.R:120
+is_outlier <- function(y, x, th = 10) 
+{
+  bin.width <- (max(x) - min(x)) * bw.SJ(x) / 2
+  eps <- .Machine$double.eps * 10
+  breaks1 <- seq(from = min(x) - eps, to = max(x) + bin.width, by = bin.width)
+  breaks2 <- seq(from = min(x) - eps - bin.width/2, to = max(x) + bin.width, by = bin.width)
+  score1 <- sctransform:::robust_scale_binned(y, x, breaks1)
+  score2 <- sctransform:::robust_scale_binned(y, x, breaks2)
+  return(pmin(abs(score1), abs(score2)) > th)
+}
+
+
 # commands/sctransform-0.4.3/R/vst.R:710
 reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, cell_attr,
                            batch_var, cells_step1, genes_step1, umi, bw_adjust, gmean_eps,
@@ -301,7 +314,7 @@ reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, c
 
   # look for outliers in the parameters
   # outliers are those that do not fit the overall relationship with the mean at all
-  outliers <- apply(model_pars, 2, function(y) sctransform:::is_outlier(y, genes_log_gmean_step1))
+  outliers <- apply(model_pars, 2, function(y) is_outlier(y, genes_log_gmean_step1))
   outliers <- apply(outliers, 1, any)
 
   # also call theta=inf as outliers
