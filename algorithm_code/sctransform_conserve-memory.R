@@ -48,6 +48,16 @@ prepare_regressor_data <- function(vst_out, cell_attr) {
   return(regressor_data)
 }
 
+# commands/sctransform-0.4.3/R/utils.R:491
+setup_progress_bar <- function(n_items, bin_size) {
+  bin_ind <- ceiling(x = 1:n_items / bin_size)
+  max_bin <- max(bin_ind)
+  pb <- NULL
+
+  return(list(bin_ind = bin_ind, pb = pb, max_bin = max_bin))
+}
+
+
 # commands/sctransform-0.4.3/R/utils.R:215
 get_residuals <- function(vst_out, umi, residual_type = 'pearson',
                           res_clip_range = c(-sqrt(ncol(umi)), sqrt(ncol(umi))),
@@ -63,7 +73,7 @@ get_residuals <- function(vst_out, umi, residual_type = 'pearson',
 
     genes <- rownames(umi)[rownames(umi) %in% rownames(model_pars)]
 
-    pb_setup <- sctransform:::setup_progress_bar(length(genes), bin_size, FALSE)
+    pb_setup <- setup_progress_bar(length(genes), bin_size)
     bin_ind <- pb_setup$bin_ind
     max_bin <- pb_setup$max_bin
     res <- matrix(NA_real_, length(genes), nrow(regressor_data), dimnames = list(genes, rownames(regressor_data)))
