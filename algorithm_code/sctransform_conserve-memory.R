@@ -175,6 +175,13 @@ make_cell_attr <- function(umi, cell_attr, latent_var, batch_var, latent_var_non
     return(cell_attr)
 }
 
+# commands/sctransform-0.4.3/R/utils.R:73
+row_gmean <- function(x, eps = 1) {
+    ret <- sctransform:::row_gmean_dgcmatrix(matrix = x, eps = eps)
+    names(ret) <- rownames(x)
+    return(ret)
+}
+
 # commands/sctransform-0.4.3/R/vst.R:109
 vst <- function(umi,
                 cell_attr = NULL,
@@ -222,7 +229,7 @@ vst <- function(umi,
     genes <- rownames(umi)[genes_cell_count >= min_cells]
     umi <- umi[genes, ]
 
-    genes_log_gmean <- log10(sctransform:::row_gmean(umi, eps = gmean_eps))
+    genes_log_gmean <- log10(row_gmean(umi, eps = gmean_eps))
 
     cells_step1 <- colnames(umi)
     genes_step1 <- genes
@@ -248,7 +255,7 @@ vst <- function(umi,
     sampling_prob <- 1 / (approx(x = log_gmean_dens$x, y = log_gmean_dens$y, xout = genes_log_gmean_step1)$y + .Machine$double.eps)
     genes_step1 <- sample(x = genes_step1, size = n_genes, prob = sampling_prob)
 
-    genes_log_gmean_step1 <- log10(sctransform:::row_gmean(umi[genes_step1, ], eps = gmean_eps))
+    genes_log_gmean_step1 <- log10(row_gmean(umi[genes_step1, ], eps = gmean_eps))
 
     model_str <- paste0('y ~ ', paste(latent_var, collapse = ' + '))
 
