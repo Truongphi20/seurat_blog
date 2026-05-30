@@ -57,6 +57,12 @@ setup_progress_bar <- function(n_items, bin_size) {
   return(list(bin_ind = bin_ind, pb = pb, max_bin = max_bin))
 }
 
+# commands/sctransform-0.4.3/R/utils.R:166
+pearson_residual <- function(y, mu, theta, min_var = -Inf) {
+  model_var <- mu + mu^2 / theta
+  model_var[model_var < min_var] <- min_var
+  return((y - mu) / sqrt(model_var))
+}
 
 # commands/sctransform-0.4.3/R/utils.R:215
 get_residuals <- function(vst_out, umi, residual_type = 'pearson',
@@ -83,7 +89,7 @@ get_residuals <- function(vst_out, umi, residual_type = 'pearson',
     mu <- exp(tcrossprod(model_pars[genes_bin, -1, drop=FALSE], regressor_data))
 
     y <- as.matrix(umi[genes_bin, , drop=FALSE])
-    res[genes_bin, ] <- sctransform:::pearson_residual(y, mu, model_pars[genes_bin, 'theta'], min_var = min_var)
+    res[genes_bin, ] <- pearson_residual(y, mu, model_pars[genes_bin, 'theta'], min_var = min_var)
   }
 
   res <- sctransform:::clip_matrix_values(res, res_clip_range)
