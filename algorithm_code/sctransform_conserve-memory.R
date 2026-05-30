@@ -3,6 +3,38 @@ library(SeuratObject)
 library(ggplot2)
 library(sctransform)
 
+# commands/sctransform-0.4.3/R/utils.R:215
+get_residuals <- function(vst_out, umi, residual_type = 'pearson',
+                          res_clip_range = c(-sqrt(ncol(umi)), sqrt(ncol(umi))),
+                          min_variance = vst_out$arguments$min_variance,
+                          cell_attr = vst_out$cell_attr, bin_size = 256,
+                          verbosity = vst_out$arguments$verbosity)
+{
+    # Maximum pearson residual for non-zero median UMI is 5
+    min_var <- (sctransform:::get_nz_median2(umi) / 5)^2
+
+    regressor_data <- sctransform:::prepare_regressor_data(vst_out, cell_attr)
+    model_pars <- vst_out$model_pars_fit
+
+    genes <- rownames(umi)[rownames(umi) %in% rownames(model_pars)]
+
+    pb_setup <- sctransform:::setup_progress_bar(length(genes), bin_size, FALSE)
+    bin_ind <- pb_setup$bin_ind
+    max_bin <- pb_setup$max_bin
+    res <- matrix(NA_real_, length(genes), nrow(regressor_data), dimnames = list(genes, rownames(regressor_data)))
+
+    for (i in 1:max_bin) {
+    genes_bin <- genes[bin_ind == i]
+    mu <- exp(tcrossprod(model_pars[genes_bin, -1, drop=FALSE], regressor_data))
+
+    y <- as.matrix(umi[genes_bin, , drop=FALSE])
+    res[genes_bin, ] <- sctransform:::pearson_residual(y, mu, model_pars[genes_bin, 'theta'], min_var = min_var)
+  }
+
+  res <- sctransform:::clip_matrix_values(res, res_clip_range)
+  return(res)
+}
+
 # commands/seurat-5.5.0/R/preprocessing.R:5111
 ScaleData.default <- function(
   object,
