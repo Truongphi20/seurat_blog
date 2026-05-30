@@ -3,6 +3,39 @@ library(SeuratObject)
 library(ggplot2)
 library(sctransform)
 
+# commands/sctransform-0.4.3/R/utils.R:460
+get_model_formula <- function(model_str) {
+  as.formula(gsub('^y', '', model_str))
+}
+
+# commands/sctransform-0.4.3/R/utils.R:473
+prepare_regressor_data <- function(vst_out, cell_attr) {
+  regressor_data <- model.matrix(get_model_formula(vst_out$model_str), cell_attr)
+
+  if (!is.null(dim(vst_out$model_pars_nonreg))) {
+    regressor_data_nonreg <- model.matrix(get_model_formula(vst_out$model_str_nonreg), cell_attr)
+    regressor_data <- cbind(regressor_data, regressor_data_nonreg)
+  }
+
+  return(regressor_data)
+}
+
+# commands/sctransform-0.4.3/R/utils.R:428
+get_nz_median2 <- function(umi, genes = NULL){
+  if (is.null(genes)) {
+    # Compute median for the entire matrix
+    return(median(umi@x))
+  } else if (length(genes) == 1) {
+    # If only one gene is being subsetted
+    return(median(umi[genes, umi[genes,] != 0]))
+  } else if (length(genes) > 1) {
+    # If multiple genes are being subsetted
+    return(median(umi[genes,]@x))
+  } else {
+    stop("genes does not contain a vector of gene names")
+  }
+}
+
 # commands/sctransform-0.4.3/R/utils.R:215
 get_residuals <- function(vst_out, umi, residual_type = 'pearson',
                           res_clip_range = c(-sqrt(ncol(umi)), sqrt(ncol(umi))),
@@ -11,7 +44,7 @@ get_residuals <- function(vst_out, umi, residual_type = 'pearson',
                           verbosity = vst_out$arguments$verbosity)
 {
     # Maximum pearson residual for non-zero median UMI is 5
-    min_var <- (sctransform:::get_nz_median2(umi) / 5)^2
+    min_var <- (get_nz_median2(umi) / 5)^2
 
     regressor_data <- sctransform:::prepare_regressor_data(vst_out, cell_attr)
     model_pars <- vst_out$model_pars_fit
