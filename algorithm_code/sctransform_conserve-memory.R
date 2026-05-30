@@ -64,6 +64,14 @@ pearson_residual <- function(y, mu, theta, min_var = -Inf) {
   return((y - mu) / sqrt(model_var))
 }
 
+# commands/sctransform-0.4.3/R/utils.R:530
+clip_matrix_values <- function(mat, clip_range) {
+  mat[mat < clip_range[1]] <- clip_range[1]
+  mat[mat > clip_range[2]] <- clip_range[2]
+  return(mat)
+}
+
+
 # commands/sctransform-0.4.3/R/utils.R:215
 get_residuals <- function(vst_out, umi, residual_type = 'pearson',
                           res_clip_range = c(-sqrt(ncol(umi)), sqrt(ncol(umi))),
@@ -92,7 +100,7 @@ get_residuals <- function(vst_out, umi, residual_type = 'pearson',
     res[genes_bin, ] <- pearson_residual(y, mu, model_pars[genes_bin, 'theta'], min_var = min_var)
   }
 
-  res <- sctransform:::clip_matrix_values(res, res_clip_range)
+  res <- clip_matrix_values(res, res_clip_range)
   return(res)
 }
 
