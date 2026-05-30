@@ -182,6 +182,13 @@ row_gmean <- function(x, eps = 1) {
     return(ret)
 }
 
+# commands/sctransform-0.4.3/R/utils.R:94
+row_var <- function(x) {
+    ret <- sctransform:::row_var_dgcmatrix(x = x@x, i = x@i, rows = nrow(x), cols = ncol(x))
+    names(ret) <- rownames(x)
+    return(ret)
+}
+
 # commands/sctransform-0.4.3/R/vst.R:109
 vst <- function(umi,
                 cell_attr = NULL,
@@ -240,7 +247,7 @@ vst <- function(umi,
 
     # Exclude known poisson genes from the learning step
     genes_amean <- rowMeans(umi)
-    genes_var <- sctransform:::row_var(umi)
+    genes_var <- row_var(umi)
     overdispersion_factor <- genes_var - genes_amean
     overdispersion_factor_step1 <- overdispersion_factor[genes_step1]
     is_overdispersed <- (overdispersion_factor_step1 > 0)
@@ -293,7 +300,7 @@ vst <- function(umi,
       detection_rate = genes_cell_count[genes] / ncol(umi),
       gmean = 10 ^ genes_log_gmean,
       amean = rowMeans(umi),
-      variance = sctransform:::row_var(umi)
+      variance = row_var(umi)
     )
     rv[['gene_attr']] <- gene_attr
 
