@@ -374,6 +374,138 @@ get_model_pars <- function(genes_step1, bin_size, umi, model_str, cells_step1,
   return(model_pars)
 }
 
+# commands/sctransform-0.4.3/R/utils.R:141
+robust_scale_binned <- function(y, x, breaks) {
+  bins <- cut(x = x, breaks = breaks, ordered_result = TRUE)
+  tmp <- aggregate(x = y, by = list(bin=bins), FUN = function(x) (x - median(x)) / (mad(x) + .Machine$double.eps))
+  score <- rep(0, length(x))
+  o <- order(bins)
+  score[o] <- unlist(tmp$x)
+  return(score)
+}
+
+# commands/sctransform-0.4.3/R/utils.R:120
+is_outlier <- function(y, x, th = 10) 
+{
+  bin.width <- (max(x) - min(x)) * bw.SJ(x) / 2
+  eps <- .Machine$double.eps * 10
+  breaks1 <- seq(from = min(x) - eps, to = max(x) + bin.width, by = bin.width)
+  breaks2 <- seq(from = min(x) - eps - bin.width/2, to = max(x) + bin.width, by = bin.width)
+  score1 <- robust_scale_binned(y, x, breaks1)
+  score2 <- robust_scale_binned(y, x, breaks2)
+  return(pmin(abs(score1), abs(score2)) > th)
+}
+
+# commands/sctransform-0.4.3/R/vst.R:710
+reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, cell_attr,
+                           batch_var, cells_step1, genes_step1, umi, bw_adjust, gmean_eps,
+                           theta_regularization,
+                           genes_amean = NULL, genes_var = NULL, exclude_poisson = FALSE,
+                           fix_intercept = FALSE, fix_slope = FALSE, use_geometric_mean = TRUE,
+                           use_geometric_mean_offset = FALSE, verbosity = 0) 
+{
+  genes <- names(genes_log_gmean)
+
+  overdispersion_factor <- genes_var - genes_amean
+  overdispersion_factor_step1 <- overdispersion_factor[genes_step1]
+
+  all_poisson_genes <- genes[overdispersion_factor<=0]
+
+  # also set genes with mean < 1e-3 as poisson
+  low_mean_genes <- genes[genes_amean<1e-3]
+  all_poisson_genes <- union(all_poisson_genes, low_mean_genes)
+
+
+  poisson_genes_step1 <- genes_step1[overdispersion_factor_step1<=0]
+
+  poisson_genes2 <- rownames(model_pars[!is.finite(model_pars[, 'theta']),])
+  poisson_genes3 <- intersect(low_mean_genes, genes_step1)
+  poisson_genes_step1 <- union(union(poisson_genes_step1, poisson_genes2),poisson_genes3)
+
+  # Call offset model with theta=inf
+  # only the slope and intercept are used downstream
+  mean_cell_sum <- mean(x = colSums(umi))
+  vst_out_offset <- cbind(rep(Inf, length(all_poisson_genes)),
+                              log(genes_amean[all_poisson_genes]) - log(mean_cell_sum),
+                              rep(log(10), length(all_poisson_genes) ))
+  dimnames(vst_out_offset) <- list(all_poisson_genes, c('theta', '(Intercept)', 'log_umi'))
+
+  dispersion_par <- rep(0, dim(vst_out_offset)[1])
+  vst_out_offset <- cbind(vst_out_offset, dispersion_par)
+
+  # we don't regularize theta directly
+  # prior to v0.3 we regularized log10(theta)
+  # now we transform to overdispersion factor
+  # variance of NB is mu * (1 + mu / theta)
+  # (1 + mu / theta) is what we call overdispersion factor here
+  dispersion_par <- switch(theta_regularization,
+                           'log_theta' = log10(model_pars[, 'theta']),
+                           'od_factor' = log10(1 + 10^genes_log_gmean_step1 / model_pars[, 'theta']),
+                           stop('theta_regularization ', theta_regularization, ' unknown - only log_theta and od_factor supported at the moment')
+  )
+
+  model_pars_all <- model_pars
+
+  model_pars <- model_pars[, colnames(model_pars) != 'theta']
+  model_pars <- cbind(dispersion_par, model_pars)
+
+  # look for outliers in the parameters
+  # outliers are those that do not fit the overall relationship with the mean at all
+  outliers <- apply(model_pars, 2, function(y) is_outlier(y, genes_log_gmean_step1))
+  outliers <- apply(outliers, 1, any)
+
+  # also call theta=inf as outliers
+  is_theta_inf <- !is.finite(model_pars_all[, "theta"])
+  outliers <- outliers | is_theta_inf
+
+  model_pars <- model_pars[!outliers, ]
+  genes_step1 <- rownames(model_pars)
+  genes_log_gmean_step1 <- genes_log_gmean_step1[!outliers]
+
+  overdispersed_genes <- setdiff(rownames(model_pars), all_poisson_genes)
+  model_pars <- model_pars[overdispersed_genes, ]
+  genes_step1 <- rownames(model_pars)
+  genes_log_gmean_step1 <- genes_log_gmean_step1[overdispersed_genes]
+
+  # select bandwidth to be used for smoothing
+  bw <- bw.SJ(genes_log_gmean_step1) * bw_adjust
+
+  # for parameter predictions
+  x_points <- pmax(genes_log_gmean, min(genes_log_gmean_step1))
+  x_points <- pmin(x_points, max(genes_log_gmean_step1))
+
+  # take results from step 1 and fit/predict parameters to all genes
+  o <- order(x_points)
+  model_pars_fit <- matrix(NA_real_, length(genes), ncol(model_pars),
+                           dimnames = list(genes, colnames(model_pars)))
+
+  # fit / regularize dispersion parameter
+  model_pars_fit[o, 'dispersion_par'] <- ksmooth(x = genes_log_gmean_step1, y = model_pars[, 'dispersion_par'],
+                                                 x.points = x_points, bandwidth = bw, kernel='normal')$y
+
+  # global fit / regularization for all coefficients
+  for (i in 2:ncol(model_pars)) {
+    model_pars_fit[o, i] <- ksmooth(x = genes_log_gmean_step1, y = model_pars[, i],
+                                    x.points = x_points, bandwidth = bw, kernel='normal')$y
+  }
+
+  dispersion_par <- rep(0, length(all_poisson_genes))
+  model_pars_fit[all_poisson_genes, "dispersion_par"] <- dispersion_par
+
+  theta <- 10^genes_log_gmean / (10^model_pars_fit[, 'dispersion_par'] - 1)
+
+  model_pars_fit <- model_pars_fit[, colnames(model_pars_fit) != 'dispersion_par']
+  model_pars_fit <- cbind(theta, model_pars_fit)
+
+  for (col in intersect(colnames(x = model_pars_fit), colnames(x = vst_out_offset)) ){
+    stopifnot(col %in% colnames(vst_out_offset))
+    model_pars_fit[all_poisson_genes, col] <- vst_out_offset[all_poisson_genes, col]
+  }
+
+  attr(model_pars_fit, 'outliers') <- outliers
+  return(model_pars_fit)
+}
+
 # commands/sctransform-0.4.3/R/vst.R:109
 vst <- function(umi,
                 cell_attr = NULL,
@@ -457,7 +589,7 @@ vst <- function(umi,
                                exclude_poisson, fix_intercept, fix_slope,
                                use_geometric_mean, use_geometric_mean_offset, verbosity)
     
-    model_pars_fit <- sctransform:::reg_model_pars(model_pars, genes_log_gmean_step1, genes_log_gmean, cell_attr,
+    model_pars_fit <- reg_model_pars(model_pars, genes_log_gmean_step1, genes_log_gmean, cell_attr,
                                      batch_var, cells_step1, genes_step1, umi, bw_adjust, gmean_eps,
                                      theta_regularization, genes_amean, genes_var,
                                      exclude_poisson, fix_intercept, fix_slope,
