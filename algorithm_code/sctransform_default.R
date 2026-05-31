@@ -286,6 +286,94 @@ correct <- function(x, data = 'y', cell_attr = x$cell_attr, as_is = FALSE,
     return(corrected_data)
 }
 
+# commands/sctransform-0.4.3/R/fit.R:108
+fit_glmGamPoi_offset <- function(umi, model_str, data,  allow_inf_theta=FALSE) 
+{
+  log10_umi <- data$log_umi
+  log_umi <- log(10^log10_umi)
+
+  new_formula <- gsub("y", "", model_str)
+
+  # if therse is no batch variable - remove log_umi and fix it
+  # remove log_umi from model formula if it is with batch variables
+  new_formula <- gsub(pattern = "\\+ log_umi", replacement = "", x = new_formula)
+  # replace log_umi with 1 if it is the only formula
+
+  new_formula <- gsub(pattern = "log_umi", replacement = "1", x = new_formula)
+
+  fit <- glmGamPoi::glm_gp(data = umi,
+                           design = as.formula(new_formula),
+                           col_data = data,
+                           offset = log_umi,
+                           size_factors = FALSE)
+  fit$theta <- 1 / fit$overdispersions
+
+  model_pars <- cbind(fit$theta,
+                      fit$Beta[, "Intercept"],
+                      rep(log(10), nrow(umi)))
+  dimnames(model_pars) <- list(rownames(umi), c('theta', '(Intercept)', 'log_umi'))
+
+  colnames(x = model_pars)[match(x = 'Intercept', table = colnames(x = model_pars))] <- "(Intercept)"
+  return(model_pars)
+}
+
+# commands/sctransform-0.4.3/R/vst.R:467
+get_model_pars <- function(genes_step1, bin_size, umi, model_str, cells_step1,
+                           method, data_step1, theta_given, theta_estimation_fun,
+                           exclude_poisson = FALSE, fix_intercept = FALSE,
+                           fix_slope = FALSE, use_geometric_mean = TRUE,
+                           use_geometric_mean_offset = FALSE, verbosity = 0)
+{
+  bin_ind <- ceiling(x = 1:length(x = genes_step1) / bin_size)
+  max_bin <- max(bin_ind)
+  model_pars <- list()
+  for (i in 1:max_bin) {
+    genes_bin_regress <- genes_step1[bin_ind == i]
+    umi_bin <- as.matrix(umi[genes_bin_regress, cells_step1, drop=FALSE])
+
+    n_workers <- 1
+    genes_per_worker <- nrow(umi_bin) / n_workers + .Machine$double.eps
+    index_vec <- 1:nrow(umi_bin)
+    index_lst <- split(index_vec, ceiling(index_vec/genes_per_worker))
+
+    par_lst <- list()
+    for (indices in index_lst){
+
+      umi_bin_worker <- umi_bin[indices, , drop = FALSE]
+      res <- fit_glmGamPoi_offset(umi = umi_bin_worker, model_str = model_str,
+                                        data = data_step1, allow_inf_theta = exclude_poisson)
+      par_lst[[length(par_lst) + 1]] <- res
+    }
+
+    model_pars[[i]] <- do.call(rbind, par_lst)
+  }
+  model_pars <- do.call(rbind, model_pars)
+
+  rownames(model_pars) <- genes_step1
+  colnames(model_pars)[1] <- 'theta'
+
+  genes_amean <- rowMeans(umi)
+  genes_var <- row_var(umi)
+
+  genes_amean_step1 <- genes_amean[genes_step1]
+  genes_var_step1 <- genes_var[genes_step1]
+
+  predicted_theta <- genes_amean_step1^2/(genes_var_step1-genes_amean_step1)
+  actual_theta <- model_pars[genes_step1, "theta"]
+  diff_theta <- predicted_theta/actual_theta
+  model_pars <- cbind(model_pars, diff_theta)
+
+  # if the naive and estimated MLE are 1000x apart, set theta estimate to Inf
+  diff_theta_index <- rownames(model_pars[model_pars[genes_step1, "diff_theta"]< 1e-3,])
+
+  # Replace theta by infinity
+  model_pars[diff_theta_index, 1] <- Inf
+  # drop diff_theta column
+  model_pars <- model_pars[, -dim(model_pars)[2]]
+
+  return(model_pars)
+}
+
 # commands/sctransform-0.4.3/R/vst.R:109
 vst <- function(umi,
                 cell_attr = NULL,
@@ -364,7 +452,7 @@ vst <- function(umi,
     bin_ind <- ceiling(x = 1:length(x = genes_step1) / bin_size)
     max_bin <- max(bin_ind)
 
-    model_pars <- sctransform:::get_model_pars(genes_step1, bin_size, umi, model_str, cells_step1,
+    model_pars <- get_model_pars(genes_step1, bin_size, umi, model_str, cells_step1,
                                method, data_step1, theta_given, theta_estimation_fun,
                                exclude_poisson, fix_intercept, fix_slope,
                                use_geometric_mean, use_geometric_mean_offset, verbosity)
