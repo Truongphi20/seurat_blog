@@ -382,7 +382,6 @@ vst <- function(umi,
 
     rv$umi_corrected <- sctransform:::correct(rv, do_round = TRUE, do_pos = TRUE, scale_factor = scale_factor,
                                                verbosity = verbosity)
-    rv$umi_corrected <- sctransform:::make.sparse(mat = rv$umi_corrected)
 
     rv$y <- clip_matrix_values(rv$y, res_clip_range)
 
