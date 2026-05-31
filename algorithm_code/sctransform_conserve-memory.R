@@ -219,11 +219,57 @@ row_gmean <- function(x, eps = 1) {
     return(ret)
 }
 
+# commands/seurat-5.5.0/src/stats.cpp:7
+row_sum_dgcmatrix_r <- function(x, i, rows, cols) {
+  rowsum_vec <- numeric(rows)
+  
+  # Accumulate values of non-zero elements into their respective rows
+  agg_sum <- rowsum(x, i + 1)
+  
+  # Extract which rows actually had non-zero values
+  present_rows <- as.integer(rownames(agg_sum))
+  rowsum_vec[present_rows] <- agg_sum[, 1]
+  
+  return(rowsum_vec)
+}
+
+# commands/seurat-5.5.0/src/stats.cpp:18
+row_mean_dgcmatrix_r <- function(x, i, rows, cols) {
+  rowmean <- row_sum_dgcmatrix_r(x, i, rows, cols)
+  
+  return(rowmean / cols)
+}
+
+# commands/seurat-5.5.0/src/stats.cpp:28
+row_var_dgcmatrix_r <- function(x, i, rows, cols) {
+  # Get the row means using our pure R mean function
+  rowmean <- row_mean_dgcmatrix_r(x, i, rows, cols)
+  
+  # Initialize output vectors
+  rowvar <- numeric(rows)
+  nzero <- rep(cols, rows)
+  
+  # Calculate squared differences for non-zero items
+  sq_diff <- (x - rowmean[i + 1])^2
+  
+  agg_var <- rowsum(sq_diff, i + 1)
+  agg_nzero <- rowsum(rep(1, length(x)), i + 1)
+  
+  present_rows <- as.integer(rownames(agg_var))
+  rowvar[present_rows] <- agg_var[, 1]
+  nzero[present_rows] <- cols - agg_nzero[, 1]
+  
+  # Add contribution of structural zeros and divide by (cols - 1)
+  rowvar <- (rowvar + ((rowmean^2) * nzero)) / (cols - 1)
+  
+  return(rowvar)
+}
+
 # commands/sctransform-0.4.3/R/utils.R:94
 row_var <- function(x) {
-    ret <- sctransform:::row_var_dgcmatrix(x = x@x, i = x@i, rows = nrow(x), cols = ncol(x))
-    names(ret) <- rownames(x)
-    return(ret)
+  ret <- row_var_dgcmatrix_r(x = x@x, i = x@i, rows = nrow(x), cols = ncol(x))
+  names(ret) <- rownames(x)
+  return(ret)
 }
 
 # commands/sctransform-0.4.3/R/fit.R:108
