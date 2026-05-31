@@ -1,6 +1,5 @@
 library(Seurat)
 library(ggplot2)
-library(sctransform)
 
 # commands/seurat-5.5.0/R/preprocessing.R:6105
 RegressOutMatrix <- function(
