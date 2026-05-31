@@ -246,6 +246,13 @@ pearson_residual <- function(y, mu, theta, min_var = -Inf) {
   return((y - mu) / sqrt(model_var))
 }
 
+# commands/sctransform-0.4.3/R/utils.R:530
+clip_matrix_values <- function(mat, clip_range) {
+  mat[mat < clip_range[1]] <- clip_range[1]
+  mat[mat > clip_range[2]] <- clip_range[2]
+  return(mat)
+}
+
 # commands/sctransform-0.4.3/R/vst.R:109
 vst <- function(umi,
                 cell_attr = NULL,
@@ -377,7 +384,7 @@ vst <- function(umi,
                                                verbosity = verbosity)
     rv$umi_corrected <- sctransform:::make.sparse(mat = rv$umi_corrected)
 
-    rv$y <- sctransform:::clip_matrix_values(rv$y, res_clip_range)
+    rv$y <- clip_matrix_values(rv$y, res_clip_range)
 
     gene_attr <- data.frame(
       detection_rate = genes_cell_count[genes] / ncol(umi),
