@@ -1,7 +1,6 @@
 library(Seurat)
 library(SeuratObject)
 library(ggplot2)
-library(sctransform)
 
 # commands/sctransform-0.4.3/R/utils.R:460
 get_model_formula <- function(model_str) {
@@ -363,7 +362,7 @@ get_model_pars <- function(genes_step1, bin_size, umi, model_str, cells_step1,
 # commands/sctransform-0.4.3/R/utils.R:141
 robust_scale_binned <- function(y, x, breaks) {
   bins <- cut(x = x, breaks = breaks, ordered_result = TRUE)
-  tmp <- aggregate(x = y, by = list(bin=bins), FUN = sctransform:::robust_scale)
+  tmp <- aggregate(x = y, by = list(bin=bins), FUN = function(x) (x - median(x)) / (mad(x) + .Machine$double.eps))
   score <- rep(0, length(x))
   o <- order(bins)
   score[o] <- unlist(tmp$x)
@@ -652,7 +651,7 @@ SCTransform.default <- function(
     return.only.var.genes <- TRUE
     vst.args[['residual_type']] <- 'none'
     vst.out <- do.call(what = 'vst', args = vst.args)
-    feature.variance <- get_residual_var(
+    feature.variance <- sctransform:::get_residual_var(
         vst_out = vst.out,
         umi = umi,
         residual_type = residual.type,
