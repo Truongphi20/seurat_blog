@@ -223,6 +223,22 @@ make_cell_attr <- function(umi, cell_attr, latent_var, batch_var, latent_var_non
     return(cell_attr)
 }
 
+# commands/sctransform-0.4.3/R/utils.R:428
+get_nz_median2 <- function(umi, genes = NULL){
+  if (is.null(genes)) {
+    # Compute median for the entire matrix
+    return(median(umi@x))
+  } else if (length(genes) == 1) {
+    # If only one gene is being subsetted
+    return(median(umi[genes, umi[genes,] != 0]))
+  } else if (length(genes) > 1) {
+    # If multiple genes are being subsetted
+    return(median(umi[genes,]@x))
+  } else {
+    stop("genes does not contain a vector of gene names")
+  }
+}
+
 # commands/sctransform-0.4.3/R/vst.R:109
 vst <- function(umi,
                 cell_attr = NULL,
@@ -322,7 +338,7 @@ vst <- function(umi,
     regressor_data_final <- regressor_data
 
     # Maximum pearson residual for non-zero median UMI is 5
-    min_var <- (sctransform:::get_nz_median2(umi) / 5)^2
+    min_var <- (get_nz_median2(umi) / 5)^2
     arguments$set_min_var <- min_var
 
     bin_ind <- ceiling(x = 1:length(x = genes) / bin_size)
