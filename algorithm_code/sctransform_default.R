@@ -262,13 +262,12 @@ correct <- function(x, data = 'y', cell_attr = x$cell_attr, as_is = FALSE,
 
     cell_attr[, latent_var] <- apply(cell_attr[, latent_var, drop=FALSE], 2, function(x) rep(median(x), length(x)))
 
-    regressor_data <- model.matrix(sctransform:::get_model_formula(x$model_str), cell_attr)
+    regressor_data <- model.matrix(as.formula(gsub('^y', '',x$model_str)), cell_attr)
     genes <- rownames(data)
     bin_size <- x$arguments$bin_size
 
-    pb_setup <- sctransform:::setup_progress_bar(length(genes), bin_size, verbosity)
-    bin_ind <- pb_setup$bin_ind
-    max_bin <- pb_setup$max_bin
+    bin_ind <- ceiling(x = 1:length(genes) / bin_size)
+    max_bin <- max(bin_ind)
     corrected_data <- matrix(NA_real_, length(genes), nrow(regressor_data), dimnames = list(genes, rownames(regressor_data)))
 
     for (i in 1:max_bin) {
