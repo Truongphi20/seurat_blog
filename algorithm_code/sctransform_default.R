@@ -239,6 +239,13 @@ get_nz_median2 <- function(umi, genes = NULL){
   }
 }
 
+# commands/sctransform-0.4.3/R/utils.R:166
+pearson_residual <- function(y, mu, theta, min_var = -Inf) {
+  model_var <- mu + mu^2 / theta
+  model_var[model_var < min_var] <- min_var
+  return((y - mu) / sqrt(model_var))
+}
+
 # commands/sctransform-0.4.3/R/vst.R:109
 vst <- function(umi,
                 cell_attr = NULL,
@@ -350,7 +357,7 @@ vst <- function(umi,
         mu <- exp(tcrossprod(model_pars_final[genes_bin, -1, drop=FALSE], regressor_data_final))
         y <- as.matrix(umi[genes_bin, , drop=FALSE])
 
-        res[genes_bin, ] <- sctransform:::pearson_residual(y, mu, model_pars_final[genes_bin, 'theta'], min_var = min_var)
+        res[genes_bin, ] <- pearson_residual(y, mu, model_pars_final[genes_bin, 'theta'], min_var = min_var)
     }
 
     rv <- list(y = res,
