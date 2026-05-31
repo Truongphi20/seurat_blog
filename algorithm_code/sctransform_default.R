@@ -314,7 +314,7 @@ vst <- function(umi,
     model_pars_outliers <- attr(model_pars_fit, 'outliers')
 
     # use all fitted values in NB model
-    regressor_data <- model.matrix(sctransform:::get_model_formula(model_str), cell_attr)
+    regressor_data <- model.matrix(as.formula(gsub('^y', '', model_str)), cell_attr)
 
     model_str_nonreg <- ''
     model_pars_nonreg <- c()
