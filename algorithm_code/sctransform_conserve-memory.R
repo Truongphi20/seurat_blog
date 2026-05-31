@@ -277,6 +277,16 @@ get_model_pars <- function(genes_step1, bin_size, umi, model_str, cells_step1,
   return(model_pars)
 }
 
+# commands/sctransform-0.4.3/R/utils.R:141
+robust_scale_binned <- function(y, x, breaks) {
+  bins <- cut(x = x, breaks = breaks, ordered_result = TRUE)
+  tmp <- aggregate(x = y, by = list(bin=bins), FUN = sctransform:::robust_scale)
+  score <- rep(0, length(x))
+  o <- order(bins)
+  score[o] <- unlist(tmp$x)
+  return(score)
+}
+
 # commands/sctransform-0.4.3/R/utils.R:120
 is_outlier <- function(y, x, th = 10) 
 {
@@ -284,8 +294,8 @@ is_outlier <- function(y, x, th = 10)
   eps <- .Machine$double.eps * 10
   breaks1 <- seq(from = min(x) - eps, to = max(x) + bin.width, by = bin.width)
   breaks2 <- seq(from = min(x) - eps - bin.width/2, to = max(x) + bin.width, by = bin.width)
-  score1 <- sctransform:::robust_scale_binned(y, x, breaks1)
-  score2 <- sctransform:::robust_scale_binned(y, x, breaks2)
+  score1 <- robust_scale_binned(y, x, breaks1)
+  score2 <- robust_scale_binned(y, x, breaks2)
   return(pmin(abs(score1), abs(score2)) > th)
 }
 
