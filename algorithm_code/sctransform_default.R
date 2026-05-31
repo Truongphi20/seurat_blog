@@ -105,6 +105,50 @@ ScaleData.default <- function(
     return(scaled.data)
 }
 
+# commands/sctransform-0.4.3/src/utils.cpp:88
+row_gmean_dgcmatrix <- function(matrix, eps) {
+  x <- matrix@x
+  i <- matrix@i
+  dim <- matrix@Dim
+  rows <- dim[1]
+  cols <- dim[2]
+  
+  # Initialize vectors
+  ret <- numeric(rows) 
+  nzero <- rep(cols, rows)
+  
+  log_eps <- log(eps)
+  
+  # Accumulate log values for non-zero elements
+  log_x_plus_eps <- log(x + eps)
+  
+  agg_ret <- rowsum(log_x_plus_eps, i + 1)
+  agg_nzero <- rowsum(rep(1, length(x)), i + 1)
+  
+  # Map the aggregated values back to their specific rows
+  present_rows <- as.integer(rownames(agg_ret))
+  ret[present_rows] <- agg_ret[, 1]
+  nzero[present_rows] <- cols - agg_nzero[, 1]
+  
+  # Compute final geometric mean per row
+  ret <- exp((ret + log_eps * nzero) / cols) - eps
+  
+  # Assign Row Names
+  dn <- matrix@Dimnames
+  if (!is.null(dn[[1]])) {
+    names(ret) <- dn[[1]]
+  }
+  
+  return(ret)
+}
+
+# commands/sctransform-0.4.3/R/utils.R:73
+row_gmean <- function(x, eps = 1) {
+    ret <- row_gmean_dgcmatrix(matrix = x, eps = eps)
+    names(ret) <- rownames(x)
+    return(ret)
+}
+
 # commands/sctransform-0.4.3/R/vst.R:109
 vst <- function(umi,
                 cell_attr = NULL,
@@ -152,7 +196,7 @@ vst <- function(umi,
     genes <- rownames(umi)[genes_cell_count >= min_cells]
     umi <- umi[genes, ]
 
-    genes_log_gmean <- log10(sctransform:::row_gmean(umi, eps = gmean_eps))
+    genes_log_gmean <- log10(row_gmean(umi, eps = gmean_eps))
 
     cells_step1 <- colnames(umi)
     genes_step1 <- genes
@@ -176,7 +220,7 @@ vst <- function(umi,
     log_gmean_dens <- density(x = genes_log_gmean_step1, bw = 'nrd', adjust = 1)
     sampling_prob <- 1 / (approx(x = log_gmean_dens$x, y = log_gmean_dens$y, xout = genes_log_gmean_step1)$y + .Machine$double.eps)
     genes_step1 <- sample(x = genes_step1, size = n_genes, prob = sampling_prob)
-    genes_log_gmean_step1 <- log10(sctransform:::row_gmean(umi[genes_step1, ], eps = gmean_eps))
+    genes_log_gmean_step1 <- log10(row_gmean(umi[genes_step1, ], eps = gmean_eps))
 
     model_str <- paste0('y ~ ', paste(latent_var, collapse = ' + '))
 
