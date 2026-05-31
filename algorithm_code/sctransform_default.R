@@ -105,6 +105,155 @@ ScaleData.default <- function(
     return(scaled.data)
 }
 
+# commands/sctransform-0.4.3/R/vst.R:109
+vst <- function(umi,
+                cell_attr = NULL,
+                latent_var = c('log_umi'),
+                batch_var = NULL,
+                latent_var_nonreg = NULL,
+                n_genes = 2000,
+                n_cells = NULL,
+                method = 'poisson',
+                do_regularize = TRUE,
+                theta_regularization = 'od_factor',
+                res_clip_range = c(-sqrt(ncol(umi)), sqrt(ncol(umi))),
+                bin_size = 500,
+                min_cells = 5,
+                residual_type = 'pearson',
+                return_cell_attr = FALSE,
+                return_gene_attr = TRUE,
+                return_corrected_umi = FALSE,
+                min_variance = -Inf,
+                bw_adjust = 3,
+                gmean_eps = 1,
+                theta_estimation_fun = 'theta.ml',
+                theta_given = NULL,
+                exclude_poisson = FALSE,
+                use_geometric_mean = TRUE,
+                use_geometric_mean_offset = FALSE,
+                fix_intercept = FALSE,
+                fix_slope = FALSE,
+                scale_factor = NA,
+                vst.flavor = NULL,
+                verbosity = 2)
+{
+    method <- "glmGamPoi_offset"
+    exclude_poisson <- TRUE
+    min_variance <- 'umi_median'
+
+    arguments <- as.list(environment())
+    arguments <- arguments[!names(arguments) %in% c("umi", "cell_attr")]
+
+    cell_attr <- sctransform:::make_cell_attr(umi, cell_attr, latent_var, batch_var, latent_var_nonreg, verbosity)
+
+    # we will generate output for all genes detected in at least min_cells cells
+    # but for the first step of parameter estimation we might use only a subset of genes
+    genes_cell_count <- rowSums(umi >= 0.01)
+    genes <- rownames(umi)[genes_cell_count >= min_cells]
+    umi <- umi[genes, ]
+
+    genes_log_gmean <- log10(sctransform:::row_gmean(umi, eps = gmean_eps))
+
+    cells_step1 <- colnames(umi)
+    genes_step1 <- genes
+    genes_log_gmean_step1 <- genes_log_gmean
+
+    genes_amean <- NULL
+    genes_var <- NULL
+    # Exclude known poisson genes from the learning step
+    genes_amean <- rowMeans(umi)
+    genes_var <- sctransform:::row_var(umi)
+    overdispersion_factor <- genes_var - genes_amean
+    overdispersion_factor_step1 <- overdispersion_factor[genes_step1]
+    is_overdispersed <- (overdispersion_factor_step1 > 0)
+
+    genes_step1 <-  genes_step1[is_overdispersed]
+    genes_log_gmean_step1 <-  genes_log_gmean[genes_step1]
+
+    data_step1 <- cell_attr[cells_step1, , drop = FALSE]
+
+    # density-sample genes to speed up the first step
+    log_gmean_dens <- density(x = genes_log_gmean_step1, bw = 'nrd', adjust = 1)
+    sampling_prob <- 1 / (approx(x = log_gmean_dens$x, y = log_gmean_dens$y, xout = genes_log_gmean_step1)$y + .Machine$double.eps)
+    genes_step1 <- sample(x = genes_step1, size = n_genes, prob = sampling_prob)
+    genes_log_gmean_step1 <- log10(sctransform:::row_gmean(umi[genes_step1, ], eps = gmean_eps))
+
+    model_str <- paste0('y ~ ', paste(latent_var, collapse = ' + '))
+
+    bin_ind <- ceiling(x = 1:length(x = genes_step1) / bin_size)
+    max_bin <- max(bin_ind)
+
+    model_pars <- sctransform:::get_model_pars(genes_step1, bin_size, umi, model_str, cells_step1,
+                               method, data_step1, theta_given, theta_estimation_fun,
+                               exclude_poisson, fix_intercept, fix_slope,
+                               use_geometric_mean, use_geometric_mean_offset, verbosity)
+    
+    model_pars_fit <- sctransform:::reg_model_pars(model_pars, genes_log_gmean_step1, genes_log_gmean, cell_attr,
+                                     batch_var, cells_step1, genes_step1, umi, bw_adjust, gmean_eps,
+                                     theta_regularization, genes_amean, genes_var,
+                                     exclude_poisson, fix_intercept, fix_slope,
+                                     use_geometric_mean, use_geometric_mean_offset, verbosity)
+    model_pars_outliers <- attr(model_pars_fit, 'outliers')
+
+    # use all fitted values in NB model
+    regressor_data <- model.matrix(sctransform:::get_model_formula(model_str), cell_attr)
+
+    model_str_nonreg <- ''
+    model_pars_nonreg <- c()
+    model_pars_final <- model_pars_fit
+    regressor_data_final <- regressor_data
+
+    # Maximum pearson residual for non-zero median UMI is 5
+    min_var <- (sctransform:::get_nz_median2(umi) / 5)^2
+    arguments$set_min_var <- min_var
+
+    bin_ind <- ceiling(x = 1:length(x = genes) / bin_size)
+    max_bin <- max(bin_ind)
+
+    res <- matrix(NA_real_, length(genes), nrow(regressor_data_final), dimnames = list(genes, rownames(regressor_data_final)))
+    for (i in 1:max_bin){
+        genes_bin <- genes[bin_ind == i]
+        mu <- exp(tcrossprod(model_pars_final[genes_bin, -1, drop=FALSE], regressor_data_final))
+        y <- as.matrix(umi[genes_bin, , drop=FALSE])
+
+        res[genes_bin, ] <- sctransform:::pearson_residual(y, mu, model_pars_final[genes_bin, 'theta'], min_var = min_var)
+    }
+
+    rv <- list(y = res,
+             model_str = model_str,
+             model_pars = model_pars,
+             model_pars_outliers = model_pars_outliers,
+             model_pars_fit = model_pars_fit,
+             model_str_nonreg = model_str_nonreg,
+             model_pars_nonreg = model_pars_nonreg,
+             arguments = arguments,
+             genes_log_gmean_step1 = genes_log_gmean_step1,
+             cells_step1 = cells_step1,
+             cell_attr = cell_attr)
+    rm(res)
+
+    rv$umi_corrected <- sctransform:::correct(rv, do_round = TRUE, do_pos = TRUE, scale_factor = scale_factor,
+                                               verbosity = verbosity)
+    rv$umi_corrected <- sctransform:::make.sparse(mat = rv$umi_corrected)
+
+    rv$y <- sctransform:::clip_matrix_values(rv$y, res_clip_range)
+
+    gene_attr <- data.frame(
+      detection_rate = genes_cell_count[genes] / ncol(umi),
+      gmean = 10 ^ genes_log_gmean,
+      amean = rowMeans(umi),
+      variance = sctransform:::row_var(umi)
+    )
+    
+    if (ncol(rv$y) > 0) {
+      gene_attr$residual_mean = rowMeans(rv$y)
+      gene_attr$residual_variance = sctransform:::row_var(rv$y)
+    }
+
+    rv[['gene_attr']] <- gene_attr
+    return(rv)
+}
+
 # commands/seurat-5.5.0/R/preprocessing.R:3863
 SCTransform.default <- function(
   object,
