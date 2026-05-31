@@ -610,6 +610,41 @@ vst <- function(umi,
     return(rv)
 }
 
+# commands/sctransform-0.4.3/R/utils.R:303
+get_residual_var <- function(vst_out, umi, residual_type = 'pearson',
+                             res_clip_range = c(-sqrt(ncol(umi)), sqrt(ncol(umi))),
+                             min_variance = vst_out$arguments$min_variance,
+                             cell_attr = vst_out$cell_attr, bin_size = 256,
+                             verbosity = vst_out$arguments$verbosity)
+{
+  regressor_data <- prepare_regressor_data(vst_out, cell_attr)
+  model_pars <- vst_out$model_pars_fit
+
+  genes <- rownames(umi)[rownames(umi) %in% rownames(model_pars)]
+
+  # min_variance estimated using median umi
+  # Maximum pearson residual for non-zero median UMI is 5
+  min_var <- (get_nz_median2(umi, genes) / 5)^2
+
+  pb_setup <- setup_progress_bar(length(genes), bin_size)
+  bin_ind <- pb_setup$bin_ind
+  max_bin <- pb_setup$max_bin
+  res <- matrix(NA_real_, length(genes))
+  names(res) <- genes
+
+  for (i in 1:max_bin){
+    genes_bin <- genes[bin_ind == i]
+    mu <- exp(tcrossprod(model_pars[genes_bin, -1, drop=FALSE], regressor_data))
+    y <- as.matrix(umi[genes_bin, , drop=FALSE])
+    res_mat <- pearson_residual(y, mu, model_pars[genes_bin, 'theta'], min_var = min_var)
+
+    res_mat <- clip_matrix_values(res_mat, res_clip_range)
+    res[genes_bin] <- matrixStats::rowVars(res_mat)
+  }
+
+  return(res)
+}
+
 # commands/seurat-5.5.0/R/preprocessing.R:3863
 SCTransform.default <- function(
   object,
@@ -651,7 +686,7 @@ SCTransform.default <- function(
     return.only.var.genes <- TRUE
     vst.args[['residual_type']] <- 'none'
     vst.out <- do.call(what = 'vst', args = vst.args)
-    feature.variance <- sctransform:::get_residual_var(
+    feature.variance <- get_residual_var(
         vst_out = vst.out,
         umi = umi,
         residual_type = residual.type,
