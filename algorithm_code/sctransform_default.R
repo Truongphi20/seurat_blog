@@ -253,6 +253,40 @@ clip_matrix_values <- function(mat, clip_range) {
   return(mat)
 }
 
+# commands/sctransform-0.4.3/R/denoise.R:81
+correct <- function(x, data = 'y', cell_attr = x$cell_attr, as_is = FALSE,
+                    do_round = TRUE, do_pos = TRUE, scale_factor=NA, verbosity = 2)
+{
+    data <- x[[data]]
+    latent_var <- x$arguments$latent_var
+
+    cell_attr[, latent_var] <- apply(cell_attr[, latent_var, drop=FALSE], 2, function(x) rep(median(x), length(x)))
+
+    regressor_data <- model.matrix(sctransform:::get_model_formula(x$model_str), cell_attr)
+    genes <- rownames(data)
+    bin_size <- x$arguments$bin_size
+
+    pb_setup <- sctransform:::setup_progress_bar(length(genes), bin_size, verbosity)
+    bin_ind <- pb_setup$bin_ind
+    max_bin <- pb_setup$max_bin
+    corrected_data <- matrix(NA_real_, length(genes), nrow(regressor_data), dimnames = list(genes, rownames(regressor_data)))
+
+    for (i in 1:max_bin) {
+        genes_bin <- genes[bin_ind == i]
+        pearson_residual <- data[genes_bin, ]
+        coefs <- x$model_pars_fit[genes_bin, -1, drop=FALSE]
+        theta <- x$model_pars_fit[genes_bin, 1]
+        mu <- exp(tcrossprod(coefs, regressor_data))
+        variance <- mu + mu^2 / theta
+        corrected_data[genes_bin, ] <- mu + pearson_residual * sqrt(variance)
+    }
+
+    corrected_data <- round(corrected_data, 0)
+    corrected_data[corrected_data < 0] <- 0
+
+    return(corrected_data)
+}
+
 # commands/sctransform-0.4.3/R/vst.R:109
 vst <- function(umi,
                 cell_attr = NULL,
@@ -380,7 +414,7 @@ vst <- function(umi,
              cell_attr = cell_attr)
     rm(res)
 
-    rv$umi_corrected <- sctransform:::correct(rv, do_round = TRUE, do_pos = TRUE, scale_factor = scale_factor,
+    rv$umi_corrected <- correct(rv, do_round = TRUE, do_pos = TRUE, scale_factor = scale_factor,
                                                verbosity = verbosity)
 
     rv$y <- clip_matrix_values(rv$y, res_clip_range)
