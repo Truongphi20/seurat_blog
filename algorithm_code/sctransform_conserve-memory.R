@@ -189,6 +189,37 @@ row_var <- function(x) {
     return(ret)
 }
 
+# commands/sctransform-0.4.3/R/fit.R:108
+fit_glmGamPoi_offset <- function(umi, model_str, data,  allow_inf_theta=FALSE) 
+{
+  log10_umi <- data$log_umi
+  log_umi <- log(10^log10_umi)
+
+  new_formula <- gsub("y", "", model_str)
+
+  # if therse is no batch variable - remove log_umi and fix it
+  # remove log_umi from model formula if it is with batch variables
+  new_formula <- gsub(pattern = "\\+ log_umi", replacement = "", x = new_formula)
+  # replace log_umi with 1 if it is the only formula
+
+  new_formula <- gsub(pattern = "log_umi", replacement = "1", x = new_formula)
+
+  fit <- glmGamPoi::glm_gp(data = umi,
+                           design = as.formula(new_formula),
+                           col_data = data,
+                           offset = log_umi,
+                           size_factors = FALSE)
+  fit$theta <- 1 / fit$overdispersions
+
+  model_pars <- cbind(fit$theta,
+                      fit$Beta[, "Intercept"],
+                      rep(log(10), nrow(umi)))
+  dimnames(model_pars) <- list(rownames(umi), c('theta', '(Intercept)', 'log_umi'))
+
+  colnames(x = model_pars)[match(x = 'Intercept', table = colnames(x = model_pars))] <- "(Intercept)"
+  return(model_pars)
+}
+
 # commands/sctransform-0.4.3/R/vst.R:467
 get_model_pars <- function(genes_step1, bin_size, umi, model_str, cells_step1,
                            method, data_step1, theta_given, theta_estimation_fun,
@@ -212,7 +243,7 @@ get_model_pars <- function(genes_step1, bin_size, umi, model_str, cells_step1,
     for (indices in index_lst){
 
       umi_bin_worker <- umi_bin[indices, , drop = FALSE]
-      res <- sctransform:::fit_glmGamPoi_offset(umi = umi_bin_worker, model_str = model_str,
+      res <- fit_glmGamPoi_offset(umi = umi_bin_worker, model_str = model_str,
                                         data = data_step1, allow_inf_theta = exclude_poisson)
       par_lst[[length(par_lst) + 1]] <- res
     }
