@@ -175,9 +175,46 @@ make_cell_attr <- function(umi, cell_attr, latent_var, batch_var, latent_var_non
     return(cell_attr)
 }
 
+# commands/sctransform-0.4.3/src/utils.cpp:88
+row_gmean_dgcmatrix <- function(matrix, eps) {
+  x <- matrix@x
+  i <- matrix@i
+  dim <- matrix@Dim
+  rows <- dim[1]
+  cols <- dim[2]
+  
+  # Initialize vectors
+  ret <- numeric(rows) 
+  nzero <- rep(cols, rows)
+  
+  log_eps <- log(eps)
+  
+  # Accumulate log values for non-zero elements
+  log_x_plus_eps <- log(x + eps)
+  
+  agg_ret <- rowsum(log_x_plus_eps, i + 1)
+  agg_nzero <- rowsum(rep(1, length(x)), i + 1)
+  
+  # Map the aggregated values back to their specific rows
+  present_rows <- as.integer(rownames(agg_ret))
+  ret[present_rows] <- agg_ret[, 1]
+  nzero[present_rows] <- cols - agg_nzero[, 1]
+  
+  # Compute final geometric mean per row
+  ret <- exp((ret + log_eps * nzero) / cols) - eps
+  
+  # Assign Row Names
+  dn <- matrix@Dimnames
+  if (!is.null(dn[[1]])) {
+    names(ret) <- dn[[1]]
+  }
+  
+  return(ret)
+}
+
 # commands/sctransform-0.4.3/R/utils.R:73
 row_gmean <- function(x, eps = 1) {
-    ret <- sctransform:::row_gmean_dgcmatrix(matrix = x, eps = eps)
+    ret <- row_gmean_dgcmatrix(matrix = x, eps = eps)
     names(ret) <- rownames(x)
     return(ret)
 }
