@@ -210,6 +210,19 @@ row_var <- function(x) {
   stop('matrix x needs to be of class matrix or dgCMatrix')
 }
 
+# commands/sctransform-0.4.3/R/utils.R:3
+make_cell_attr <- function(umi, cell_attr, latent_var, batch_var, latent_var_nonreg, verbosity) {
+
+    new_attr <- list()
+    new_attr$umi <- colSums(umi)
+    new_attr$log_umi <- log10(new_attr$umi)
+
+    new_attr <- do.call(cbind, new_attr)
+    cell_attr <- cbind(cell_attr, new_attr[, setdiff(colnames(new_attr), colnames(cell_attr)), drop = FALSE])
+
+    return(cell_attr)
+}
+
 # commands/sctransform-0.4.3/R/vst.R:109
 vst <- function(umi,
                 cell_attr = NULL,
@@ -249,7 +262,7 @@ vst <- function(umi,
     arguments <- as.list(environment())
     arguments <- arguments[!names(arguments) %in% c("umi", "cell_attr")]
 
-    cell_attr <- sctransform:::make_cell_attr(umi, cell_attr, latent_var, batch_var, latent_var_nonreg, verbosity)
+    cell_attr <- make_cell_attr(umi, cell_attr, latent_var, batch_var, latent_var_nonreg, verbosity)
 
     # we will generate output for all genes detected in at least min_cells cells
     # but for the first step of parameter estimation we might use only a subset of genes
