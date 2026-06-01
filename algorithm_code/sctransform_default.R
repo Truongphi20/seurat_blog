@@ -162,17 +162,10 @@ row_sum_dgcmatrix_r <- function(x, i, rows, cols) {
   return(rowsum_vec)
 }
 
-# commands/seurat-5.5.0/src/stats.cpp:18
-row_mean_dgcmatrix_r <- function(x, i, rows, cols) {
-  rowmean <- row_sum_dgcmatrix_r(x, i, rows, cols)
-  
-  return(rowmean / cols)
-}
-
 # commands/seurat-5.5.0/src/stats.cpp:28
 row_var_dgcmatrix_r <- function(x, i, rows, cols) {
   # Get the row means using our pure R mean function
-  rowmean <- row_mean_dgcmatrix_r(x, i, rows, cols)
+  rowmean <- row_sum_dgcmatrix_r(x, i, rows, cols)/cols
   
   # Initialize output vectors
   rowvar <- numeric(rows)
@@ -210,7 +203,7 @@ row_var <- function(x) {
 }
 
 # commands/sctransform-0.4.3/R/utils.R:3
-make_cell_attr <- function(umi, cell_attr, latent_var, batch_var, latent_var_nonreg, verbosity) {
+make_cell_attr <- function(umi, cell_attr) {
 
     new_attr <- list()
     new_attr$umi <- colSums(umi)
@@ -253,8 +246,7 @@ clip_matrix_values <- function(mat, clip_range) {
 }
 
 # commands/sctransform-0.4.3/R/denoise.R:81
-correct <- function(x, data = 'y', cell_attr = x$cell_attr, as_is = FALSE,
-                    do_round = TRUE, do_pos = TRUE, scale_factor=NA, verbosity = 2)
+correct <- function(x, data = 'y', cell_attr = x$cell_attr)
 {
     data <- x[[data]]
     latent_var <- x$arguments$latent_var
@@ -321,7 +313,7 @@ get_model_pars <- function(genes_step1, bin_size, umi, model_str, cells_step1,
                            method, data_step1, theta_given, theta_estimation_fun,
                            exclude_poisson = FALSE, fix_intercept = FALSE,
                            fix_slope = FALSE, use_geometric_mean = TRUE,
-                           use_geometric_mean_offset = FALSE, verbosity = 0)
+                           use_geometric_mean_offset = FALSE)
 {
   bin_ind <- ceiling(x = 1:length(x = genes_step1) / bin_size)
   max_bin <- max(bin_ind)
@@ -401,7 +393,7 @@ reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, c
                            theta_regularization,
                            genes_amean = NULL, genes_var = NULL, exclude_poisson = FALSE,
                            fix_intercept = FALSE, fix_slope = FALSE, use_geometric_mean = TRUE,
-                           use_geometric_mean_offset = FALSE, verbosity = 0) 
+                           use_geometric_mean_offset = FALSE) 
 {
   genes <- names(genes_log_gmean)
 
@@ -437,11 +429,7 @@ reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, c
   # now we transform to overdispersion factor
   # variance of NB is mu * (1 + mu / theta)
   # (1 + mu / theta) is what we call overdispersion factor here
-  dispersion_par <- switch(theta_regularization,
-                           'log_theta' = log10(model_pars[, 'theta']),
-                           'od_factor' = log10(1 + 10^genes_log_gmean_step1 / model_pars[, 'theta']),
-                           stop('theta_regularization ', theta_regularization, ' unknown - only log_theta and od_factor supported at the moment')
-  )
+  dispersion_par <- log10(1 + 10^genes_log_gmean_step1 / model_pars[, 'theta'])
 
   model_pars_all <- model_pars
 
@@ -534,8 +522,7 @@ vst <- function(umi,
                 fix_intercept = FALSE,
                 fix_slope = FALSE,
                 scale_factor = NA,
-                vst.flavor = NULL,
-                verbosity = 2)
+                vst.flavor = NULL)
 {
     method <- "glmGamPoi_offset"
     exclude_poisson <- TRUE
@@ -544,7 +531,7 @@ vst <- function(umi,
     arguments <- as.list(environment())
     arguments <- arguments[!names(arguments) %in% c("umi", "cell_attr")]
 
-    cell_attr <- make_cell_attr(umi, cell_attr, latent_var, batch_var, latent_var_nonreg, verbosity)
+    cell_attr <- make_cell_attr(umi, cell_attr)
 
     # we will generate output for all genes detected in at least min_cells cells
     # but for the first step of parameter estimation we might use only a subset of genes
@@ -586,13 +573,13 @@ vst <- function(umi,
     model_pars <- get_model_pars(genes_step1, bin_size, umi, model_str, cells_step1,
                                method, data_step1, theta_given, theta_estimation_fun,
                                exclude_poisson, fix_intercept, fix_slope,
-                               use_geometric_mean, use_geometric_mean_offset, verbosity)
+                               use_geometric_mean, use_geometric_mean_offset)
     
     model_pars_fit <- reg_model_pars(model_pars, genes_log_gmean_step1, genes_log_gmean, cell_attr,
                                      batch_var, cells_step1, genes_step1, umi, bw_adjust, gmean_eps,
                                      theta_regularization, genes_amean, genes_var,
                                      exclude_poisson, fix_intercept, fix_slope,
-                                     use_geometric_mean, use_geometric_mean_offset, verbosity)
+                                     use_geometric_mean, use_geometric_mean_offset)
     model_pars_outliers <- attr(model_pars_fit, 'outliers')
 
     # use all fitted values in NB model
@@ -632,8 +619,7 @@ vst <- function(umi,
              cell_attr = cell_attr)
     rm(res)
 
-    rv$umi_corrected <- correct(rv, do_round = TRUE, do_pos = TRUE, scale_factor = scale_factor,
-                                               verbosity = verbosity)
+    rv$umi_corrected <- correct(rv)
 
     rv$y <- clip_matrix_values(rv$y, res_clip_range)
 
@@ -668,20 +654,18 @@ SCTransform.default <- function(
   seed.use = 1448145
 ) {
     set.seed(seed = seed.use)
-    vst.args <- list()
     object <- as.sparse(x = object)
     umi <- object
 
-    vst.args[['vst.flavor']] <- vst.flavor
-    vst.args[['umi']] <- umi
-    vst.args[['cell_attr']] <- cell.attr
-    vst.args[['verbosity']] <- as.numeric(x = TRUE) * 1
-    vst.args[['return_cell_attr']] <- TRUE
-    vst.args[['return_gene_attr']] <- TRUE
-    vst.args[['return_corrected_umi']] <- do.correct.umi
-    vst.args[['n_cells']] <- min(ncells, ncol(x = umi))
-
-    vst.out <- do.call(what = 'vst', args = vst.args)
+    vst.out <- vst(
+      vst.flavor = vst.flavor,
+      umi = umi,
+      cell_attr = cell.attr,
+      return_cell_attr = TRUE,
+      return_gene_attr = TRUE,
+      return_corrected_umi = do.correct.umi,
+      n_cells = min(ncells, ncol(x = umi))
+    )
 
     feature.variance <- vst.out$gene_attr[,"residual_variance"]
     names(x = feature.variance) <- rownames(x = vst.out$gene_attr)
