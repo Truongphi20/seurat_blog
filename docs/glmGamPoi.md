@@ -30,9 +30,9 @@ Command explanation:
 
 ## Workflow
 
-### Design handler
-
 ### Error conditions
+
+Base on the formula `~ 1`, a linear-model matrix is assigned with only an intercept for each sample.
 
 ### Size factors and offset
 
