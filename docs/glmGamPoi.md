@@ -30,4 +30,16 @@ Command explanation:
 
 ## Workflow
 
+### Error conditions
+
+### Size factors and offset
+
+### Getting groups
+
+### Dispersion estimation
+
+### Beta estimation
+
+### Overdispersion refining 
+
 ## Summary
