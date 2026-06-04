@@ -30,9 +30,7 @@ Command explanation:
 
 ## Workflow
 
-### Error conditions
-
-Base on the formula `~ 1`, a linear-model matrix is assigned with only an intercept for each sample.
+Base on the formula `~ 1`, a linear-model matrix is assigned with only an intercept for each sample. Additionally, small ridge penalties ($\frac{10^{-10}}{N}$) is added to avoid overfitting.  
 
 ### Size factors and offset
 
