@@ -25,6 +25,9 @@ project:
       file: docs/scaling.md
     - title: SCTransform
       file: docs/sctransform.md
+    - title: Supplementary
+      children:
+        - file: docs/glmGamPoi.md
     
 site:
   template: book-theme
