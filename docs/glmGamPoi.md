@@ -59,6 +59,19 @@ This question hasn't known yet.
 
 ### Beta estimation
 
+```{math}
+:label:beta-est
+\Large 
+\begin{cases}
+\begin{aligned}
+
+NC_{ij} &= \frac{C_{ij}}{\sum_{k=1}^{M}{C_{kj}}} \\
+\widehat{\beta_i} &= \ln(mean(NC_i))
+
+\end{aligned}
+\end{cases}
+```
+
 ### Overdispersion refining 
 
 ## Summary
