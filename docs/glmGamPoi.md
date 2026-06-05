@@ -41,15 +41,15 @@ Base on the formula `~1`, a linear-model matrix is assigned with only an interce
 \Large 
 \begin{cases}
 \begin{aligned}
-\xi = \left( \frac{1}{N}\sum_{j=1}^{N}{\exp(o_j)} \right)^{-1} \\
-\widehat{\theta}_{i} = \frac{var(C_i) - \xi mean(C_i)}{mean(C_i)^2}
+\xi &= \left( \frac{1}{N}\sum_{j=1}^{N}{\exp(o_j)} \right)^{-1} \\
+\widehat{\theta}_{i} &= \max \left(\frac{var(C_i) - \xi mean(C_i)}{mean(C_i)^2}, 0 \right)
 \end{aligned}
 \end{cases}
 ```
 
 Firstly, a rough estimate of the dispersion level for gene $i$ ($\widehat{\theta}_{i}$) is computed according to Equation [](#rough-disper-est), where $\xi$ is an offset correction factor, which defined as the reciprocal of the average exponential of the offset ($o_j$) on total number of samples ($N$). Hence the offset in this command is natural log of the total counts of each sample, so $\xi = (\overline{C})^{-1}$, where $\overline{C}$ is the mean of total count across samples.
 
-The rough dispersion estimator is derived from the mean–variance relationship of the Gamma-Poisson distribution ($\sigma^2 = \mu + \theta \mu^2$, [@ahlmann-eltzeGlmGamPoiFittingGammaPoisson2021]), adjusted by the offset factor $\xi$.
+The rough dispersion estimator is derived from the mean–variance relationship of the Gamma-Poisson distribution ($\sigma^2 = \mu + \theta \mu^2$, [@ahlmann-eltzeGlmGamPoiFittingGammaPoisson2021]), adjusted by the offset factor $\xi$ and ensured to be positive.
 
 Here, $C_i$ denotes the vector of count values for gene $i$, while $var()$ and $mean()$ represent the variance and mean functions, respectively.
 
