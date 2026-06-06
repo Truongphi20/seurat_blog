@@ -77,8 +77,10 @@ At the beginning, rough beta of each gene ($\beta_i$) is estimated by Equation [
 ```{math}
 :label:beta-est-step
 \Large
-\beta_i(n+1) = \beta_i(n) + \frac{dl_{i}}{ddl_{i}}
+\beta_i^{(n+1)} = \beta_i^{(n)} + \frac{dl_{i}}{ddl_{i}}
 ```
+
+Beta is estimated using the Newton-Raphson method [@akram2015newton], which iterates Equation [](#beta-est-step) untils the beta being nearly unchanging. $dl_{i}$ is the derivative of likelihood function that count values of gene $i$ is of Negative Binomial (NB) distribution.  
 
 ```{math}
 :label:beta-est-newton-raphson
