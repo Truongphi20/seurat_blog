@@ -60,7 +60,7 @@ This question hasn't known yet.
 ### Beta estimation
 
 ```{math}
-:label:beta-est
+:label:beta-est-init
 \Large 
 \begin{cases}
 \begin{aligned}
@@ -70,6 +70,26 @@ NC_{ij} &= \frac{C_{ij}}{\sum_{k=1}^{M}{C_{kj}}} \\
 
 \end{aligned}
 \end{cases}
+```
+
+```{math}
+:label:beta-est-newton-raphson
+\Large 
+\begin{cases}
+\begin{aligned}
+
+\mu_{ij} &= \exp(\beta_i + o_j) \\
+dl_{i} &= \sum_{k=1}^{N}{\frac{C_{ik}-\mu_{ik}}{1 + \mu_{ik}  \theta_i}} \\
+ddl_{i} &= \sum_{k=1}^{N}{\frac{\mu_{ik}(1+C_{ik}\theta_i)}{(1 + \mu_{ik}  \theta_i)^2}}
+
+\end{aligned}
+\end{cases}
+```
+
+```{math}
+:label:beta-est-step
+\Large
+\beta_i(n+1) = \beta_i(n) + \frac{dl_{i}}{ddl_{i}}
 ```
 
 ### Overdispersion refining 
