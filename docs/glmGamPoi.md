@@ -72,6 +72,14 @@ NC_{ij} &= \frac{C_{ij}}{\sum_{k=1}^{M}{C_{kj}}} \\
 \end{cases}
 ```
 
+At the beginning, rough beta of each gene ($\beta_i$) is estimated by Equation [](#beta-est-init), defined as the logorithm of the gene-oriented mean of normalised counts ($NC_{ij}$), which are proportion of count on total counts of each sample ($M$ is the number of genes).     
+
+```{math}
+:label:beta-est-step
+\Large
+\beta_i(n+1) = \beta_i(n) + \frac{dl_{i}}{ddl_{i}}
+```
+
 ```{math}
 :label:beta-est-newton-raphson
 \Large 
@@ -84,12 +92,6 @@ ddl_{i} &= \sum_{k=1}^{N}{\frac{\mu_{ik}(1+C_{ik}\theta_i)}{(1 + \mu_{ik}  \thet
 
 \end{aligned}
 \end{cases}
-```
-
-```{math}
-:label:beta-est-step
-\Large
-\beta_i(n+1) = \beta_i(n) + \frac{dl_{i}}{ddl_{i}}
 ```
 
 ### Overdispersion refining 
