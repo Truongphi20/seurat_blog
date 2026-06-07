@@ -102,6 +102,7 @@ ddl_{i} &= \sum_{k=1}^{N}{\frac{\mu_{ik}(1+C_{ik}\theta_i)}{(1 + \mu_{ik}  \thet
 
 Counting the Number of Failures ($Y$)
 ```{math}
+:label: nb-dis
 \begin{cases}
 \begin{aligned}
 
@@ -111,6 +112,8 @@ p &= \frac{1}{(\mu/r- 1)}
 \end{aligned}
 \end{cases}
 ```
+
+The probability mass function of NB distribution [](#nb-dis) estimates the probability of obtaining $y$ failures before archiving $r$ successes in a sequence of independent Bernoullian trials (two possible results, success or failure), with $p$ is the probability of succeeding any trial, and $\mu$ is the mean of number of failures [@sinharayDiscreteProbabilityDistributions2010].    
 
 ```{math}
 
