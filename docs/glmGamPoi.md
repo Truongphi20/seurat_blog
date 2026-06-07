@@ -89,8 +89,8 @@ Beta is estimated using the Newton-Raphson method [@akram2015newton], which iter
 \begin{aligned}
 
 \mu_{ij} &= \exp(\beta_i + o_j) \\
-dl_{i} &= \sum_{k=1}^{N}{\frac{C_{ik}-\mu_{ik}}{1 + \mu_{ik}  \theta_i}} \\
-ddl_{i} &= \sum_{k=1}^{N}{\frac{\mu_{ik}(1+C_{ik}\theta_i)}{(1 + \mu_{ik}  \theta_i)^2}}
+dl_{i}(\beta_i) &= \sum_{k=1}^{N}{\frac{C_{ik}-\mu_{ik}}{1 + \mu_{ik}  \theta_i}} \\
+ddl_{i}(\beta_i) &= \sum_{k=1}^{N}{\frac{\mu_{ik}(1+C_{ik}\theta_i)}{(1 + \mu_{ik}  \theta_i)^2}}
 
 \end{aligned}
 \end{cases}
@@ -100,7 +100,8 @@ ddl_{i} &= \sum_{k=1}^{N}{\frac{\mu_{ik}(1+C_{ik}\theta_i)}{(1 + \mu_{ik}  \thet
 :class: dropdown
 :open: true
 
-Counting the Number of Failures ($Y$)
+By assuming counts of each gene follows NB distribution, where variance parabolically increases by mean, data is utillized to estimated coefficents in the model by the maximum likelihood method. 
+
 ```{math}
 :label: nb-dis
 \begin{cases}
@@ -113,7 +114,7 @@ p &= \frac{1}{(\mu/r- 1)}
 \end{cases}
 ```
 
-The probability mass function (PMF) of NB distribution [](#nb-dis) estimates the probability of obtaining $y$ failures before archiving $r$ successes in a sequence of independent Bernoullian trials (two possible results, success or failure), with $p$ is the probability of succeeding any trial, and $\mu$ is the mean of number of failures [@sinharayDiscreteProbabilityDistributions2010].    
+Theoretically, the probability mass function (PMF) of NB distribution [](#nb-dis) estimates the probability of obtaining $y$ failures before archiving $r$ successes in a sequence of independent Bernoullian trials (two possible results, success or failure), with $p$ is the probability of succeeding any trial, and $\mu$ is the mean of number of failures [@sinharayDiscreteProbabilityDistributions2010]. In emperical, because $y$ is discrete value starts from 0, it is chosen to assign for $C_k$ without any biological meaning.     
 
 ```{math}
 :label: likelihood-func
@@ -146,7 +147,7 @@ Due to likelihood function here is used to estimated $\mu$, the partial derivati
 
 ```
 
-Hence the package `glmGamPoi` uses adjusted logarithmic mean $\beta$ as mentioned in [](#beta-est-newton-raphson), it is transformed to paritial derivative by $\beta$ following Equation [](#likelihood-derivative-beta).
+Hence the package `glmGamPoi` uses empirical mean $\beta$ mentioned in [](#beta-est-newton-raphson) instead of logarithmic mean $\mu$, it is transformed to paritial derivative by $\beta$ following Equation [](#likelihood-derivative-beta).
 
 :::
 
