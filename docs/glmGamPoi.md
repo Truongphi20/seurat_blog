@@ -72,7 +72,7 @@ NC_{ij} &= \frac{C_{ij}}{\sum_{k=1}^{M}{C_{kj}}} \\
 \end{cases}
 ```
 
-At the beginning, rough beta of each gene ($\beta_i$) is estimated by Equation [](#beta-est-init), defined as the logorithm of the gene-oriented mean of normalised counts ($NC_{ij}$), which are proportion of count on total counts of each sample ($M$ is the number of genes).     
+At the beginning, rough beta of each gene ($\beta_i$) is estimated by Equation [](#beta-est-init), defined as the logarithm of the gene-oriented mean of normalised counts ($NC_{ij}$), which are proportion of count on total counts of each sample ($M$ is the number of genes).     
 
 ```{math}
 :label:beta-est-step
@@ -80,7 +80,7 @@ At the beginning, rough beta of each gene ($\beta_i$) is estimated by Equation [
 \beta_i^{(n+1)} = \beta_i^{(n)} + \frac{dl_{i}}{ddl_{i}}
 ```
 
-Beta is estimated using the Newton-Raphson method [@akram2015newton], which iterates Equation [](#beta-est-step) untils the beta being nearly unchanging. $dl_{i}$ is the derivative of likelihood function that count values of gene $i$ is of Negative Binomial (NB) distribution.  
+Beta is estimated using the Newton-Raphson method [@akram2015newton], which iterates Equation [](#beta-est-step) until the value of beta converges. $dl_{i}$ is the derivative of likelihood function that count values of gene $i$ is of Negative Binomial (NB) distribution.  
 
 ```{math}
 :label:beta-est-newton-raphson
@@ -108,13 +108,13 @@ By assuming counts of each gene follows NB distribution, where variance paraboli
 \begin{aligned}
 
 P(Y = y) &= \binom{y+r-1}{r-1} p^r (1-p)^y \\
-p &= \frac{1}{(\mu/r- 1)}
+p &= \frac{1}{1+\mu/r)}
 
 \end{aligned}
 \end{cases}
 ```
 
-Theoretically, the probability mass function (PMF) of NB distribution [](#nb-dis) estimates the probability of obtaining $y$ failures before archiving $r$ successes in a sequence of independent Bernoullian trials (two possible results, success or failure), with $p$ is the probability of succeeding any trial, and $\mu$ is the mean of number of failures [@sinharayDiscreteProbabilityDistributions2010]. In emperical, because $y$ is discrete value starts from 0, it is chosen to assign for $C_k$ without any biological meaning.     
+Theoretically, the probability mass function (PMF) of NB distribution [](#nb-dis) estimates the probability of obtaining $y$ failures before archiving $r$ successes in a sequence of independent Bernoullian trials (two possible results, success or failure), with $p$ is the probability of succeeding any trial, and $\mu$ is the mean of number of failures [@sinharayDiscreteProbabilityDistributions2010]. In practical, since $y$ is a discrete value starts from 0, it is chosen to assign for $C_k$ without any biological meaning.     
 
 ```{math}
 :label: likelihood-func
@@ -122,7 +122,7 @@ l(p) = \ln \left( \prod_{k=1}^{N}{ P(Y = C_k) } \right)
 
 ```
 
-Likelihood function [](#likelihood-func) is logarithm of PMF to enable addition ability, being easy to derivate. Particularly, count number ($C_k$) represents the number of failures of biological captures. As the mean–variance relationship mentioned ealier, $r$ is defined by $\theta$ ($r = 1/\theta$) when expanning the likelihood function. 
+Likelihood function [](#likelihood-func) is logarithm of PMF to convert products into manageable sums, making it analytically straightforward to differentiate. Particularly, count number ($C_k$) represents the number of failures of biological captures. As the mean–variance relationship mentioned ealier, $r$ is defined by $\theta$ ($r = 1/\theta$) when expanning the likelihood function. 
 
 ```{math} 
 :label: likelihood-mu
@@ -147,7 +147,7 @@ Due to likelihood function here is used to estimated $\mu$, the partial derivati
 
 ```
 
-Hence the package `glmGamPoi` uses empirical mean $\beta$ mentioned in [](#beta-est-newton-raphson) instead of logarithmic mean $\mu$, it is transformed to paritial derivative by $\beta$ following Equation [](#likelihood-derivative-beta).
+Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in [](#beta-est-newton-raphson) instead of logarithmic mean $\mu$, it is transformed to paritial derivative by $\beta$ following Equation [](#likelihood-derivative-beta).
 
 :::
 
