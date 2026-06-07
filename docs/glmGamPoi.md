@@ -113,15 +113,15 @@ p &= \frac{1}{(\mu/r- 1)}
 \end{cases}
 ```
 
-The probability mass function of NB distribution [](#nb-dis) estimates the probability of obtaining $y$ failures before archiving $r$ successes in a sequence of independent Bernoullian trials (two possible results, success or failure), with $p$ is the probability of succeeding any trial, and $\mu$ is the mean of number of failures [@sinharayDiscreteProbabilityDistributions2010].    
+The probability mass function (PMF) of NB distribution [](#nb-dis) estimates the probability of obtaining $y$ failures before archiving $r$ successes in a sequence of independent Bernoullian trials (two possible results, success or failure), with $p$ is the probability of succeeding any trial, and $\mu$ is the mean of number of failures [@sinharayDiscreteProbabilityDistributions2010].    
 
 ```{math}
-
-l(p) &= \ln \left( \prod_{k=1}^{N}{ P(Y = C_k) } \right)
+:label: likelihood-func
+l(p) = \ln \left( \prod_{k=1}^{N}{ P(Y = C_k) } \right)
 
 ```
 
-$r = 1/\theta$
+Likelihood function [](#likelihood-func) is logarithm of PMF to enable addition ability, being easy to derivate. As the mean–variance relationship mentioned ealier, $r$ is defined by $\theta$ ($r = 1/\theta$) when expanning the likelihood function. 
 
 ```{math} 
 l(\mu) = \sum_{k=1}^N{\left(  \ln \left[\binom{C_{k}+1/\theta-1}{1/\theta-1} \right] - \frac{1}{\theta}\ln(\mu\theta + 1) + C_k\ln(\frac{\mu\theta}{1+\mu\theta}) \right) }
