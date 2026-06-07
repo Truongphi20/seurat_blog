@@ -96,6 +96,45 @@ ddl_{i} &= \sum_{k=1}^{N}{\frac{\mu_{ik}(1+C_{ik}\theta_i)}{(1 + \mu_{ik}  \thet
 \end{cases}
 ```
 
+:::{tip} Maximum likelihood of NB distribution 
+:class: dropdown
+:open: true
+
+Counting the Number of Failures ($Y$)
+```{math}
+\begin{cases}
+\begin{aligned}
+
+P(Y = y) &= \binom{y+r-1}{r-1} p^r (1-p)^y \\
+p &= \frac{1}{(\mu/r- 1)}
+
+\end{aligned}
+\end{cases}
+```
+
+```{math}
+
+l(p) &= \ln \left( \prod_{k=1}^{N}{ P(Y = C_k) } \right)
+
+```
+
+$r = 1/\theta$
+
+```{math} 
+l(\mu) = \sum_{k=1}^N{\left(  \ln \left[\binom{C_{k}+1/\theta-1}{1/\theta-1} \right] - \frac{1}{\theta}\ln(\mu\theta + 1) + C_k\ln(\frac{\mu\theta}{1+\mu\theta}) \right) }
+
+```
+
+```{math}
+\frac{\partial l}{\partial \mu} = \sum_{k=1}^N{\frac{C_k - \mu}{\mu(1+\mu\theta)}}
+```
+
+```{math}
+\frac{\partial l}{\partial \beta} = \sum_{k=1}^N{\frac{C_k - \mu}{(1+\mu\theta)}}
+```
+
+:::
+
 ### Overdispersion refining 
 
 ## Summary
