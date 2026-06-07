@@ -121,20 +121,32 @@ l(p) = \ln \left( \prod_{k=1}^{N}{ P(Y = C_k) } \right)
 
 ```
 
-Likelihood function [](#likelihood-func) is logarithm of PMF to enable addition ability, being easy to derivate. As the mean–variance relationship mentioned ealier, $r$ is defined by $\theta$ ($r = 1/\theta$) when expanning the likelihood function. 
+Likelihood function [](#likelihood-func) is logarithm of PMF to enable addition ability, being easy to derivate. Particularly, count number ($C_k$) represents the number of failures of biological captures. As the mean–variance relationship mentioned ealier, $r$ is defined by $\theta$ ($r = 1/\theta$) when expanning the likelihood function. 
 
 ```{math} 
+:label: likelihood-mu
+
 l(\mu) = \sum_{k=1}^N{\left(  \ln \left[\binom{C_{k}+1/\theta-1}{1/\theta-1} \right] - \frac{1}{\theta}\ln(\mu\theta + 1) + C_k\ln(\frac{\mu\theta}{1+\mu\theta}) \right) }
 
 ```
 
+Substituting $p$ according to [](#nb-dis), Equation [](#likelihood-mu) computes likelihood depending on the mean count of a gene. Maximum likelihood is found by rooting derivative of the likelihood function.  
+
 ```{math}
+:label: likelihood-derivative
 \frac{\partial l}{\partial \mu} = \sum_{k=1}^N{\frac{C_k - \mu}{\mu(1+\mu\theta)}}
 ```
 
+Due to likelihood function here is used to estimated $\mu$, the partial derivative of likelihood by $\mu$ is performed as [](#likelihood-derivative). 
+
 ```{math}
-\frac{\partial l}{\partial \beta} = \sum_{k=1}^N{\frac{C_k - \mu}{(1+\mu\theta)}}
+:label: likelihood-derivative-beta
+
+\frac{\partial l}{\partial \beta} = \frac{\partial l}{\partial \mu} \cdot \frac{\partial \mu}{\partial \beta} = \sum_{k=1}^N{\frac{C_k - \mu}{(1+\mu\theta)}}
+
 ```
+
+Hence the package `glmGamPoi` uses adjusted logarithmic mean $\beta$ as mentioned in [](#beta-est-newton-raphson), it is transformed to paritial derivative by $\beta$ following Equation [](#likelihood-derivative-beta).
 
 :::
 
