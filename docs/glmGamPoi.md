@@ -153,8 +153,10 @@ Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in []
 
 :::
 
-### Optimizing overdispersion
+### Overdispersion estimation
 
-### Shrinkage overdispersion
+#### Optimizing
+
+#### Shrinkage
 
 ## Summary
