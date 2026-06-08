@@ -90,11 +90,13 @@ Beta is estimated using the Newton-Raphson method [@akram2015newton], which iter
 
 \mu_{ij} &= \exp(\beta_i + o_j) \\
 dl_{i}(\beta_i) &= \sum_{k=1}^{N}{\frac{C_{ik}-\mu_{ik}}{1 + \mu_{ik}  \theta_i}} \\
-dl'_{i}(\beta_i) &= \sum_{k=1}^{N}{\frac{\mu_{ik}(1+C_{ik}\theta_i)}{(1 + \mu_{ik}  \theta_i)^2}}
+dl'_{i}(\beta_i) &= - \sum_{k=1}^{N}{\frac{\mu_{ik}(1+C_{ik}\theta_i)}{(1 + \mu_{ik}  \theta_i)^2}}
 
 \end{aligned}
 \end{cases}
 ```
+
+Starting with an initial rough estimate of $\beta_i$ for gene $i$, the sample-specific expected count $\mu_{ij}$ is updated in each iteration $n$ by combining the biological parameter ($\beta_i$) and technical sampling offset ($o_j$). Even though $\mu$ represents the theoretical mean of the NB distribution, incorporating these sample-specific offsets allows the model to account for variation in sequencing depth across the samples. This helps strip away library-size biases while computing the log-likelihood function and its derivative according to Equation [](#beta-est-newton-raphson).
 
 :::{tip} Maximum likelihood of NB distribution 
 :class: dropdown
