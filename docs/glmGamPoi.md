@@ -166,6 +166,7 @@ Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in []
 
 w_i &= \frac{1}{\frac{1}{\mu_i}+\theta} \\
 B &= M^T \cdot IW \cdot M \\
+B^{-1} &= (B + \lambda I)^{-1} \\
 CR &= \frac{\partial}{\partial \theta} \left( -\frac{1}{2} \log |B| \right) = -\frac{1}{2}\mathrm{Tr}\left( B^{-1} \frac{\partial B}{\partial \theta} \right)
 
 \end{aligned}
