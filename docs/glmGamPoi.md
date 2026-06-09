@@ -157,6 +157,8 @@ Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in []
 
 #### Optimizing
 
+#### Score function
+
 ```{math}
 \Large
 \begin{cases}
@@ -169,6 +171,7 @@ CR &= \frac{\partial}{\partial \theta} \left( -\frac{1}{2} \log |B| \right) = -\
 \end{aligned}
 \end{cases}
 ```
+
 
 #### Shrinkage
 
