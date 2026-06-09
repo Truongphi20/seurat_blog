@@ -157,6 +157,19 @@ Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in []
 
 #### Optimizing
 
+```{math}
+\Large
+\begin{cases}
+\begin{aligned}
+
+w_i &= \frac{1}{\frac{1}{\mu_i}+\theta} \\
+B &= M^T \cdot IW \cdot M \\
+CR &= \frac{\partial}{\partial \theta} \left( -\frac{1}{2} \log |B| \right) = -\frac{1}{2}\mathrm{Tr}\left( B^{-1} \frac{\partial B}{\partial \theta} \right)
+
+\end{aligned}
+\end{cases}
+```
+
 #### Shrinkage
 
 ## Summary
