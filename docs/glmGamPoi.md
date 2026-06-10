@@ -178,7 +178,7 @@ CR &= \frac{\partial}{\partial \theta} \left( -\frac{1}{2} \log |B| \right) = -\
 \begin{cases}
 \begin{aligned}
 
-DG = \sum_{y}{F(y) \cdot \psi(y + 1/\theta)}
+DG = \sum_{y}{Fr(y) \cdot \psi(y + 1/\theta)}
 
 \end{aligned}
 \end{cases}
