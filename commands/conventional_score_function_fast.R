@@ -14,12 +14,12 @@ conventional_score_function_fast <- function(y, mu, log_theta, model_matrix, do_
 # commands/glmGamPoi_1.24.0/R/overdispersion.R:190
 far_left_value <- conventional_score_function_fast(
     mystack$y, 
-    mu = mystack$mu, 
+    mu = mystack$mean_vector, 
     log_theta = log(1e-8),
     model_matrix = mystack$model_matrix, 
-    do_cr_adj = mystack$do_cr_adj, 
-    mystack$unique_counts, 
-    mystack$count_frequencies
+    do_cr_adj = mystack$do_cox_reid_adjustment, 
+    mystack$tab[[1]], 
+    mystack$tab[[2]]
 )
 
 print(far_left_value)
