@@ -153,13 +153,18 @@ Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in []
 
 ### Overdispersion estimation
 
-:::{tip} Mathematic transform of Maximum likelihood for $\theta$
 
 ```{math}
-\frac{\partial l}{\partial \theta} = \frac{1}{\theta} \left[ \sum_{k=1}^{N}{ \left( -\frac{1}{\theta} \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1})  \right)  + \log(1+\mu\theta) + \frac{C_k - \mu}{\mu_i + \theta^{-1}} \right) } \right]
+\frac{\partial l}{\partial \theta} = \frac{1}{\theta} \left[ \sum_{k=1}^{N}{ \left( -\frac{1}{\theta} \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1})  \right)  + \log(1+\mu\theta) + \frac{C_k - \mu}{\mu + \theta^{-1}} \right) } \right]
 ```
 
-:::
+```{math}
+\underbrace{\frac{1}{\theta}\sum_{k=1}^{N}{ \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1}) \right) } }_{D(\theta)} = \underbrace{\sum_{k=1}^{N}{ \left( \log(1+\mu_i\theta) + \frac{C_k - \mu_i}{\mu_i + \theta^{-1}} \right) } }_{L(\theta)}
+```
+
+```{math}
+M(\theta) = L(\theta) - D(\theta) + CR
+```
 
 #### Optimizing
 
