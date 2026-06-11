@@ -98,9 +98,7 @@ dl'_{i}(\beta_i) &= - \sum_{k=1}^{N}{\frac{\mu_{ik}(1+C_{ik}\theta_i)}{(1 + \mu_
 
 Starting with an initial rough estimate of $\beta_i$ for gene $i$, the sample-specific expected count $\mu_{ij}$ is updated in each iteration $n$ by combining the biological parameter ($\beta_i$) and technical sampling offset ($o_j$). Even though $\mu$ represents the theoretical mean of the NB distribution, incorporating these sample-specific offsets allows the model to account for variation in sequencing depth across the samples. This helps strip away library-size biases while computing the log-likelihood function and its derivative according to Equation [](#beta-est-newton-raphson).
 
-:::{tip} Maximum likelihood of NB distribution 
-:class: dropdown
-:open: true
+:::{tip} Maximum likelihood of NB distribution
 
 By assuming counts of each gene follows NB distribution, where variance quadratically increases by mean, data is utillized to estimated coefficents in the model by the maximum likelihood method. 
 
@@ -120,7 +118,7 @@ Theoretically, the probability mass function (PMF) of NB distribution [](#nb-dis
 
 ```{math}
 :label: likelihood-func
-l(p) = \ln \left( \prod_{k=1}^{N}{ P(Y = C_k) } \right)
+l(p,r) = \ln \left( \prod_{k=1}^{N}{ P(Y = C_k) } \right)
 
 ```
 
@@ -129,7 +127,7 @@ The log-likelihood function [](#likelihood-func) converts the product of probabi
 ```{math} 
 :label: likelihood-mu
 
-l(\mu) = \sum_{k=1}^N{\left(  \ln \left[\binom{C_{k}+1/\theta-1}{1/\theta-1} \right] - \frac{1}{\theta}\ln(\mu\theta + 1) + C_k\ln(\frac{\mu\theta}{1+\mu\theta}) \right) }
+l(\mu,\theta) = \sum_{k=1}^N{\left(  \ln \left[\binom{C_{k}+1/\theta-1}{1/\theta-1} \right] - \frac{1}{\theta}\ln(\mu\theta + 1) + C_k\ln(\frac{\mu\theta}{1+\mu\theta}) \right) }
 
 ```
 
@@ -154,6 +152,14 @@ Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in []
 :::
 
 ### Overdispersion estimation
+
+:::{tip} Mathematic transform of Maximum likelihood for $\theta$
+
+```{math}
+\frac{\partial l}{\partial \theta} = \frac{1}{\theta} \left[ \sum_{k=1}^{N}{ \left( \frac{1}{\theta} \left( \psi(C_k + \theta^{-1}) + \psi(\theta^{-1})  \right)  + \log(1+\mu\theta) + \frac{C_k - \mu}{\mu_i + \theta^{-1}} \right) } \right]
+```
+
+:::
 
 #### Optimizing
 
