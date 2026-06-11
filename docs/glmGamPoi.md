@@ -156,7 +156,7 @@ Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in []
 :::{tip} Mathematic transform of Maximum likelihood for $\theta$
 
 ```{math}
-\frac{\partial l}{\partial \theta} = \frac{1}{\theta} \left[ \sum_{k=1}^{N}{ \left( \frac{1}{\theta} \left( \psi(C_k + \theta^{-1}) + \psi(\theta^{-1})  \right)  + \log(1+\mu\theta) + \frac{C_k - \mu}{\mu_i + \theta^{-1}} \right) } \right]
+\frac{\partial l}{\partial \theta} = \frac{1}{\theta} \left[ \sum_{k=1}^{N}{ \left( -\frac{1}{\theta} \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1})  \right)  + \log(1+\mu\theta) + \frac{C_k - \mu}{\mu_i + \theta^{-1}} \right) } \right]
 ```
 
 :::
