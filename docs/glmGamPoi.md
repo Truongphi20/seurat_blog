@@ -162,7 +162,7 @@ l(\theta) = \sum_{k=1}^{N}{ \left[ \ln\Gamma(C_k + \theta^{-1}) - \ln\Gamma(\the
 ```
 
 ```{math}
-\underbrace{\frac{1}{\theta}\sum_{k=1}^{N}{ \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1}) \right) } }_{D(\theta)} = \underbrace{\sum_{k=1}^{N}{ \left( \ln(1+\mu_k\theta) + \frac{C_k - \mu_k}{\mu_k + \theta^{-1}} \right) } }_{L(\theta)}
+- \underbrace{\frac{1}{\theta}\sum_{k=1}^{N}{ \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1}) \right) } }_{D(\theta)} + \underbrace{\sum_{k=1}^{N}{ \left( \ln(1+\mu_k\theta) + \frac{C_k - \mu_k}{\mu_k + \theta^{-1}} \right) } }_{L(\theta)} = 0
 ```
 
 ```{math}
