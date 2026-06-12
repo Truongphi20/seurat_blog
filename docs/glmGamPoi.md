@@ -153,23 +153,23 @@ Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in []
 
 ### Overdispersion estimation
 
-
 ```{math}
-\frac{\partial l}{\partial \theta} = \frac{1}{\theta} \left[ \sum_{k=1}^{N}{ \left( -\frac{1}{\theta} \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1})  \right)  + \log(1+\mu\theta) + \frac{C_k - \mu}{\mu + \theta^{-1}} \right) } \right]
+l(\theta) = \sum_{k=1}^{N}{ \left[ \ln\Gamma(C_k + \theta^{-1}) - \ln\Gamma(\theta^{-1}) - \left( C_k +\theta^{-1} \right)\ln(\mu_k+\theta^{-1}) - \frac{1}{\theta} \ln(\theta) \right] }
 ```
 
 ```{math}
-\underbrace{\frac{1}{\theta}\sum_{k=1}^{N}{ \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1}) \right) } }_{D(\theta)} = \underbrace{\sum_{k=1}^{N}{ \left( \log(1+\mu_i\theta) + \frac{C_k - \mu_i}{\mu_i + \theta^{-1}} \right) } }_{L(\theta)}
+\frac{d l}{d \theta} = \frac{1}{\theta} \left[ \sum_{k=1}^{N}{ \left( -\frac{1}{\theta} \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1})  \right)  + \ln(1+\mu_k\theta) + \frac{C_k - \mu_k}{\mu_k + \theta^{-1}} \right) } \right]
 ```
 
 ```{math}
-M(\theta) = L(\theta) - D(\theta) + CR
+\underbrace{\frac{1}{\theta}\sum_{k=1}^{N}{ \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1}) \right) } }_{D(\theta)} = \underbrace{\sum_{k=1}^{N}{ \left( \ln(1+\mu_k\theta) + \frac{C_k - \mu_k}{\mu_k + \theta^{-1}} \right) } }_{L(\theta)}
 ```
 
-#### Optimizing
+```{math}
+G(\theta) = L(\theta) - D(\theta)
+```
 
-#### Score function
-
+:::{tip} The Cox-Reid (CR) adjustment
 ```{math}
 \Large
 \begin{cases}
@@ -194,7 +194,8 @@ DG = \sum_{y}{Fr(y) \cdot \psi(y + 1/\theta)}
 \end{aligned}
 \end{cases}
 ```
+:::
 
-#### Shrinkage
+### Shrinkage
 
 ## Summary
