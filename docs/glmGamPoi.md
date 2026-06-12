@@ -169,6 +169,10 @@ l(\theta) = \sum_{k=1}^{N}{ \left[ \ln\Gamma(C_k + \theta^{-1}) - \ln\Gamma(\the
 G(\theta) = L(\theta) - D(\theta)
 ```
 
+```{math}
+\frac{d^{2}l}{d\theta^2} = -\theta^{-2}G(\theta) + \theta^{-1} G'(\theta)
+```
+
 :::{tip} The Cox-Reid (CR) adjustment
 ```{math}
 \Large
