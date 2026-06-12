@@ -153,42 +153,42 @@ Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in []
 
 ### Overdispersion (theta) estimation
 
-Hence using the likelihood function $l(\mu,\theta)$ to model NB distribution for each gene, the $\theta$ parameter would be estimated after estimation of $\beta$ derived from $\mu$. The vector of mean count $\mu_i$ of gene $i$ deduced by the equation in [](#beta-est-newton-raphson), which is counted for stabilized mean acrossing $N$ samples when performing likelihood function for $\theta$.      
+Hence using the likelihood function $l(\mu,\theta)$ to model NB distribution for each gene, the overdispersion parameter $\theta$ is estimated after determination of $\beta$ derived from $\mu$. The vector of mean count $\mu_i$ of gene $i$ is deduced via the equation in [](#beta-est-newton-raphson), which stands for constant count mean across $N$ samples during optimizing $\theta$.      
 
 ```{math}
 :label: likelihood-theta
 l(\theta) = \sum_{k=1}^{N}{ \left[ \ln\Gamma(C_k + \theta^{-1}) - \ln\Gamma(\theta^{-1}) - \left( C_k +\theta^{-1} \right)\ln(\mu_k+\theta^{-1}) - \frac{1}{\theta} \ln(\theta) \right] }
 ```
 
-The likelihood function $l(\theta)$ [](#likelihood-theta) deduced from general likelihood function of NB distribution [](#likelihood-mu), where chunks of factorial in combinition is substituted by Gamma function, which is interval on $\mathbb{R}$ set, and reducing terms being independent to $\theta$.  
+The likelihood function $l(\theta)$ presented in Equation [](#likelihood-theta) is derived from general likelihood function of NB distribution [](#likelihood-mu). Here the factorial components in the combination term is substituted with Gamma functions to generalize the domain to continuous real numbers ($\mathbb{R}$), while any additive terms independent of $\theta$ are omitted.
 
 ```{math}
 :label: likelihood-derivative-theta
 \frac{d l}{d \theta} = \frac{1}{\theta} \left[ \sum_{k=1}^{N}{ \left( -\frac{1}{\theta} \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1})  \right)  + \ln(1+\mu_k\theta) + \frac{C_k - \mu_k}{\mu_k + \theta^{-1}} \right) } \right]
 ```
 
-To find maximum of likelihood function, the first is computing $\theta$-partial derivative of $l$, which is shown as Equaltion [](#likelihood-derivative-theta), where $\psi(x)$ is derivative of $\ln\Gamma(x)$.   
+To maximize the log-likelihood function, we first compute its derivative with respect to $\theta$, as shown in Equation [](#likelihood-derivative-theta), where $\psi(x)$ denotes the digamma function (the first derivative of $\ln\Gamma(x)$).   
 
 ```{math}
 :label: likelihood-derivative-theta-simplify
 - \underbrace{\frac{1}{\theta}\sum_{k=1}^{N}{ \left( \psi(C_k + \theta^{-1}) - \psi(\theta^{-1}) \right) } }_{D(\theta)} + \underbrace{\sum_{k=1}^{N}{ \left( \ln(1+\mu_k\theta) + \frac{C_k - \mu_k}{\mu_k + \theta^{-1}} \right) } }_{L(\theta)} = 0
 ```
 
-Let $dl/d\theta = 0$, Equation [](#likelihood-derivative-theta-simplify) is derived and could be separated into two parts. The left part $D(\theta)$ contains heavy computation of derivative of Gamma function, which is optimized using frequency table to avoid replicative calculation [@ahlmann-eltzeGlmGamPoiFittingGammaPoisson2021]. Meanwhile $L(\theta)$ is easier to handle.   
+Setting $dl/d\theta = 0$ yields the root-finding problem in Equation [](#likelihood-derivative-theta-simplify), which can be separated into two distinct components. The first part, $D(\theta)$, accounts for the digamma terms and involves intensive computation. To eliminate redundant calculations for identical count values, `glmGamPoi` optimizes this step by utilizing a count frequency table [@ahlmann-eltzeGlmGamPoiFittingGammaPoisson2021]. Meanwhile, the remaining log-mean component, $L(\theta)$, is more straightforward to compute.  
 
 ```{math}
 :label: g-theta
 G(\theta) = L(\theta) - D(\theta)
 ```
 
-In general, gradient $G(\theta)$ [](#g-theta) determines direction of $\theta$ variation. Where $G > 0$, likelihood is increasing, $\theta$ should continue to increase; In opposite, $G < 0$, $\theta$ should decrease as well; And $G = 0$, where likelihood reaches a local extremum.    
+Structurally, the gradient $G(\theta)$ defined in Equation [](#g-theta) governs the direction of the variation of $\theta$. When $G(\theta) > 0$, the log-likelihood slope is positive, indicating that $\theta$ must be increased. Conversely, when $G(\theta) < 0$, the slope is negative, meaning $\theta$ must be decreased. A state of $G(\theta) = 0$ indicates that the log-likelihood has reached a local extremum.
 
 ```{math}
 :label: likelihood-second-derivative
 \frac{d^{2}l}{d\theta^2} = -\theta^{-2}G(\theta) + \theta^{-1} G'(\theta)
 ```
 
-In order to determine a extremum point is minimum or maximum, second derivative of likelihood fuction is employed [](#likelihood-second-derivative), where if $d^{2}l/d\theta^2 < 0$, extremum is maximum, $d^{2}l / d\theta^2 > 0$, it is minimum.  
+To verify whether this stationary point corresponds to a local maximum or minimum, the second derivative of the log-likelihood function is shown in Equation [](#likelihood-second-derivative). According to the second-derivative test, if $d^{2}l/d\theta^2 < 0$, the curvature is concave down, confirming that the extremum is a local maximum representing the Maximum Likelihood Estimate (MLE) of $\theta$.
 
 :::{tip} The Cox-Reid (CR) adjustment
 ```{math}
