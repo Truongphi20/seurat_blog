@@ -192,7 +192,29 @@ To verify whether this stationary point corresponds to a local maximum or minimu
 
 :::{tip} The Cox-Reid (CR) adjustment
 ```{math}
-l(\mu,\theta)_{CR} = l(\mu,\theta) - \frac{1}{2} \ln(det(X^TWX))  
+\begin{cases}
+\begin{aligned}
+
+w_{jj} &= \frac{1}{\theta + 1/\mu_j } \\
+B &= M^TWM \\
+b(\theta) &= \ln(det(B))
+
+\end{aligned}
+\end{cases}
+```
+
+```{math}
+
+l(\theta)_{cr} &= l(\theta) - \frac{1}{2} b(\theta) F_{cr}
+```
+
+```{math}
+
+G(\theta)_{cr} &= G(\theta) - \frac{\theta}{2} \frac{db}{d\theta} F_{cr}
+```
+
+```{math}
+\frac{d^{2}l_{cr}}{d\theta^2} = \frac{d^{2}l}{d\theta^2} + \frac{\theta^2}{2} \left[ \left(\frac{db}{d\theta}\right)^2 - \frac{d^2b}{d\theta^2} \right] F_{cr} - \frac{\theta}{2} \frac{db}{d\theta} F_{cr}
 ```
 
 :::
