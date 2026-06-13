@@ -214,7 +214,7 @@ G(\theta)_{cr} &= G(\theta) - \frac{\theta}{2} \frac{db}{d\theta} F_{cr}
 ```
 
 ```{math}
-\frac{d^{2}l_{cr}}{d\theta^2} = \frac{d^{2}l}{d\theta^2} + \frac{\theta^2}{2} \left[ \left(\frac{db}{d\theta}\right)^2 - \frac{d^2b}{d\theta^2} \right] F_{cr} - \frac{\theta}{2} \frac{db}{d\theta} F_{cr}
+\frac{d^{2}l_{cr}}{d\theta^2} = \frac{d^{2}l}{d\theta^2} + \frac{\theta^2}{2} \left[ \left(\frac{db}{d\theta}\right)^2 - \frac{d^2b}{d\theta^2} - \frac{1}{\theta} \frac{db}{d\theta} \right] F_{cr}
 ```
 
 :::
