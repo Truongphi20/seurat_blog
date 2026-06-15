@@ -32,8 +32,6 @@ Command explanation:
 
 ## Workflow
 
-Based on the formula `~1`, a linear model matrix is assigned with only an intercept term for each sample. Additionally, a small ridge penalty ($\frac{10^{-10}}{N}$) is added to prevent overfitting.
-
 ### Rough dispersion estimation
 
 ```{math}
@@ -183,14 +181,14 @@ G(\theta) = L(\theta) - D(\theta)
 
 Structurally, the gradient $G(\theta)$ defined in Equation [](#g-theta) governs the direction of the variation of $\theta$. When $G(\theta) > 0$, the log-likelihood slope is positive, indicating that $\theta$ must be increased. Conversely, when $G(\theta) < 0$, the slope is negative, meaning $\theta$ must be decreased. A state of $G(\theta) = 0$ indicates that the log-likelihood has reached a local extremum.
 
-```{math}
-:label: likelihood-second-derivative
-\frac{d^{2}l}{d\theta^2} = -\theta^{-2}G(\theta) + \theta^{-1} G'(\theta)
-```
+To verify whether this stationary point corresponds to a local maximum or minimum. The second-derivative of the gradient is tested, if $d^{2}G/d\theta^2 < 0$, the curvature is concave down, confirming that the extremum is a local maximum representing the Maximum Likelihood Estimate (MLE) of $\theta$.
 
-To verify whether this stationary point corresponds to a local maximum or minimum, the second derivative of the log-likelihood function is shown in Equation [](#likelihood-second-derivative). According to the second-derivative test, if $d^{2}l/d\theta^2 < 0$, the curvature is concave down, confirming that the extremum is a local maximum representing the Maximum Likelihood Estimate (MLE) of $\theta$.
+:::{caution}
+The second derivative of log-likelihood is not compatible to the code implement, which is declared at https://github.com/const-ae/glmGamPoi/issues/74.
+:::
 
 :::{tip} The Cox-Reid (CR) adjustment
+
 ```{math}
 \begin{cases}
 \begin{aligned}
@@ -203,19 +201,14 @@ b(\theta) &= \ln(det(B))
 \end{cases}
 ```
 
-```{math}
+Based on the formula `~1`, a linear model matrix ($M$) is assigned with only an intercept term for each sample (a vector of 1). Additionally, a small ridge penalty ($\frac{10^{-10}}{N}$) is added to prevent overfitting.
 
-l(\theta)_{cr} &= l(\theta) - \frac{1}{2} b(\theta) F_{cr}
-```
 
 ```{math}
 
-G(\theta)_{cr} &= G(\theta) - \frac{\theta}{2} \frac{db}{d\theta} F_{cr}
+l(\theta)_{cr} = l(\theta) - \frac{1}{2} b(\theta) F_{cr}
 ```
 
-```{math}
-\frac{d^{2}l_{cr}}{d\theta^2} = \frac{d^{2}l}{d\theta^2} + \frac{\theta^2}{2} \left[ \left(\frac{db}{d\theta}\right)^2 - \frac{d^2b}{d\theta^2} - \frac{1}{\theta} \frac{db}{d\theta} \right] F_{cr}
-```
 
 :::
 
