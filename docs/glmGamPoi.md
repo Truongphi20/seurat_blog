@@ -214,4 +214,6 @@ l(\theta)_{cr} = l(\theta) - \frac{1}{2} b(\theta) F_{cr}
 
 ### Shrinkage
 
+Initially, the vector of estimated dispersion ($\exp(1/\theta_i)$) is performed local median regression to stablize data. Specifically, the dispersion according to each mean count value ($\mu_i$) would be performed weighted median [@cormen2022introduction] with neighbors (sorted by mean, analyzing 100 neighbors by default), where the weight range originates from the range of probability in the domain $[-3,3]$ of normal distribution.  
+
 ## Summary
