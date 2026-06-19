@@ -214,15 +214,22 @@ l(\theta)_{cr} = l(\theta) - \frac{1}{2} b(\theta) F_{cr}
 
 ### Shrinkage
 
-Initially, the vector of estimated dispersion ($\exp(1/\theta_i)$) is performed local median regression to stablize data. Specifically, the dispersion according to each mean count value ($\mu_i$) would be performed weighted median [@cormen2022introduction] with neighbors (sorted by mean, analyzing 100 neighbors by default), where the weight range originates from the range of probability in the domain $[-3,3]$ of standard normal distribution. 
+Even though NB distribution is able to obtain flexible variance-mean relationship, it is proved virtually being uncertainty in parameter estimation. Quasi-likelihood (QL) comes as a solution to adjust dispersion [@lundDetectingDifferentialExpression2012]. The variance-mean equation of quasi-distribution by genes is shown as [](#quasi-likelihood).    
 
 ```{math}
-\sigma^2 = \theta_{QL}(\mu + \theta_t\mu)
+:label: quasi-likelihood
+\sigma^2 = \theta_{QL}(\mu + \mu^2\theta_{\text{trend}})
 ```
 
+Initially, the trend dispersion ($\theta_{\text{trend}}$) is derived from the vector of likelihood estimated dispersion ($\exp(1/\theta_{\text{ML}})$), which is performed local median regression to stablize dispersion. Specifically, the dispersion according to each mean count value ($\mu_i$) would be performed weighted median [@cormen2022introduction] with neighbors (sorted by mean, analyzing 100 neighbors by default), where the weight range originates from the range of probability in the domain $[-3,3]$ of standard normal distribution. 
+
+
 ```{math}
-\theta_{QL} = \frac{1+\mu\theta_{\text{est}}}{1+\mu\theta_{\text{trend}}}
+:label: theta-ql
+\theta_{QL} = \frac{1+\mu\theta_{\text{ML}}}{1+\mu\theta_{\text{trend}}}
 ```
+
+$\theta_{QL}$ is defined by [](#theta-ql), which derived from [](#quasi-likelihood) and mean-variance equation of NB distribution, where likelihood dispersion $\theta_{\text{ML}}$ was smoothed into $\theta_{\text{trend}}$. 
 
 ```{math}
 \theta_{SQL} = \frac{\text{df}_0\tau^2_0 + \text{df}\theta_{QL}}{\text{df}_0 + \text{df}}
