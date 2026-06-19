@@ -220,4 +220,12 @@ Initially, the vector of estimated dispersion ($\exp(1/\theta_i)$) is performed 
 \sigma^2 = \theta_{QL}(\mu + \theta_t\mu)
 ```
 
+```{math}
+\theta_{QL} = \frac{1+\mu\theta_{\text{est}}}{1+\mu\theta_{\text{trend}}}
+```
+
+```{math}
+\theta_{SQL} = \frac{\text{df}_0\tau^2_0 + \text{df}\theta_{QL}}{\text{df}_0 + \text{df}}
+```
+
 ## Summary
