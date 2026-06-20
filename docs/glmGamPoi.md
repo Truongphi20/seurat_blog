@@ -232,6 +232,6 @@ $\theta_{QL}$ is defined by [](#theta-ql), which derived from [](#quasi-likeliho
 \theta_{SQL} = \frac{\text{df}_0\tau^2_0 + \text{df}\theta_{QL}}{\text{df}_0 + \text{df}}
 ```
 
-The shrunken quasi-likelihood overdispersion ($\theta_{SQL}$) for each gene is estimated by Equation [](#shrink_quasi_theta). Particularly, $\text{df}$ is the degree of freedom - DOF ($\text{\#samples} - 1$), $\text{df}_0$ and $\tau^2_0$ are prior parameters which are perspectively DOF and dispersion scaler when denosed by cubic spline and fitting $\theta_{QL}$ to a likelihood scaled Chi-squared model, which helps estimate theoretical number of samples and the denoised central dispersion. From that, $\theta_{SQL}$ represents the real mount of informatic dispersion that data obtains.     
+The shrunken quasi-likelihood overdispersion ($\theta_{SQL}$) for each gene is estimated by Equation [](#shrink_quasi_theta). Particularly, $\text{df}$ is the residual degree of freedom - DOF ($\text{\#samples} - 1$), while $\text{df}_0$ and $\tau^2_0$ are prior parameters representing DOF and dispersion scaler respectively. These prior parameters are estimated by modeling the $\theta_{QL}$ values using a scaled Chi-squared distribution via a natural cubic spline framework. The process successfully yeilds a theoretical pseudo-sample size ($\text{df}_0$) and a denoised central dispersion trend ($\tau_0^2$). Ultimately, the resulting $\theta_{SQL}$ reflects the true amount of informative dispersion captured from the data.  
 
 ## Summary
