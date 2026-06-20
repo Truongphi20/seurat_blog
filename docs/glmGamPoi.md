@@ -32,6 +32,14 @@ Command explanation:
 
 ## Workflow
 
+Overall, this workflow fits a raw count matrix to a Negative Binomial (NB) distribution. The primary target is to determine the model coefficients ($\beta$), which define the log-scaled expected mean counts; and the dispersion parameter ($\theta$) for each gene.
+
+The workflow begins with an initial [rough dispersion estimation](#rough-dispersion), followed by [estimating the model coefficients $\beta$](#beta-estimation) using the Maximum Likelihood method. After fixing $\beta$, the maximum likelihood estimation of $\theta$ is conducted. These gene-specific dispersion estimates are then stabilized via a [shrinkage process](#shrinkage).
+
+:::{attention}
+Ultimately, the final outputs returned by the workflow are the re-estimated coefficients ($\beta$) and the initial dispersion from [](#rough-dispersion).
+:::
+
 (rough-dispersion)=
 ### Rough dispersion estimation
 
@@ -147,6 +155,7 @@ Hence the package `glmGamPoi` uses logarithm-scaled mean $\beta$ mentioned in []
 
 :::
 
+(theta-estimation)=
 ### Overdispersion (theta) estimation
 
 Hence using the likelihood function $l(\mu,\theta)$ to model NB distribution for each gene, the overdispersion parameter $\theta$ is estimated after determination of $\beta$ derived from $\mu$. The vector of mean count $\mu_i$ of gene $i$ is deduced via the equation in [](#beta-est-newton-raphson), which stands for constant count mean across $N$ samples during optimizing $\theta$.      
@@ -237,10 +246,6 @@ $\theta_{QL}$ is defined by [](#theta-ql), which derived from [](#quasi-likeliho
 The shrunken quasi-likelihood overdispersion ($\theta_{SQL}$) for each gene is estimated by Equation [](#shrink_quasi_theta). Particularly, $\text{df}$ is the residual degree of freedom - DOF ($\text{\#samples} - 1$), while $\text{df}_0$ and $\tau^2_0$ are prior parameters representing DOF and dispersion scaler respectively. These prior parameters are estimated by modeling the $\theta_{QL}$ values using a scaled Chi-squared distribution via a natural cubic spline framework. The process successfully yeilds a theoretical pseudo-sample size ($\text{df}_0$) and a denoised central dispersion trend ($\tau_0^2$). Ultimately, the resulting $\theta_{SQL}$ reflects the true amount of informative dispersion captured from the data.
 
 Under the intercept-only model (`~1`), all samples are treated as a single group. The coefficient vector $\beta$ is re-estimated using the trend dispersion ($\theta_\text{trend}$), which is then used to recalculate the expected mean counts. 
-
-:::{attention}
-Ultimately, as the program, the initial dispersion from [](#rough-dispersion) is the output dispersion.  
-:::
 
 
 ## Summary
