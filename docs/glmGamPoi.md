@@ -32,7 +32,7 @@ Command explanation:
 
 ## Workflow
 
-Overall, this workflow fits a raw count matrix to a Negative Binomial (NB) distribution. The primary target is to determine the model coefficients ($\beta$), which define the log-scaled expected mean counts; and the dispersion parameter ($\theta$) for each gene.
+Overall, this workflow fits a raw count matrix to a Negative Binomial (NB) distribution. The primary target is to determine the model coefficients: $\beta$, which represented as the log-scaled expected mean counts; and the dispersion parameter ($\theta$) for each gene.
 
 The workflow begins with an initial [rough dispersion estimation](#rough-dispersion), followed by [estimating the model coefficients $\beta$](#beta-estimation) using the Maximum Likelihood method. After fixing $\beta$, the maximum likelihood estimation of $\theta$ is conducted. These gene-specific dispersion estimates are then stabilized via a [shrinkage process](#shrinkage).
 
