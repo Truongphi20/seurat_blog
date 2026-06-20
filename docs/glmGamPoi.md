@@ -228,7 +228,10 @@ Initially, the trend dispersion ($\theta_{\text{trend}}$) is derived from the ve
 $\theta_{QL}$ is defined by [](#theta-ql), which derived from [](#quasi-likelihood) and mean-variance equation of NB distribution, where likelihood dispersion $\theta_{\text{ML}}$ was smoothed into $\theta_{\text{trend}}$. 
 
 ```{math}
+:label: shrink_quasi_theta
 \theta_{SQL} = \frac{\text{df}_0\tau^2_0 + \text{df}\theta_{QL}}{\text{df}_0 + \text{df}}
 ```
+
+The shrunken quasi-likelihood overdispersion ($\theta_{SQL}$) for each gene is estimated by Equation [](#shrink_quasi_theta). Particularly, $\text{df}$ is the degree of freedom - DOF ($\text{\#samples} - 1$), $\text{df}_0$ and $\tau^2_0$ are prior parameters which are perspectively DOF and dispersion scaler when fitting $\theta_{QL}$ to a likelihood Chi-squared model.  
 
 ## Summary
