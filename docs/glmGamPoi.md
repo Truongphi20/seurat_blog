@@ -32,6 +32,7 @@ Command explanation:
 
 ## Workflow
 
+(rough-dispersion)=
 ### Rough dispersion estimation
 
 ```{math}
@@ -54,6 +55,7 @@ Here, $C_i$ denotes the vector of counts for gene $i$, while $var()$ and $mean()
 This question hasn't known yet.
 :::
 
+(beta-estimation)=
 ### Beta estimation
 
 ```{math}
@@ -232,6 +234,13 @@ $\theta_{QL}$ is defined by [](#theta-ql), which derived from [](#quasi-likeliho
 \theta_{SQL} = \frac{\text{df}_0\tau^2_0 + \text{df}\theta_{QL}}{\text{df}_0 + \text{df}}
 ```
 
-The shrunken quasi-likelihood overdispersion ($\theta_{SQL}$) for each gene is estimated by Equation [](#shrink_quasi_theta). Particularly, $\text{df}$ is the residual degree of freedom - DOF ($\text{\#samples} - 1$), while $\text{df}_0$ and $\tau^2_0$ are prior parameters representing DOF and dispersion scaler respectively. These prior parameters are estimated by modeling the $\theta_{QL}$ values using a scaled Chi-squared distribution via a natural cubic spline framework. The process successfully yeilds a theoretical pseudo-sample size ($\text{df}_0$) and a denoised central dispersion trend ($\tau_0^2$). Ultimately, the resulting $\theta_{SQL}$ reflects the true amount of informative dispersion captured from the data.  
+The shrunken quasi-likelihood overdispersion ($\theta_{SQL}$) for each gene is estimated by Equation [](#shrink_quasi_theta). Particularly, $\text{df}$ is the residual degree of freedom - DOF ($\text{\#samples} - 1$), while $\text{df}_0$ and $\tau^2_0$ are prior parameters representing DOF and dispersion scaler respectively. These prior parameters are estimated by modeling the $\theta_{QL}$ values using a scaled Chi-squared distribution via a natural cubic spline framework. The process successfully yeilds a theoretical pseudo-sample size ($\text{df}_0$) and a denoised central dispersion trend ($\tau_0^2$). Ultimately, the resulting $\theta_{SQL}$ reflects the true amount of informative dispersion captured from the data.
+
+Under the intercept-only model (`~1`), all samples are treated as a single group. The coefficient vector $\beta$ is re-estimated using the trend dispersion ($\theta_\text{trend}$), which is then used to recalculate the expected mean counts. 
+
+:::{attention}
+Ultimately, as the program, the initial dispersion from [](#rough-dispersion) is the output dispersion.  
+:::
+
 
 ## Summary
