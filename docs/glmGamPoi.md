@@ -52,7 +52,7 @@ The rough dispersion estimator is derived from the mean–variance relationship 
 Here, $C_i$ denotes the vector of counts for gene $i$, while $var()$ and $mean()$ represent the variance and mean functions, respectively.
 
 :::{tip} Why is $\xi$ necessary?
-This question hasn't known yet.
+I haven't known yet. I raised it in https://github.com/const-ae/glmGamPoi/issues/75.
 :::
 
 (beta-estimation)=
