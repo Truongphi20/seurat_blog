@@ -196,7 +196,7 @@ The second derivative of log-likelihood is not compatible to the code implement,
 
 :::{tip} The Cox-Reid (CR) adjustment
 
-The Cox-Reid (CR) adjustment is usually used in scRNA-seq data to correct negative bias when performing overdispersion estimation using ML models [@loveModeratedEstimationFold2014].
+The Cox-Reid (CR) adjustment [@coxParameterOrthogonalityApproximate1987] is widely used in bulk and single-cell RNA-seq data analysis to correct for the negative bias that occurs when performing dispersion estimation via Maximum Likelihood Estimation (MLE) [@loveModeratedEstimationFold2014].
 
 ```{math}
 :label: cox-reid-b
@@ -206,23 +206,23 @@ The Cox-Reid (CR) adjustment is usually used in scRNA-seq data to correct negati
 
 w_{jj} &= \frac{1}{\theta + 1/\mu_j } \\
 B &= M^TWM \\
-b(\theta) &= \ln(det(B))
+b(\theta) &= \ln(\det(B))
 
 \end{aligned}
 \end{cases}
 ```
 
-The log-scaled Fisher information is introduced as $b(\theta)$, which measures how well the $\theta$ is estimated by the method. Equation [](#cox-reid-b) shows the calculation.
+The log-determinant of the Fisher information matrix for the linear model coefficients is denoted as $b(\theta)$. Equation [](#cox-reid-b) outlines its calculation.
 
-As the null model `~1`, a linear model matrix ($M$) is assigned with only an intercept term for each sample (a vector of 1). $W$ is a diagonal matrix, where elements $w_{jj}$ are defined as @loveModeratedEstimationFold2014. 
+For a simple null model `~1`, the design matrix ($M$) contains only an intercept term (a column vector of ones). $W$ is a diagonal weight matrix whose elements $w_{jj}$ are determined by the mean $\mu_j$ and the dispersion $\theta$ as specified by @loveModeratedEstimationFold2014.
 
 
 ```{math}
 :label: likelihood-theta-cr
-l(\theta)_{cr} = l(\theta) - \frac{1}{2} b(\theta) F_{cr}
+l(\theta)_{\text{cr}} = l(\theta) - \frac{1}{2} b(\theta) F_{\text{cr}}
 ```
 
-The Cox-Reid adjusted likelihood estimation ($l(\theta)_{cr}$) is introduced as Equation [](#likelihood-theta-cr), where the second term is the adjustment from the bias. This is the main likelihood function for further calculating and estimation.
+The Cox-Reid adjusted log-likelihood ($l(\theta)_{\text{cr}}$) is defined in Equation [](#likelihood-theta-cr), where the second term is the adjustment from the bias. This is the main likelihood function for further calculating and estimation. The scaling factor $F_{\text{cr}}$ (is set to 0.99) prevents the mathematical cancellation leading to exceptionally large values of $\theta$ in edge cases.
 
 :::
 
