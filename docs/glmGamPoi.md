@@ -34,7 +34,7 @@ Command explanation:
 
 Overall, this workflow fits a raw count matrix to a Negative Binomial (NB) distribution. The primary target is to determine the model coefficients: $\beta$, which represented as the log-scaled expected mean counts; and the dispersion parameter ($\theta$) for each gene.
 
-The workflow begins with an initial [rough dispersion estimation](#rough-dispersion), followed by [estimating the model coefficients $\beta$](#beta-estimation) using the Maximum Likelihood method. After fixing $\beta$, the maximum likelihood estimation of $\theta$ is conducted. These gene-specific dispersion estimates are then stabilized via a [shrinkage process](#shrinkage).
+The workflow begins with an initial [rough dispersion estimation](#rough-dispersion), followed by [estimating the model coefficients $\beta$](#beta-estimation) using the Maximum Likelihood method. After fixing $\beta$, the [maximum likelihood estimation of $\theta$](#theta-estimation) is conducted. These gene-specific dispersion estimates are then stabilized via a [shrinkage process](#shrinkage).
 
 (rough-dispersion)=
 ### Rough dispersion estimation
@@ -246,7 +246,7 @@ $\theta_{QL}$ is defined by [](#theta-ql), which derived from [](#quasi-likeliho
 \theta_{SQL} = \frac{\text{df}_0\tau^2_0 + \text{df}\theta_{QL}}{\text{df}_0 + \text{df}}
 ```
 
-The shrunken quasi-likelihood overdispersion ($\theta_{SQL}$) for each gene is estimated by Equation [](#shrink_quasi_theta). Particularly, $\text{df}$ is the residual degree of freedom - DOF ($\text{\#samples} - 1$), while $\text{df}_0$ and $\tau^2_0$ are prior parameters representing DOF and dispersion scaler respectively. These prior parameters are estimated by modeling the $\theta_{QL}$ values using a scaled Chi-squared distribution via a natural cubic spline framework. The process successfully yeilds a theoretical pseudo-sample size ($\text{df}_0$) and a denoised central dispersion trend ($\tau_0^2$). Ultimately, the resulting $\theta_{SQL}$ reflects the true amount of informative dispersion captured from the data.
+The shrunken quasi-likelihood overdispersion ($\theta_{SQL}$) for each gene is estimated by Equation [](#shrink_quasi_theta). Particularly, $\text{df}$ is the residual degree of freedom - DOF ($\text{\#samples} - 1$), while $\text{df}_0$ and $\tau^2_0$ are prior parameters representing DOF and dispersion scaler respectively. These prior parameters are estimated by modeling the $\theta_{QL}$ values using a scaled Chi-squared distribution via a natural cubic spline framework. The process successfully yields a theoretical pseudo-sample size ($\text{df}_0$) and a denoised central dispersion trend ($\tau_0^2$). Ultimately, the resulting $\theta_{SQL}$ reflects the true amount of informative dispersion captured from the data.
 
 Under the intercept-only model (`~1`), all samples are treated as a single group. The coefficient vector $\beta$ is re-estimated using the trend dispersion ($\theta_\text{trend}$), which is then used to recalculate the expected mean counts. 
 
@@ -257,3 +257,5 @@ Ultimately, the final outputs returned by the workflow are the re-estimated coef
 
 
 ## Summary
+
+The Gamma-Poisson model is a good fit for overdispersed scRNA-seq data. Ultimately, the function `glm_gp()` of the glmGamPoi package, which models NB distribution, targets essential regression coefficients (relative log-scaled count mean $\beta$ and overdispersion $\theta$), by maximizing their likelihood estimations.  
