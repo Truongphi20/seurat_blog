@@ -6,9 +6,11 @@ numbering:
 
 ## Introduction
 
+The Gamma-Poisson (or Negative Binomial) distribution is a suitable model to describe variation accurately in count matrices of single-cell RNA-sequencing (scRNA-seq) data in both theory and practice [@ahlmann-eltzeGlmGamPoiFittingGammaPoisson2021]. It plays an essential role in normalizing count data in [the SCTransform](./sctransform.md) process before performing downstream analyses, such as principal component analysis (PCA) or clustering.   
+
+Although several packages implement this framework, [glmGamPoi](https://github.com/const-ae/glmGamPoi) offers an outstanding and robust performance [@ahlmann-eltzeGlmGamPoiFittingGammaPoisson2021].
+
 :::{tip} Seurat command
-:class: dropdown
-:open: true
 This command is captured from the process of [SCTransform](./sctransform.md).
 ```R
 fit <- glmGamPoi::glm_gp(data = umi,
@@ -16,8 +18,6 @@ fit <- glmGamPoi::glm_gp(data = umi,
                            col_data = data,
                            offset = log_umi,
                            size_factors = FALSE)
-
-fit$theta <- 1 / fit$overdispersions
 ```
 
 Command explanation:
