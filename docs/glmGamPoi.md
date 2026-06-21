@@ -36,10 +36,6 @@ Overall, this workflow fits a raw count matrix to a Negative Binomial (NB) distr
 
 The workflow begins with an initial [rough dispersion estimation](#rough-dispersion), followed by [estimating the model coefficients $\beta$](#beta-estimation) using the Maximum Likelihood method. After fixing $\beta$, the maximum likelihood estimation of $\theta$ is conducted. These gene-specific dispersion estimates are then stabilized via a [shrinkage process](#shrinkage).
 
-:::{attention}
-Ultimately, the final outputs returned by the workflow are the re-estimated coefficients ($\beta$) and the initial dispersion from [](#rough-dispersion). I raised an issue at https://github.com/const-ae/glmGamPoi/issues/76
-:::
-
 (rough-dispersion)=
 ### Rough dispersion estimation
 
@@ -253,6 +249,11 @@ $\theta_{QL}$ is defined by [](#theta-ql), which derived from [](#quasi-likeliho
 The shrunken quasi-likelihood overdispersion ($\theta_{SQL}$) for each gene is estimated by Equation [](#shrink_quasi_theta). Particularly, $\text{df}$ is the residual degree of freedom - DOF ($\text{\#samples} - 1$), while $\text{df}_0$ and $\tau^2_0$ are prior parameters representing DOF and dispersion scaler respectively. These prior parameters are estimated by modeling the $\theta_{QL}$ values using a scaled Chi-squared distribution via a natural cubic spline framework. The process successfully yeilds a theoretical pseudo-sample size ($\text{df}_0$) and a denoised central dispersion trend ($\tau_0^2$). Ultimately, the resulting $\theta_{SQL}$ reflects the true amount of informative dispersion captured from the data.
 
 Under the intercept-only model (`~1`), all samples are treated as a single group. The coefficient vector $\beta$ is re-estimated using the trend dispersion ($\theta_\text{trend}$), which is then used to recalculate the expected mean counts. 
+
+:::{attention}
+Ultimately, the final outputs returned by the workflow are the re-estimated coefficients ($\beta$) and the initial dispersion from [](#rough-dispersion). I raised an issue at https://github.com/const-ae/glmGamPoi/issues/76
+:::
+
 
 
 ## Summary
