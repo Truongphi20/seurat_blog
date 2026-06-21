@@ -196,7 +196,11 @@ The second derivative of log-likelihood is not compatible to the code implement,
 
 :::{tip} The Cox-Reid (CR) adjustment
 
+The Cox-Reid (CR) adjustment is usually used in scRNA-seq data to correct negative bias when performing overdispersion estimation using ML models [@loveModeratedEstimationFold2014].
+
 ```{math}
+:label: cox-reid-b
+
 \begin{cases}
 \begin{aligned}
 
@@ -208,14 +212,17 @@ b(\theta) &= \ln(det(B))
 \end{cases}
 ```
 
-Based on the formula `~1`, a linear model matrix ($M$) is assigned with only an intercept term for each sample (a vector of 1). Additionally, a small ridge penalty ($\frac{10^{-10}}{N}$) is added to prevent overfitting.
+The log-scaled Fisher information is introduced as $b(\theta)$, which measures how well the $\theta$ is estimated by the method. Equation [](#cox-reid-b) shows the calculation.
+
+As the null model `~1`, a linear model matrix ($M$) is assigned with only an intercept term for each sample (a vector of 1). $W$ is a diagonal matrix, where elements $w_{jj}$ are defined as @loveModeratedEstimationFold2014. 
 
 
 ```{math}
-
+:label: likelihood-theta-cr
 l(\theta)_{cr} = l(\theta) - \frac{1}{2} b(\theta) F_{cr}
 ```
 
+The Cox-Reid adjusted likelihood estimation ($l(\theta)_{cr}$) is introduced as Equation [](#likelihood-theta-cr), where the second term is the adjustment from the bias. This is the main likelihood function for further calculating and estimation.
 
 :::
 
