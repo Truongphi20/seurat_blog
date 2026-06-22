@@ -10,6 +10,12 @@ pbmc <- SCTransform(pbmc, vars.to.regress = "percent.mt", verbose = FALSE)
 
 :::
 
-## Methods
+## Workflow
+
+### Fitting NB model
+
+### Regularizing model
+
+### Pearson residuals
 
 ## Summary
