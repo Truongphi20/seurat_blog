@@ -20,11 +20,22 @@ pbmc <- SCTransform(pbmc, vars.to.regress = "percent.mt", verbose = FALSE)
 
 At the begining, a number of genes is randomly selected (default is 2000) depending on quantity of expression. They are modeled by Gamma-Poisson general linear model (Gamma-Poisson GLM) to properly obtain overdispersion. See [](./glmGamPoi.md) for more detail about the fitting model process. 
 
-Briefly, it uses the Maximum Likelihood Estimates (MLE) method to estimate coefficients of the model according to the count values of each gene. The coefficients includes relative log-scaled count mean $\beta$, and overdispersion $\theta$.
+Briefly, it uses the Maximum Likelihood Estimates (MLE) method to estimate coefficients of the model according to the count values of each gene. The coefficients includes relative log-scaled count mean $\beta$, and overdispersion $\theta$. Note that the definition of overdispersion between sctransform and Gamma-Poisson GLM are reciprocal.
 
 ```{math}
-\sigma^2 = \mu + \theta\mu^2
+:label: mean-var
+\begin{cases}
+\begin{aligned}
+
+\sigma^2 &= \mu + \frac{1}{\hat{\theta}}\mu^2 \\
+\alpha &= \hat{\theta} / \theta
+
+
+\end{aligned}
+\end{cases}
 ```
+
+Next, theoretical overdispersion $\hat{\theta}$, which is derived from mean-variance relationship of NB model, shown as Equation [](#mean-var). $\alpha$ is the ratio of expected overdispersion ($\hat{\theta}$) over observed overdispersion ($\theta$), which is originated from estimation above. If $\alpha < 0.001$, the model of that gene would be assumed to approximately follow the Poisson distribution ($\sigma^2 = \mu$). 
 
 ### Regularizing model
 
