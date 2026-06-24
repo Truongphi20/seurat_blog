@@ -39,6 +39,15 @@ Next, theoretical overdispersion $\hat{\theta}$, which is derived from mean-vari
 
 ### Regularizing model
 
+```{math}
+:label: geometric-mean
+
+\mu_{\text{g}} = \exp\left[ \frac{1}{N} \sum_{j=1}^{N}{\ln(C_j + \epsilon)} \right] - \epsilon
+
+```
+
+For each gene, logarithmic geometric mean ($\mu_{\text{g}}$) computed by Equation [](#geometric-mean), represents as a centric count without affected by outlier samples. With $C_j$ is the count value of sample $j$ in total $N$ samples, and $\epsilon$ (default is 1) is a small fixed number to avoid $\ln(0)$ [@hafemeisterNormalizationVarianceStabilization2019].   
+
 ### Pearson residuals
 
 ## Summary

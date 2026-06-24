@@ -106,6 +106,7 @@ ScaleData.default <- function(
 
 # commands/sctransform-0.4.3/src/utils.cpp:88
 row_gmean_dgcmatrix <- function(matrix, eps) {
+  browser()
   x <- matrix@x
   i <- matrix@i
   dim <- matrix@Dim
@@ -396,7 +397,7 @@ reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, c
                            use_geometric_mean_offset = FALSE) 
 {
   genes <- names(genes_log_gmean)
-
+  browser()
   overdispersion_factor <- genes_var - genes_amean
   overdispersion_factor_step1 <- overdispersion_factor[genes_step1]
 
