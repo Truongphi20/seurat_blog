@@ -106,7 +106,6 @@ ScaleData.default <- function(
 
 # commands/sctransform-0.4.3/src/utils.cpp:88
 row_gmean_dgcmatrix <- function(matrix, eps) {
-  browser()
   x <- matrix@x
   i <- matrix@i
   dim <- matrix@Dim
@@ -368,6 +367,7 @@ get_model_pars <- function(genes_step1, bin_size, umi, model_str, cells_step1,
 
 # commands/sctransform-0.4.3/R/utils.R:141
 robust_scale_binned <- function(y, x, breaks) {
+  browser()
   bins <- cut(x = x, breaks = breaks, ordered_result = TRUE)
   tmp <- aggregate(x = y, by = list(bin=bins), FUN = function(x) (x - median(x)) / (mad(x) + .Machine$double.eps))
   score <- rep(0, length(x))
@@ -379,6 +379,7 @@ robust_scale_binned <- function(y, x, breaks) {
 # commands/sctransform-0.4.3/R/utils.R:120
 is_outlier <- function(y, x, th = 10) 
 {
+  browser()
   bin.width <- (max(x) - min(x)) * bw.SJ(x) / 2
   eps <- .Machine$double.eps * 10
   breaks1 <- seq(from = min(x) - eps, to = max(x) + bin.width, by = bin.width)
@@ -397,7 +398,7 @@ reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, c
                            use_geometric_mean_offset = FALSE) 
 {
   genes <- names(genes_log_gmean)
-  browser()
+  # browser()
   overdispersion_factor <- genes_var - genes_amean
   overdispersion_factor_step1 <- overdispersion_factor[genes_step1]
 
@@ -439,6 +440,7 @@ reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, c
 
   # look for outliers in the parameters
   # outliers are those that do not fit the overall relationship with the mean at all
+  browser()
   outliers <- apply(model_pars, 2, function(y) is_outlier(y, genes_log_gmean_step1))
   outliers <- apply(outliers, 1, any)
 
