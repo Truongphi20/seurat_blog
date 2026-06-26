@@ -46,4 +46,7 @@ WORKDIR /workspace
 RUN Rscript -e "install.packages('languageserver', repos='https://cloud.r-project.org')"
 ENV R_HOME "/usr/local/bin/R"
 
+# Install for R complier
+RUN sudo apt-get install -y libreadline-dev libxt-dev
+
 ENTRYPOINT ["bash", "-l"]
