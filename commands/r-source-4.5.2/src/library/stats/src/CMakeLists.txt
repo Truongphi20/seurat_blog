@@ -48,6 +48,7 @@ target_compile_definitions(stats PRIVATE
   HAVE_CONFIG_H
   SUPPORT_OPENMP
   HAVE_BLAS
+  ATTRIBUTE_VISIBLE
 )
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
