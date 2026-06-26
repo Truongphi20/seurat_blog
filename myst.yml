@@ -28,6 +28,7 @@ project:
     - title: Supplementary
       children:
         - file: docs/glmGamPoi.md
+        - file: docs/bandwidth_est.md
     
 site:
   template: book-theme
