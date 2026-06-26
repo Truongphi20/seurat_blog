@@ -2,28 +2,16 @@ cmake_minimum_required(VERSION 3.10)
 project(stats LANGUAGES C Fortran)
 
 # Define R internal include paths based on your custom folder tree layout
-set(R_INTERNAL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../include")
+set(R_INTERNAL_INCLUDE_DIR 
+      "${CMAKE_CURRENT_SOURCE_DIR}/../../../include"
+      "${CMAKE_CURRENT_SOURCE_DIR}/../../../gnuwin32/fixed/h"
+)
+set(R_INCLUDE_DIR ${R_INTERNAL_INCLUDE_DIR})
 
 # Dependencies
 find_package(OpenMP)
 find_package(BLAS)
 find_package(LAPACK)
-
-# Retrieve additional BLAS/LAPACK flags from R configuration if available
-if(R_COMMAND)
-  execute_process(
-    COMMAND ${R_COMMAND} CMD config BLAS_LIBS
-    OUTPUT_VARIABLE R_BLAS_LIBS
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    ERROR_QUIET
-  )
-  execute_process(
-    COMMAND ${R_COMMAND} CMD config LAPACK_LIBS
-    OUTPUT_VARIABLE R_LAPACK_LIBS
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    ERROR_QUIET
-  )
-endif()
 
 # Source file definitions
 set(SOURCES_C
@@ -44,7 +32,6 @@ set(SOURCES_F
 # Define target
 add_library(stats SHARED ${SOURCES_C} ${SOURCES_F})
 
-# Properties match R plugin output naming conventions
 set_target_properties(stats PROPERTIES
   PREFIX ""
   SUFFIX ".so"
@@ -59,17 +46,17 @@ target_include_directories(stats PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/../../../appl  
 )
 
-# Compile configurations & macros
-if(CONFIG_H_DIR)
-  target_compile_definitions(stats PRIVATE HAVE_CONFIG_H)
-  message(STATUS "HAVE_CONFIG_H enabled using: ${CONFIG_H_DIR}")
-endif()
+# Force-inject Linux configurations since we skipped R's ./configure
+target_compile_definitions(stats PRIVATE 
+  HAVE_CONFIG_H
+  SUPPORT_OPENMP
+  HAVE_BLAS
+)
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(stats PRIVATE -Wall -O2)
 endif()
 
-# Specific low-optimization flags required by portsrc library routines
 set_source_files_properties(portsrc.f PROPERTIES
   COMPILE_FLAGS "-O0"
 )
@@ -81,14 +68,10 @@ if(OpenMP_FOUND)
   target_link_libraries(stats PRIVATE OpenMP::OpenMP_C OpenMP::OpenMP_Fortran)
 endif()
 
-if(R_BLAS_LIBS)
-  target_link_libraries(stats PRIVATE ${R_BLAS_LIBS})
-elseif(BLAS_FOUND)
+if(BLAS_FOUND)
   target_link_libraries(stats PRIVATE ${BLAS_LIBRARIES})
 endif()
 
-if(R_LAPACK_LIBS)
-  target_link_libraries(stats PRIVATE ${R_LAPACK_LIBS})
-elseif(LAPACK_FOUND)
+if(LAPACK_FOUND)
   target_link_libraries(stats PRIVATE ${LAPACK_LIBRARIES})
 endif()
