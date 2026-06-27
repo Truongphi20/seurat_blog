@@ -8,6 +8,7 @@ x <- readRDS("/workspaces/seurat_blog/test_data/inputs_fitBeta_one_group.rds")
 ## switch-over at n > nb/2 found by empirical timing.
 bw_pair_cnts <- function(x, nb, binned)
 {
+    browser()
     if(binned) {
         r <- range(x)
         d <- diff(r) * 1.01/nb
@@ -25,6 +26,7 @@ bw_pair_cnts <- function(x, nb, binned)
 bw.SJ <- function(x, nb = 1000L, lower = 0.1*hmax, upper = hmax,
                   method = c("ste", "dpi"), tol = 0.1*lower)
 {
+    browser()
     if((n <- length(x)) < 2L) stop("need at least 2 data points")
     n <- as.integer(n)
     if (is.na(n)) stop("invalid length(x)")
