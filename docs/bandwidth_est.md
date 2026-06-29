@@ -21,7 +21,7 @@ Here `x` is an arbitrary numeric vector.
 
 ### Bin-width density
 
-Firstly, data is divided into $N$ bins (default is 1000), and counted density for each bin ($b_i, 0 \le i \le N-1$).  
+Firstly, data is divided into $N$ bins (default is 1000), and counted density for each bin ($b_k, 0 \le k \le N-1$), which is prepared for identifying total denstity for each bin-width distance.  
 
 ```{math}
 :label: ci-sum
