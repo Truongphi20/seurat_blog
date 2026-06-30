@@ -19,9 +19,9 @@ Here `x` is an arbitrary numeric vector.
 
 ## Workflow
 
-### Bin-width density
+### Bin-step density
 
-First, the data is partitioned into $N$ discrete bins (the default is 1000) to determine the individual bin frequencies ($b_k$, where $0 \le k \le N-1$). These frequencies are used to efficiently compute the total number of data point pairs at each specific bin-width distance.
+First, the data is partitioned into $N$ discrete bins (the default is 1000) to determine the individual bin frequencies ($b_k$, where $0 \le k \le N-1$). These frequencies are used to efficiently compute the total number of data point pairs at each specific bin-step.
 
 ```{math}
 :label: ci-sum
