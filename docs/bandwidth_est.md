@@ -38,4 +38,25 @@ c_0 = \sum_{k=0}^{N-1}{ b_k \choose 2 } = \sum_{k=0}^{N-1}{\frac{b_k (b_k-1)}{2}
 
 For the baseline case where the distance between bins is zero ($i = 0$), the value $c_0$ represents the pairs residing within the exact same bin, described in Equation [](#c0-sum). 
 
+### Second pilot bandwidth
+
+```{math}
+b = 0.912 \cdot \hat{\lambda}N^{-1/9}
+```
+
+```{math}
+\hat{T}_D(b) = \frac{1}{N(N-1)b^7} \sum_{i=1}^{N} \sum_{j=1}^{N} \phi^{\text{vi}}\left(\frac{X_i - X_j}{b}\right) \quad \text{}
+```
+
+```{math}
+\begin{cases}
+\begin{aligned}
+
+t_{ij} &= \frac{X_i - X_j}{b} \\
+\phi^{\text{vi}}(t_{ij}) &= \frac{1}{\sqrt{2\pi}} e^{-t_{ij}^2/2} \left(t_{ij}^6 - 15t_{ij}^4 + 45t_{ij}^2 - 15\right)
+
+\end{aligned}
+\end{cases}
+```
+
 ## Summary
