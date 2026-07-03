@@ -45,18 +45,11 @@ b = 0.912 \cdot \hat{\lambda}N^{-1/9}
 ```
 
 ```{math}
-\hat{T}_D(b) = \frac{1}{N(N-1)b^7} \sum_{i=1}^{N} \sum_{j=1}^{N} \phi^{\text{vi}}\left(\frac{X_i - X_j}{b}\right) \quad \text{}
+\hat{T}_D(b) = \frac{1}{N(N-1)b^7} \sum_{i=1}^{N} \left[ c_i \cdot \phi^{\text{vi}}\left(\frac{d \cdot i}{b}\right) \right]
 ```
 
 ```{math}
-\begin{cases}
-\begin{aligned}
-
-t_{ij} &= \frac{X_i - X_j}{b} \\
-\phi^{\text{vi}}(t_{ij}) &= \frac{1}{\sqrt{2\pi}} e^{-t_{ij}^2/2} \left(t_{ij}^6 - 15t_{ij}^4 + 45t_{ij}^2 - 15\right)
-
-\end{aligned}
-\end{cases}
+\phi^{\text{vi}}(t) &= \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left(t^6 - 15t^4 + 45t^2 - 15\right)
 ```
 
 ## Summary
