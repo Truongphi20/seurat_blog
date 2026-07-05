@@ -48,11 +48,11 @@ For the baseline case where the distance between bins is zero ($i = 0$), the val
 ### The second pilot bandwidth
 
 ```{math}
-:label: sec-pilot-bw
+:label: sec-pilot-bw-eq
 b = 0.912 \cdot \hat{\lambda}N^{-1/9}
 ```
 
-At the beginning, the initial heuristic bandwidth ($b$) is computed following Equation [](#sec-pilot-bw) with $\hat{\lambda}$ is the estimated interquartile. 
+At the beginning, the initial heuristic bandwidth ($b$) is computed following Equation [](#sec-pilot-bw-eq) with $\hat{\lambda}$ is the estimated interquartile. 
 
 ```{math}
 :label: t-hat
