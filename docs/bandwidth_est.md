@@ -44,7 +44,7 @@ c_0 = \sum_{k=0}^{N-1}{ b_k \choose 2 } = \sum_{k=0}^{N-1}{\frac{b_k (b_k-1)}{2}
 
 For the baseline case where the distance between bins is zero ($i = 0$), the value $c_0$ represents the pairs residing within the exact same bin, described in Equation [](#c0-sum). 
 
-### Second pilot bandwidth
+### The second pilot bandwidth
 
 ```{math}
 :label: sec-pilot-bw
@@ -62,9 +62,28 @@ The dominator component of Equation [](#hat-alpha) is estimated following Equati
 
 ```{math}
 :label: six-dev-nb
-\phi^{\text{vi}}(t) &= \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left(t^6 - 15t^4 + 45t^2 - 15\right)
+\phi^{\text{vi}}(t) = \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left(t^6 - 15t^4 + 45t^2 - 15\right)
 ```
 
 In Equation [](#t-hat), $\phi^{\text{vi}}(t)$ is the 6-th derivative of the Probability Density Function (PDF) of Normal Distribution. The expansion using the [Hermite polynomials](https://en.wikipedia.org/wiki/Hermite_polynomials) is shown by Equation [](#six-dev-nb).  
+
+### The first pilot bandwidth
+
+```{math}
+:label: st-pilot-bw
+
+a = 0.920 \cdot \hat{\lambda}N^{-1/7}
+
+```
+
+```{math}
+:label: s-hat
+\hat{S}_D(a) = \frac{1}{N(N-1)a^5} \sum_{i=0}^{N-1} \left[ c_i \cdot \phi^{\text{iv}}\left(\frac{d \cdot i}{a}\right) \right]
+```
+
+```{math}
+:label: four-dev-nb
+\phi^{\text{iv}}(t) = \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left( t^4 - 6t^2 + 3 \right) 
+```
 
 ## Summary
