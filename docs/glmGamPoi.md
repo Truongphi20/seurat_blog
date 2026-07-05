@@ -222,6 +222,7 @@ The Cox-Reid adjusted log-likelihood ($l(\theta)_{\text{cr}}$) is defined in Equ
 
 :::
 
+(shrinkage)=
 ### Shrinkage
 
 Even though NB distribution is able to obtain flexible variance-mean relationship, it is proved virtually being uncertainty in parameter estimation. Quasi-likelihood (QL) comes as a solution to adjust dispersion [@lundDetectingDifferentialExpression2012]. The variance-mean equation of quasi-distribution by genes is shown as [](#quasi-likelihood).    
