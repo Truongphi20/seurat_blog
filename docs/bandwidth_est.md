@@ -71,10 +71,10 @@ In Equation [](#t-hat), $\phi^{\text{vi}}(t)$ is the 6-th derivative of the Prob
 
 ```{math}
 :label: st-pilot-bw
-
 a = 0.920 \cdot \hat{\lambda}N^{-1/7}
-
 ```
+
+By assuming both the pilot kernel and the unknown density to be normal distributions in the method of @jonesUsingNonstochasticTerms1991, the heuristic bandwidth $a$ for bias optimization is obtained following Equation [](#st-pilot-bw).
 
 ```{math}
 :label: s-hat
