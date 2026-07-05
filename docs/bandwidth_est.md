@@ -19,6 +19,16 @@ Here `x` is an arbitrary numeric vector.
 
 ## Workflow
 
+:::{tip} Why don't just minimize AMISE to solve bandwidth $h$?
+
+```{math}
+\text{AMISE}(h) = \underbrace{(nh)^{-1} R(K) \vphantom{\frac{1}{4}}}_{\text{variance}} + \underbrace{\frac{1}{4} h^4\sigma^4_K R(f'')}_{\text{bias}}
+```
+
+:::
+
+### Bandwidth for bias optimization 
+
 ```{math}
 :label: hat-alpha 
 \hat{\alpha}_2(h) = 1.357 \cdot \left( \frac{\hat{S}_D(a)}{\hat{T}_D(b)} \right)^{1/7} \cdot h^{5/7}
