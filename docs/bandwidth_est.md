@@ -44,6 +44,7 @@ c_0 = \sum_{k=0}^{N-1}{ b_k \choose 2 } = \sum_{k=0}^{N-1}{\frac{b_k (b_k-1)}{2}
 
 For the baseline case where the distance between bins is zero ($i = 0$), the value $c_0$ represents the pairs residing within the exact same bin, described in Equation [](#c0-sum). 
 
+(sec-pilot-bw)=
 ### The second pilot bandwidth
 
 ```{math}
@@ -78,12 +79,16 @@ By assuming both the pilot kernel and the unknown density to be normal distribut
 
 ```{math}
 :label: s-hat
-\hat{S}_D(a) = \frac{1}{N(N-1)a^5} \sum_{i=0}^{N-1} \left[ c_i \cdot \phi^{\text{iv}}\left(\frac{d \cdot i}{a}\right) \right]
+\begin{cases}
+\begin{aligned}
+
+\hat{S}_D(a) &= \frac{1}{N(N-1)a^5} \sum_{i=0}^{N-1} \left[ c_i \cdot \phi^{\text{iv}}\left(\frac{d \cdot i}{a}\right) \right] \\
+\phi^{\text{iv}}(t) &= \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left( t^4 - 6t^2 + 3 \right) 
+
+\end{aligned}
+\end{cases}
 ```
 
-```{math}
-:label: four-dev-nb
-\phi^{\text{iv}}(t) = \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left( t^4 - 6t^2 + 3 \right) 
-```
+Likewise to [the second pilot bandwidth](#sec-pilot-bw), the numerator component $\hat{S}_D(a)$ for Equation [](#hat-alpha) is computed by Equation [](#s-hat). 
 
 ## Summary
