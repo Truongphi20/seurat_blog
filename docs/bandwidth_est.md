@@ -69,7 +69,7 @@ At the beginning, the initial heuristic bandwidth ($b$) is computed following Eq
 \hat{T}_D(b) = \frac{1}{N(N-1)b^7} \sum_{i=0}^{N-1} \left[ c_i \cdot \phi^{\text{vi}}\left(\frac{d \cdot i}{b}\right) \right]
 ```
 
-The dominator component of Equation [](#hat-alpha) is estimated following Equation [](#t-hat). Practically, due to using bin-step density ($c_i$) with the bin width $d$ calculated while dividing bins, it reduces complexity from $O(n^2)$ to $O(n)$ comparing to the theoretical formula mentioned by @sheatherReliableDataBasedBandwidth1991.   
+The dominator component of Equation [](#hat-alpha) is estimated following Equation [](#t-hat). Practically, due to using bin-step density ($c_i$) with the bin width $d$ calculated while dividing bins, it reduces complexity from $O(k^2)$ ($k$ is the number of data points) to $O(N)$ comparing to the theoretical formula mentioned by @sheatherReliableDataBasedBandwidth1991.   
 
 ```{math}
 :label: six-dev-nb
@@ -99,6 +99,6 @@ By assuming both the pilot kernel and the unknown density to be normal distribut
 \end{cases}
 ```
 
-Likewise to [the second pilot bandwidth](#sec-pilot-bw), the numerator component $\hat{S}_D(a)$ for Equation [](#hat-alpha) is computed by Equation [](#s-hat). 
+Likewise to [the second pilot bandwidth](#sec-pilot-bw), the numerator component $\hat{S}_D(a)$ for Equation [](#hat-alpha) is computed by Equation [](#s-hat). Note that $\phi^{\text{iv}}(t)$ is the 4-th derivative of the PDF of Normal Distribution. 
 
 ## Summary
