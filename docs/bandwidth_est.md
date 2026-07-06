@@ -27,13 +27,6 @@ Here `x` is an arbitrary numeric vector.
 
 :::
 
-### Bandwidth for bias optimization 
-
-```{math}
-:label: hat-alpha 
-\hat{\alpha}_2(h) = 1.357 \cdot \left( \frac{\hat{S}_D(a)}{\hat{T}_D(b)} \right)^{1/7} \cdot h^{5/7}
-```
-
 (bin-step-dens)=
 ### Bin-step density
 
@@ -54,8 +47,16 @@ c_0 = \sum_{k=0}^{N-1}{ b_k \choose 2 } = \sum_{k=0}^{N-1}{\frac{b_k (b_k-1)}{2}
 
 For the baseline case where the distance between bins is zero ($i = 0$), the value $c_0$ represents the pairs residing within the exact same bin, described in Equation [](#c0-sum). 
 
+### Bandwidth for bias optimization 
+
+```{math}
+:label: hat-alpha 
+\hat{\alpha}_2(h) = 1.357 \cdot \left( \frac{\hat{S}_D(a)}{\hat{T}_D(b)} \right)^{1/7} \cdot h^{5/7}
+```
+
+
 (sec-pilot-bw)=
-### The second pilot bandwidth
+#### The second pilot bandwidth
 
 ```{math}
 :label: sec-pilot-bw-eq
@@ -78,7 +79,7 @@ The dominator component of Equation [](#hat-alpha) is estimated following Equati
 
 In Equation [](#t-hat), $\phi^{\text{vi}}(t)$ is the 6-th derivative of the Probability Density Function (PDF) of Normal Distribution. The expansion using the [Hermite polynomials](https://en.wikipedia.org/wiki/Hermite_polynomials) is shown by Equation [](#six-dev-nb).  
 
-### The first pilot bandwidth
+#### The first pilot bandwidth
 
 ```{math}
 :label: st-pilot-bw
