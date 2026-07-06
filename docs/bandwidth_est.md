@@ -51,7 +51,7 @@ For the baseline case where the distance between bins is zero ($i = 0$), the val
 
 ```{math}
 :label: hat-alpha 
-\hat{\alpha}_2(h) = 1.357 \cdot \left( \frac{\hat{S}_D(a)}{\hat{T}_D(b)} \right)^{1/7} \cdot h^{5/7}
+\hat{\alpha}(h) = 1.357 \cdot \left( \frac{\hat{S}_D(a)}{\hat{T}_D(b)} \right)^{1/7} \cdot h^{5/7}
 ```
 
 
@@ -101,5 +101,12 @@ By assuming both the pilot kernel and the unknown density to be normal distribut
 ```
 
 Likewise to [the second pilot bandwidth](#sec-pilot-bw), the numerator component $\hat{S}_D(a)$ for Equation [](#hat-alpha) is computed by Equation [](#s-hat). Note that $\phi^{\text{iv}}(t)$ is the 4-th derivative of the PDF of Normal Distribution. 
+
+### Bandwidth computation
+
+```{math}
+:label: ultimate-bw
+\left[  2N\sqrt{\pi} \hat{S}_D( \hat{\alpha}(h) ) \right]^{-1/5} - h = 0
+```
 
 ## Summary
