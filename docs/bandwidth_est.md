@@ -36,7 +36,7 @@ As mentioned by @sheatherReliableDataBasedBandwidth1991, AMISE is shown by Equat
 - $K$: The estimated model (Normal Distribution)
 - $f$: The real underlying model
 
-The ultimate target of the SJ method is choosing $h$ to as minimize AMISE as possible. Although the variance is straightforward for solving $h$ using mathematic methods, $R(f'')$ in the bias term obstructs the direct minimization by the unknown real model $f$, which may be dependent on $h$, and the integral layer.
+The ultimate target of the SJ method is choosing $h$ to as minimize AMISE as possible. Although the variance is straightforward for solving $h$ using mathematic methods, $R(f'')$ in the bias term obstructs the direct minimization by the unknown real model $f$, which is independent on $h$, and the integral layer.
 
 Therefore, the whole workflow is firstly estimating $R(f'')$ and finding $h$ by minimalizing AMISE.
 
