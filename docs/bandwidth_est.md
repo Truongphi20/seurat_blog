@@ -19,11 +19,26 @@ Here `x` is an arbitrary numeric vector.
 
 ## Workflow
 
-:::{tip} Why don't just minimize AMISE to solve bandwidth $h$?
+:::{tip} Why don't just solve the minimization of AMISE to find bandwidth $h$?
 
 ```{math}
+:label: amise-eq
 \text{AMISE}(h) = \underbrace{(nh)^{-1} R(K) \vphantom{\frac{1}{4}}}_{\text{variance}} + \underbrace{\frac{1}{4} h^4\sigma^4_K R(f'')}_{\text{bias}}
 ```
+
+Asymtotic mean integrated squared error (AMISE) measures disimilarity between the beneath real model and the estimated one from the observed data. 
+
+As mentioned by @sheatherReliableDataBasedBandwidth1991, AMISE is shown by Equation [](#amise-eq) with two components representing the variance of estimation and the bias comparing to underlying model. Particularly:
+
+- $n$: The bin number
+- $h$: The bandwidth
+- $R(g)$: The roughness function ($\int{g(x)^2dx}$)
+- $K$: The estimated model (Normal Distribution)
+- $f$: The real underlying model
+
+The ultimate target of the SJ method is choosing $h$ to as minimize AMISE as possible. Although the variance is straightforward for solving $h$ using mathematic methods, $R(f'')$ in the bias term obstructs the direct minimization by the unknown real model $f$, which may be dependent on $h$, and the integral layer.
+
+Therefore, the whole workflow is firstly estimating $R(f'')$ and finding $h$ by minimalizing AMISE.
 
 :::
 
