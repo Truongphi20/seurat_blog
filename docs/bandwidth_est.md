@@ -30,7 +30,7 @@ Asymtotic mean integrated squared error (AMISE) measures disimilarity between th
 
 As mentioned by @sheatherReliableDataBasedBandwidth1991, AMISE is shown by Equation [](#amise-eq) with two components representing the variance of estimation and the bias comparing to underlying model. Particularly:
 
-- $n$: The bin number
+- $n$: The length of data
 - $h$: The bandwidth
 - $R(g)$: The roughness function ($\int{g(x)^2dx}$)
 - $K$: The estimated model (Normal Distribution)
@@ -44,19 +44,29 @@ Therefore, the whole workflow is firstly estimating $R(f'')$ and finding $h$ by 
 
 :::{tip} How to estimate $R(f'')$?
 
+The kernel-based method of @jonesUsingNonstochasticTerms1991 is utilized to estimate $R(f'')$.
+
 ```{math}
+:label: roughness-define
 R(f'') = \int_{-\infty}^{+\infty} [f''(x)]^2 dx = \int_{-\infty}^{+\infty} f^{\text{iv}}(x)f(x) dx = \mathbb{E}[f^{\text{iv}}(X)]
 ```
 
+First, the roughness function of $f''$ is defined and performed integration by parts to be the expectation of 4-th derivative of $f$, which shown in Equation [](#roughness-define).  
 
 ```{math}
+:label: real-f-est
 \hat{f}_\alpha^{\text{iv}}(x) = \frac{1}{n\alpha^5} \sum_{j=1}^n L^{\text{iv}}\left(\frac{x - X_j}{\alpha}\right)
 ```
 
+The method assumes that the real model following another [Kernel Density Estimation (KDE)](https://en.wikipedia.org/wiki/Kernel_density_estimation), which is different to the KDE when expanding AMISE (kernel function $K$, bandwidth $h$), with the kernel function $L$ and bandwidth $\alpha$. The 4-th derivative of real model estimation $\hat{f}_\alpha^{\text{iv}}(x)$ at a random point follows Equation [](#real-f-est). 
+
 
 ```{math}
+:label: s-diagonal
 \hat{S}_{\text{D}}(\alpha) = \frac{1}{n} \sum_{i=1}^n \hat{f}_\alpha^{\text{iv}}(X_i) = \frac{1}{n^2 \alpha^5} \sum_{i=1}^n \sum_{j=1}^n L^{\text{iv}}\left(\frac{X_i - X_j}{\alpha}\right)
 ```
+
+To be general, the average of estimation ($\hat{S}_{\text{D}}(\alpha)$) across the data represents the validly estimated $f^{\text{iv}}(X)$, which is shown by Equation [](#s-diagonal). 
 
 ```{math}
 \hat{S}_{\text{D}}(\alpha) = \frac{L^{\text{iv}}(0)}{n \alpha^5} + \hat{S}_{\text{ND}}(\alpha)
