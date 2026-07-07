@@ -42,6 +42,36 @@ Therefore, the whole workflow is firstly estimating $R(f'')$ and finding $h$ by 
 
 :::
 
+:::{tip} How to estimate $R(f'')$?
+
+```{math}
+R(f'') = \int_{-\infty}^{+\infty} [f''(x)]^2 dx = \int_{-\infty}^{+\infty} f^{\text{iv}}(x)f(x) dx = \mathbb{E}[f^{\text{iv}}(X)]
+```
+
+
+```{math}
+\hat{f}_\alpha^{\text{iv}}(x) = \frac{1}{n\alpha^5} \sum_{j=1}^n L^{\text{iv}}\left(\frac{x - X_j}{\alpha}\right)
+```
+
+
+```{math}
+\hat{S}_{\text{D}}(\alpha) = \frac{1}{n} \sum_{i=1}^n \hat{f}_\alpha^{\text{iv}}(X_i) = \frac{1}{n^2 \alpha^5} \sum_{i=1}^n \sum_{j=1}^n L^{\text{iv}}\left(\frac{X_i - X_j}{\alpha}\right)
+```
+
+```{math}
+\hat{S}_{\text{D}}(\alpha) = \frac{L^{\text{iv}}(0)}{n \alpha^5} + \hat{S}_{\text{ND}}(\alpha)
+```
+
+```{math}
+\mathbb{E}[\hat{S}_{\text{D}}(\alpha)] \approx R(f'') + \underbrace{\frac{L^{\text{iv}}(0)}{n \alpha^5}}_{\text{Positive Bias}} - \underbrace{\frac{1}{2}\alpha^2 \sigma_L^2 R(f''')}_{\text{Negative Bias}}
+```
+
+```{math}
+\alpha_2 = \left( \frac{2 L^{\text{iv}}(0)}{\sigma_L^2} \right)^{1/7} R^{-1/7}(f''') n^{-1/7}
+```
+
+:::
+
 (bin-step-dens)=
 ### Bin-step density
 
