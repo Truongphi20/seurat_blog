@@ -38,7 +38,12 @@ As mentioned by @sheatherReliableDataBasedBandwidth1991, AMISE is shown by Equat
 
 The ultimate target of the SJ method is choosing $h$ to as minimize AMISE as possible. Although the variance is straightforward for solving $h$ using mathematic methods, $R(f'')$ in the bias term obstructs the direct minimization by the unknown real model $f$, which is independent on $h$, and the integral layer.
 
-Therefore, the whole workflow is firstly estimating $R(f'')$ and finding $h$ by minimalizing AMISE.
+```{math}
+:label: amise-dev
+h_{\text{opt}} = \left[ \frac{R(K)}{\sigma_K^4 R(f'') n} \right]^{1/5}
+```
+
+Therefore, the whole workflow is firstly estimating $R(f'')$ and finding $h_{\text{opt}}$ by minimalizing AMISE through the derivative Equation [](#amise-dev).
 
 :::
 
@@ -88,6 +93,15 @@ Equation [](#exp-s-diag) applies an expectation layer to obtain $\mathbb{E}[\hat
 ```
 
 To correct the estimation, the bias components is canceled out by the bandwidth $\alpha$ following Equation [](#alpha-eq), where possitive bias equals negative one. 
+
+```{math}
+:label: alpha-trans1
+\alpha(h_{\text{opt}}) = \left( \frac{2 L^{\text{iv}}(0) \sigma_K^4}{\sigma_L^2 R(K)} \right)^{1/7} \cdot \left( \frac{R(f'')}{R(f''')} \right)^{1/7} h_{\text{opt}}^{5/7}
+```
+
+By manipulating with Equation [](#amise-dev), $\alpha$ is able to performed as Equation [](#alpha-trans1), where the ratio $R(f'')/R(f''')$ can be estimated by heuristic pilot bandwidths.
+
+Summarily, $R(f'') \approx \hat{S}_{\text{D}}(\alpha(h_{\text{opt}}))$, which is an independent KDE performed as Equation [](s-diagonal) with $\alpha$ depended on optimized bandwidth $h_{\text{opt}}$ shown as Equation [](#alpha-trans1). From that, $h_{\text{opt}}$ can be solved by the equation, the susitution of $\hat{S}_{\text{D}}(\alpha(h_{\text{opt}}))$ to Equation [](#amise-dev).  
 
 :::
 
