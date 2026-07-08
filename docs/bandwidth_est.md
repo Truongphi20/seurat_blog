@@ -69,16 +69,25 @@ The method assumes that the real model following another [Kernel Density Estimat
 To be general, the average of estimation ($\hat{S}_{\text{D}}(\alpha)$) across the data represents the validly estimated $f^{\text{iv}}(X)$, which is shown by Equation [](#s-diagonal). 
 
 ```{math}
+:label: sep-s-diag
 \hat{S}_{\text{D}}(\alpha) = \frac{L^{\text{iv}}(0)}{n \alpha^5} + \hat{S}_{\text{ND}}(\alpha)
 ```
 
+Separating $\hat{S}_{\text{D}}(\alpha)$ into 2 parts shown by Equation [](#sep-s-diag) including the diagonal term, where $i=j$, and non-diagonal $\hat{S}_{\text{ND}}(\alpha)$, which facilitates for asymptotic expansion of expectation. 
+
 ```{math}
+:label: exp-s-diag
 \mathbb{E}[\hat{S}_{\text{D}}(\alpha)] \approx R(f'') + \underbrace{\frac{L^{\text{iv}}(0)}{n \alpha^5}}_{\text{Positive Bias}} - \underbrace{\frac{1}{2}\alpha^2 \sigma_L^2 R(f''')}_{\text{Negative Bias}}
 ```
 
+Equation [](#exp-s-diag) applies an expectation layer to obtain $\mathbb{E}[\hat{S}_{\text{D}}(\alpha)]$, which is the ultimate estimation for $\mathbb{E}[f^{\text{iv}}(X)]$ representing the $R(f'')$ proven by Equation [](#roughness-define). After asymptotically expanding $\mathbb{E}[\hat{S}_{\text{ND}}(\alpha)]$, there are approximally two components seen as bias from the true roughness $R(f'')$.      
+
 ```{math}
-\alpha_2 = \left( \frac{2 L^{\text{iv}}(0)}{\sigma_L^2} \right)^{1/7} R^{-1/7}(f''') n^{-1/7}
+:label: alpha-eq
+\alpha = \left( \frac{2 L^{\text{iv}}(0)}{\sigma_L^2} \right)^{1/7} R^{-1/7}(f''') n^{-1/7}
 ```
+
+To correct the estimation, the bias components is canceled out by the bandwidth $\alpha$ following Equation [](#alpha-eq), where possitive bias equals negative one. 
 
 :::
 
