@@ -19,31 +19,31 @@ Here `x` is an arbitrary numeric vector.
 
 ## Workflow
 
-:::{tip} Why don't just solve the minimization of AMISE to find bandwidth $h$?
+:::{tip} Why don't we just solve the minimization of AMISE to find bandwidth $h$?
+
+Asymptotic mean integrated squared error (AMISE) measures dissimilarity between the underlying true density function and the estimator constructed from observed data. 
 
 ```{math}
 :label: amise-eq
 \text{AMISE}(h) = \underbrace{(nh)^{-1} R(K) \vphantom{\frac{1}{4}}}_{\text{variance}} + \underbrace{\frac{1}{4} h^4\sigma^4_K R(f'')}_{\text{bias}}
 ```
 
-Asymtotic mean integrated squared error (AMISE) measures disimilarity between the beneath real model and the estimated one from the observed data. 
+As detailed by @sheatherReliableDataBasedBandwidth1991, AMISE consists of two components representing the variance of the estimation and its squared bias relative to the true model:
 
-As mentioned by @sheatherReliableDataBasedBandwidth1991, AMISE is shown by Equation [](#amise-eq) with two components representing the variance of estimation and the bias comparing to underlying model. Particularly:
+- $n$: The sample size
+- $h$: The smoothing bandwidth
+- $R(g)$: The roughness functional ($\int{g(x)^2dx}$)
+- $K$: The primary kernel function (typically a standard normal density)
+- $f$: The true underlying density function
 
-- $n$: The length of data
-- $h$: The bandwidth
-- $R(g)$: The roughness function ($\int{g(x)^2dx}$)
-- $K$: The estimated model (Normal Distribution)
-- $f$: The real underlying model
-
-The ultimate target of the SJ method is choosing $h$ to as minimize AMISE as possible. Although the variance is straightforward for solving $h$ using mathematic methods, $R(f'')$ in the bias term obstructs the direct minimization by the unknown real model $f$, which is independent on $h$, and the integral layer.
+The ultimate target of the SJ method is choosing $h$ to minimize AMISE. While the variance term is mathematically straightforward, the true roughness $R(f'')$ in the bias term obstructs direct minimization because it depends on the unknown true density $f$. Crucially, $f$ is completely independent of our chosen bandwidth $h$.
 
 ```{math}
 :label: amise-dev
 h_{\text{opt}} = \left[ \frac{R(K)}{\sigma_K^4 R(f'') n} \right]^{1/5}
 ```
 
-Therefore, the whole workflow is firstly estimating $R(f'')$ and finding $h_{\text{opt}}$ by minimalizing AMISE through the derivative Equation [](#amise-dev).
+Therefore, the core workflow prioritizes to estimate $R(f'')$ first, allowing to find $h_{\text{opt}}$ by solving the minimized AMISE equation (Equation [](#amise-dev)) derived from setting its derivative to zero.
 
 :::
 
@@ -56,43 +56,43 @@ The kernel-based method of @jonesUsingNonstochasticTerms1991 is utilized to esti
 R(f'') = \int_{-\infty}^{+\infty} [f''(x)]^2 dx = \int_{-\infty}^{+\infty} f^{\text{iv}}(x)f(x) dx = \mathbb{E}[f^{\text{iv}}(X)]
 ```
 
-First, the roughness function of $f''$ is defined and performed integration by parts to be the expectation of 4-th derivative of $f$, which shown in Equation [](#roughness-define).  
+First, the roughness function of $f''$ is rewritten using integration by parts to express it as the mathematical expectation of the 4-th derivative of the true density $f$, as shown in Equation [](#roughness-define).
 
 ```{math}
 :label: real-f-est
 \hat{f}_\alpha^{\text{iv}}(x) = \frac{1}{n\alpha^5} \sum_{j=1}^n L^{\text{iv}}\left(\frac{x - X_j}{\alpha}\right)
 ```
 
-The method assumes that the real model following another [Kernel Density Estimation (KDE)](https://en.wikipedia.org/wiki/Kernel_density_estimation), which is different to the KDE when expanding AMISE (kernel function $K$, bandwidth $h$), with the kernel function $L$ and bandwidth $\alpha$. The 4-th derivative of real model estimation $\hat{f}_\alpha^{\text{iv}}(x)$ at a random point follows Equation [](#real-f-est). 
-
+To estimate this expectation, a secondary pilot kernel density estimator is introduced using a pilot kernel function $L$ and a pilot bandwidth $\alpha$ (distinct from the primary kernel $K$ and bandwidth $h$). Evaluating the 4-th derivative of this pilot density yields Equation [](#real-f-est).
 
 ```{math}
 :label: s-diagonal
 \hat{S}_{\text{D}}(\alpha) = \frac{1}{n} \sum_{i=1}^n \hat{f}_\alpha^{\text{iv}}(X_i) = \frac{1}{n^2 \alpha^5} \sum_{i=1}^n \sum_{j=1}^n L^{\text{iv}}\left(\frac{X_i - X_j}{\alpha}\right)
 ```
 
-To be general, the average of estimation ($\hat{S}_{\text{D}}(\alpha)$) across the data represents the validly estimated $f^{\text{iv}}(X)$, which is shown by Equation [](#s-diagonal). 
+Evaluating this derivative estimator at every observed data point $X_i$ and taking the sample average gives the "diagonals-in" functional estimator $\hat{S}_{\text{D}}(\alpha)$ shown in Equation [](#s-diagonal).
 
 ```{math}
 :label: sep-s-diag
 \hat{S}_{\text{D}}(\alpha) = \frac{L^{\text{iv}}(0)}{n \alpha^5} + \hat{S}_{\text{ND}}(\alpha)
 ```
 
-Separating $\hat{S}_{\text{D}}(\alpha)$ into 2 parts shown by Equation [](#sep-s-diag) including the diagonal term, where $i=j$, and non-diagonal $\hat{S}_{\text{ND}}(\alpha)$, which facilitates for asymptotic expansion of expectation. 
+Separating $\hat{S}_{\text{D}}(\alpha)$ into two parts isolates the diagonal terms (where $i=j$) from the off-diagonal terms $\hat{S}_{\text{ND}}(\alpha)$ ($i \neq j$), which facilitates an asymptotic expansion of its expected value.
 
 ```{math}
 :label: exp-s-diag
 \mathbb{E}[\hat{S}_{\text{D}}(\alpha)] \approx R(f'') + \underbrace{\frac{L^{\text{iv}}(0)}{n \alpha^5}}_{\text{Positive Bias}} - \underbrace{\frac{1}{2}\alpha^2 \sigma_L^2 R(f''')}_{\text{Negative Bias}}
 ```
 
-Equation [](#exp-s-diag) applies an expectation layer to obtain $\mathbb{E}[\hat{S}_{\text{D}}(\alpha)]$, which is the ultimate estimation for $\mathbb{E}[f^{\text{iv}}(X)]$ representing the $R(f'')$ proven by Equation [](#roughness-define). After asymptotically expanding $\mathbb{E}[\hat{S}_{\text{ND}}(\alpha)]$, there are approximally two components seen as bias from the true roughness $R(f'')$.      
+Equation [](#exp-s-diag) takes the expectation of both terms to obtain $\mathbb{E}[\hat{S}_{\text{D}}(\alpha)]$, which is the ultimate estimation for $\mathbb{E}[f^{\text{iv}}(X)]$. After applying the asymptotic expansion of $\mathbb{E}[\hat{S}_{\text{ND}}(\alpha)]$, there are approximally two components causing bias from the true roughness $R(f'')$. 
+
 
 ```{math}
 :label: alpha-eq
 \alpha = \left( \frac{2 L^{\text{iv}}(0)}{\sigma_L^2} \right)^{1/7} R^{-1/7}(f''') n^{-1/7}
 ```
 
-To correct the estimation, the bias components is canceled out by the bandwidth $\alpha$ following Equation [](#alpha-eq), where possitive bias equals negative one. 
+To correct the estimator, the bias components is canceled out by the bandwidth $\alpha$ following Equation [](#alpha-eq), where positive and negative bias are equal each other. 
 
 ```{math}
 :label: alpha-trans1
@@ -101,7 +101,7 @@ To correct the estimation, the bias components is canceled out by the bandwidth 
 
 By manipulating with Equation [](#amise-dev), $\alpha$ is able to performed as Equation [](#alpha-trans1), where the ratio $R(f'')/R(f''')$ can be estimated by heuristic pilot bandwidths.
 
-Summarily, $R(f'') \approx \hat{S}_{\text{D}}(\alpha(h_{\text{opt}}))$, which is an independent KDE performed as Equation [](s-diagonal) with $\alpha$ depended on optimized bandwidth $h_{\text{opt}}$ shown as Equation [](#alpha-trans1). From that, $h_{\text{opt}}$ can be solved by the equation, the susitution of $\hat{S}_{\text{D}}(\alpha(h_{\text{opt}}))$ to Equation [](#amise-dev).  
+Summarily, $R(f'') \approx \hat{S}_{\text{D}}(\alpha(h_{\text{opt}}))$, which is performed as Equation [](s-diagonal) with an independent KDE obtaining $\alpha$ depended on the optimized bandwidth $h_{\text{opt}}$ shown as Equation [](#alpha-trans1). From that, $h_{\text{opt}}$ can be solved by the equation of subsituting $\hat{S}_{\text{D}}(\alpha(h_{\text{opt}}))$ to Equation [](#amise-dev). 
 
 :::
 
