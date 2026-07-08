@@ -132,6 +132,31 @@ For the baseline case where the distance between bins is zero ($i = 0$), the val
 \hat{\alpha}(h) = 1.357 \cdot \left( \frac{\hat{S}_D(a)}{\hat{T}_D(b)} \right)^{1/7} \cdot h^{5/7}
 ```
 
+From Equation [](#alpha-trans1), assuming both kernel function $K$ and $L$ follows Probability Density Function (PDF) of Normal Distribution. Additionally, $R(f'')$ and $R(f''')$ are estimated to $\hat{S}_D(a)$ and $\hat{T}_D(b)$ perspectively using the method of @jonesUsingNonstochasticTerms1991 with the heuristic pilot bandwidth $a$ and $b$. The practical computation of $\hat{S}_D(a)$ and $\hat{T}_D(b)$ details in [](#fist-pilot-bw) and [](#sec-pilot-bw) correspondently.
+
+(fist-pilot-bw)=
+#### The first pilot bandwidth
+
+```{math}
+:label: st-pilot-bw
+a = 0.920 \cdot \hat{\lambda}N^{-1/7}
+```
+
+By assuming both the pilot kernel and the unknown density to be normal distributions in the method of @jonesUsingNonstochasticTerms1991, the heuristic bandwidth $a$ for bias optimization is obtained following Equation [](#st-pilot-bw).
+
+```{math}
+:label: s-hat
+\begin{cases}
+\begin{aligned}
+
+\hat{S}_D(a) &= \frac{1}{N(N-1)a^5} \sum_{i=0}^{N-1} \left[ c_i \cdot \phi^{\text{iv}}\left(\frac{d \cdot i}{a}\right) \right] \\
+\phi^{\text{iv}}(t) &= \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left( t^4 - 6t^2 + 3 \right) 
+
+\end{aligned}
+\end{cases}
+```
+
+Likewise to [the second pilot bandwidth](#sec-pilot-bw), the numerator component $\hat{S}_D(a)$ for Equation [](#hat-alpha) is computed by Equation [](#s-hat). Note that $\phi^{\text{iv}}(t)$ is the 4-th derivative of the PDF of Normal Distribution. 
 
 (sec-pilot-bw)=
 #### The second pilot bandwidth
@@ -155,30 +180,7 @@ The dominator component of Equation [](#hat-alpha) is estimated following Equati
 \phi^{\text{vi}}(t) = \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left(t^6 - 15t^4 + 45t^2 - 15\right)
 ```
 
-In Equation [](#t-hat), $\phi^{\text{vi}}(t)$ is the 6-th derivative of the Probability Density Function (PDF) of Normal Distribution. The expansion using the [Hermite polynomials](https://en.wikipedia.org/wiki/Hermite_polynomials) is shown by Equation [](#six-dev-nb).  
-
-#### The first pilot bandwidth
-
-```{math}
-:label: st-pilot-bw
-a = 0.920 \cdot \hat{\lambda}N^{-1/7}
-```
-
-By assuming both the pilot kernel and the unknown density to be normal distributions in the method of @jonesUsingNonstochasticTerms1991, the heuristic bandwidth $a$ for bias optimization is obtained following Equation [](#st-pilot-bw).
-
-```{math}
-:label: s-hat
-\begin{cases}
-\begin{aligned}
-
-\hat{S}_D(a) &= \frac{1}{N(N-1)a^5} \sum_{i=0}^{N-1} \left[ c_i \cdot \phi^{\text{iv}}\left(\frac{d \cdot i}{a}\right) \right] \\
-\phi^{\text{iv}}(t) &= \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left( t^4 - 6t^2 + 3 \right) 
-
-\end{aligned}
-\end{cases}
-```
-
-Likewise to [the second pilot bandwidth](#sec-pilot-bw), the numerator component $\hat{S}_D(a)$ for Equation [](#hat-alpha) is computed by Equation [](#s-hat). Note that $\phi^{\text{iv}}(t)$ is the 4-th derivative of the PDF of Normal Distribution. 
+In Equation [](#t-hat), $\phi^{\text{vi}}(t)$ is the 6-th derivative of the Normal Distribution PDF. The expansion using the [Hermite polynomials](https://en.wikipedia.org/wiki/Hermite_polynomials) is shown by Equation [](#six-dev-nb).  
 
 ### Bandwidth computation
 
