@@ -19,6 +19,8 @@ Here `x` is an arbitrary numeric vector.
 
 ## Workflow
 
+At the beginning, the input vector ($X$) data is divided into bins and measured density of each bin-step (detailed in [](#bin-step-dens)), which helps reduce significantly computational cost when computing pilot bandwidths of [the secondary bandwidth ($\alpha$) estimator](#sec-bw-est). From that, [the primary bandwidth $h$](#prim-bw-h-comp) is solved from derivative of AMISE. The mathematic theories is mentioned in green boxes below. 
+
 :::{tip} Why don't we just solve the minimization of AMISE to find bandwidth $h$?
 
 Asymptotic mean integrated squared error (AMISE) measures dissimilarity between the underlying true density function and the estimator constructed from observed data. 
@@ -125,7 +127,8 @@ c_0 = \sum_{k=0}^{N-1}{ b_k \choose 2 } = \sum_{k=0}^{N-1}{\frac{b_k (b_k-1)}{2}
 
 For the baseline case where the distance between bins is zero ($i = 0$), the value $c_0$ represents the pairs residing within the exact same bin, described in Equation [](#c0-sum). 
 
-### Bandwidth for bias optimization 
+(sec-bw-est)=
+### Secondary bandwidth ($\alpha$) estimator
 
 ```{math}
 :label: hat-alpha 
@@ -182,7 +185,8 @@ Simmilarly, $R(f''')$ is estimated and canceled out bias by using specific bandw
 
 Likewise to [the first pilot bandwidth](#fist-pilot-bw), the component $\hat{T}_D(b)$ estimated for $R(f''')$ in Equation [](#hat-alpha) is computed by Equation [](#t-hat). Note that $\phi^{\text{vi}}(t)$ is the 6-th derivative of the PDF of Normal Distribution. 
 
-### Bandwidth computation
+(prim-bw-h-comp)=
+### Primary bandwidth ($h$) computation
 
 ```{math}
 :label: ultimate-bw
