@@ -189,4 +189,10 @@ Likewise to [the first pilot bandwidth](#fist-pilot-bw), the component $\hat{T}_
 \left[  2N\sqrt{\pi} \hat{S}_D( \hat{\alpha}(h) ) \right]^{-1/5} - h = 0
 ```
 
+Ultimately, the optimal bandwidth $h$ is found by Equation [](#ultimate-bw), which originates from Equation [](#amise-dev) with $K$ following normal scale model and the substitution of $R(f'')$ by $\hat{S}_D( \hat{\alpha}(h) )$. Noticeably, data size $n$ is replaced by the number of bins $N$. 
+
+Finally, Equation [](#ultimate-bw) is solved using Brent's method [@brent2013algorithms] to find optimized bandwidth $h$. 
+
 ## Summary
+
+Eventhough @sheatherReliableDataBasedBandwidth1991 stated that the final bandwidth $h$ is solved using Newton-Raphson method, Brent's method is employed in practice to find root of Equation [](#ultimate-bw) ensuring convergence and computational robustness.  
