@@ -146,14 +146,14 @@ By Equation [](#alpha-eq), assuming both the kernel function $L$ and the true de
 
 ```{math}
 :label: s-hat
-\hat{S}_D(a) &= \frac{1}{N(N-1)a^5} \sum_{i=0}^{N-1} \left[ c_i \cdot \phi^{\text{iv}}\left(\frac{d \cdot i}{a}\right) \right]
+\hat{S}_D(a) = \frac{1}{N(N-1)a^5} \sum_{i=0}^{N-1} \left[ c_i \cdot \phi^{\text{iv}}\left(\frac{d \cdot i}{a}\right) \right]
 ```
 
 The pilot roughness estimator $\hat{S}_D(a)$ of Equation [](#hat-alpha) is estimated following Equation [](#s-hat), which originates from Equation [](#s-diagonal). Practically, due to using bin-step density ($c_i$) with the bin width $d$ calculated while dividing bins, it reduces complexity from $O(k^2)$ ($k$ is the data size) to $O(N)$ comparing to the theoretical formula.
 
 ```{math}
 :label: phi-iv
-\phi^{\text{iv}}(t) &= \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left( t^4 - 6t^2 + 3 \right) 
+\phi^{\text{iv}}(t) = \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \left( t^4 - 6t^2 + 3 \right) 
 ```
 
 In Equation [](#s-hat), $\phi^{\text{iv}}(t)$ is the 4-th derivative of the Normal Distribution PDF. The expansion using the [Hermite polynomials](https://en.wikipedia.org/wiki/Hermite_polynomials) is shown by Equation [](#phi-iv). 
@@ -180,7 +180,7 @@ Simmilarly, $R(f''')$ is estimated and canceled out bias by using specific bandw
 \end{cases}
 ```
 
-Likewise to [the first pilot bandwidth](#fist-pilot-bw), the component $\hat{T}_D(b)$ for Equation [](#hat-alpha) is computed by Equation [](#t-hat). Note that $\phi^{\text{vi}}(t)$ is the 6-th derivative of the PDF of Normal Distribution. 
+Likewise to [the first pilot bandwidth](#fist-pilot-bw), the component $\hat{T}_D(b)$ estimated for $R(f''')$ in Equation [](#hat-alpha) is computed by Equation [](#t-hat). Note that $\phi^{\text{vi}}(t)$ is the 6-th derivative of the PDF of Normal Distribution. 
 
 ### Bandwidth computation
 
