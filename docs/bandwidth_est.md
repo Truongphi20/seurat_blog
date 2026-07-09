@@ -19,7 +19,9 @@ Here `x` is an arbitrary numeric vector.
 
 ## Workflow
 
-At the beginning, the input vector ($X$) data is divided into bins and measured density of each bin-step (detailed in [](#bin-step-dens)), which helps reduce significantly computational cost when computing pilot bandwidths of [the secondary bandwidth ($\alpha$) estimator](#sec-bw-est). From that, [the primary bandwidth $h$](#prim-bw-h-comp) is solved from derivative of AMISE. The mathematic theories is mentioned in green boxes below. 
+Initially, the input data vector $X$ is partitioned into discrete bins to calculate a binned density grid (detailed in [](#bin-step-dens)). This binning strategy dramatically reduces the computational cost of evaluating the double summations required by the pilot bandwidth estimators when performing the secondary bandwidth $\alpha$ estimator detailed in [the secondary bandwidth ($\alpha$) estimator](#sec-bw-est). 
+
+Using this accelerated grid, the roughness functionals are estimated, allowing the optimal primary bandwidth $h$ to be found (as described in [he primary bandwidth $h$](#prim-bw-h-comp)) by solving the derivative of the AMISE equation, the core metric evaluating the accuracy of estimation. The underlying mathematical theories are detailed in the boxes below.
 
 :::{tip} Why don't we just solve the minimization of AMISE to find bandwidth $h$?
 
