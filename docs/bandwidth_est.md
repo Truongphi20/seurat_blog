@@ -7,6 +7,10 @@ numbering:
 
 ## Introduction
 
+[Kernel Density Estimation (KDE)](https://en.wikipedia.org/wiki/Kernel_density_estimation) is a common estimator allowing to model random-variance data, which does not follow any model assumptions (e.g. Bell curve of Normal Distribution). 
+
+KDE mainly depends on a kernel function, which is assumed as local model for each point to calculate partitional probability for others based on their distances. Moreover, a smoothing parameter $h$ - bandwidth, is a constant playing a important role.  
+
 :::{tip} Seurat command
 This command is captured from the process of [SCTransform](./sctransform.md).
 
