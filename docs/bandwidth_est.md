@@ -202,3 +202,5 @@ Finally, Equation [](#ultimate-bw) is solved using Brent's method [@brent2013alg
 ## Summary
 
 Eventhough @sheatherReliableDataBasedBandwidth1991 stated that the final bandwidth $h$ is solved using Newton-Raphson method, Brent's method is employed in practice to find root of Equation [](#ultimate-bw) ensuring convergence and computational robustness.  
+
+The biggest downside of the method is assuming real density function $f$ following another normal-scaled kernel estimator.
