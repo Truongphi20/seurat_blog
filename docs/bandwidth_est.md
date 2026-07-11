@@ -9,7 +9,9 @@ numbering:
 
 [Kernel Density Estimation (KDE)](https://en.wikipedia.org/wiki/Kernel_density_estimation) is a powerful non-parametric technique used to estimate the probability density function of a random variable without relying on rigid structural assumptions (such as the bell curve of a Normal distribution). The behavior of a KDE model depends primarily on two components: the kernel function-typically a standard Gaussian distribution that assigns local probability weights based on distance-and the bandwidth parameter $h$. 
 
-The bandwidth $h$ acts as a crucial smoothing parameter that dictates sensitivity of the model. If $h$ is too small, the estimator overfits the data, creating a noisy, wiggling curve. Conversely, if $h$ is too large, the estimator undersmooths (underfits) the data, washing away genuine structural details into a flat, uninformative curve [@Scott2012]. While numerous methodologies have been developed to optimize $h$, the plug-in approach by @sheatherReliableDataBasedBandwidth1991 remains a benchmark standard, reliably minimizing the Asymptotic Mean Integrated Squared Error (AMISE) across a wide array of complex, non-parametric distributions [@eidousComparativeStudyBandwidth2010].
+The bandwidth $h$ acts as a crucial smoothing parameter that dictates sensitivity of the model. If $h$ is too small, the estimator overfits the data, creating a noisy, wiggling curve. Conversely, if $h$ is too large, the estimator undersmooths (underfits) the data, washing away genuine structural details into a flat, uninformative curve [@Scott2012]. 
+
+While numerous methodologies have been developed to optimize $h$, the plug-in approach by @sheatherReliableDataBasedBandwidth1991 remains a benchmark standard, reliably minimizing the Asymptotic Mean Integrated Squared Error (AMISE) across a wide array of complex, non-parametric distributions [@eidousComparativeStudyBandwidth2010].
 
 :::{tip} Seurat command
 This command is captured from the process of [SCTransform](./sctransform.md).
@@ -205,6 +207,8 @@ Finally, Equation [](#ultimate-bw) is solved using Brent's method [@brent2013alg
 
 ## Summary
 
-Eventhough @sheatherReliableDataBasedBandwidth1991 stated that the final bandwidth $h$ is solved using Newton-Raphson method, Brent's method is employed in practice to find root of Equation [](#ultimate-bw) ensuring convergence and computational robustness.  
+Overall, the Sheather-Jones method optimizes the bandwidth parameter ($h$) by minimizing the AMISE. The primary challenge of this approach lies in estimating the unknown curvature of the true underlying density function $f$. This is achieved by utilizing a pilot estimation step (a secondary KDE) with an auxiliary bandwidth, which effectively cancels the asymptotic biases of the roughness estimator.
 
-The biggest downside of the method is assuming real density function $f$ following another normal-scaled kernel estimator.
+In practice, the implementations utilize a linear binning technique to drastically reduce the computational complexity. Furthermore, while @sheatherReliableDataBasedBandwidth1991 originally outlined a Newton-Raphson framework to solve for the final bandwidth, the practical implementation employ Brent’s method. This numerical root-finding approach guarantees convergence and computational robustness when solving Equation [](#ultimate-bw). 
+
+However, the primary theoretical drawback of this method is its circularity: it relies on the assumption that the real unknown density function $f$ can be approximated well enough by an initial normal-scaled kernel estimator.
