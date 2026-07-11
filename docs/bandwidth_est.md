@@ -25,7 +25,7 @@ Here `x` is an arbitrary numeric vector.
 
 ## Workflow
 
-Initially, the input data vector $X$ is partitioned into discrete bins to calculate a bin-step density (detailed in [](#bin-step-dens)). This binning strategy dramatically reduces the computational cost of evaluating the double summations required by the pilot bandwidth estimators when performing the secondary bandwidth $\alpha$ estimator detailed in [the secondary bandwidth ($\alpha$) estimator](#sec-bw-est). 
+Initially, the input data vector $X$ is partitioned into discrete bins to calculate a bin-step density (detailed in [](#bin-step-dens)). This binning strategy dramatically reduces the computational cost of evaluating the double summations required by the pilot bandwidth estimators when performing the secondary bandwidth $\alpha$ estimation detailed in [the secondary bandwidth ($\alpha$) estimator](#sec-bw-est). 
 
 From that, the roughness functionals are estimated, allowing the optimal primary bandwidth $h$ to be found (as described in [the primary bandwidth $h$](#prim-bw-h-comp)) by solving the derivative of the AMISE equation, the core metric evaluating the accuracy of estimation. The underlying mathematical theories are detailed in the boxes below.
 
@@ -94,7 +94,7 @@ Separating $\hat{S}_{\text{D}}(\alpha)$ into two parts isolates the diagonal ter
 \mathbb{E}[\hat{S}_{\text{D}}(\alpha)] \approx R(f'') + \underbrace{\frac{L^{\text{iv}}(0)}{n \alpha^5}}_{\text{Positive Bias}} - \underbrace{\frac{1}{2}\alpha^2 \sigma_L^2 R(f''')}_{\text{Negative Bias}}
 ```
 
-Equation [](#exp-s-diag) takes the expectation of both terms to obtain $\mathbb{E}[\hat{S}_{\text{D}}(\alpha)]$, which is the ultimate estimation for $\mathbb{E}[f^{\text{iv}}(X)]$. After applying the asymptotic expansion of $\mathbb{E}[\hat{S}_{\text{ND}}(\alpha)]$, there are approximally two components causing bias from the true roughness $R(f'')$. 
+Equation [](#exp-s-diag) takes the expectation of both terms to obtain $\mathbb{E}[\hat{S}_{\text{D}}(\alpha)]$, which is the ultimate estimation for $\mathbb{E}[f^{\text{iv}}(X)]$. After applying the asymptotic expansion of $\mathbb{E}[\hat{S}_{\text{ND}}(\alpha)]$, there are approximately two components causing bias from the true roughness $R(f'')$. 
 
 
 ```{math}
@@ -109,7 +109,7 @@ To correct the estimator, the bias components is canceled out by the bandwidth $
 \alpha(h_{\text{opt}}) = \left( \frac{2 L^{\text{iv}}(0) \sigma_K^4}{\sigma_L^2 R(K)} \right)^{1/7} \cdot \left( \frac{R(f'')}{R(f''')} \right)^{1/7} h_{\text{opt}}^{5/7}
 ```
 
-By manipulating with Equation [](#amise-dev), $\alpha$ is able to performed as Equation [](#alpha-trans1), where the ratio $R(f'')/R(f''')$ can be estimated by heuristic pilot bandwidths.
+By manipulating with Equation [](#amise-dev), $\alpha$ can be expressed as Equation [](#alpha-trans1), where the ratio $R(f'')/R(f''')$ can be estimated by heuristic pilot bandwidths.
 
 Summarily, $R(f'') \approx \hat{S}_{\text{D}}(\alpha(h_{\text{opt}}))$, which is performed as Equation [](#s-diagonal) with an independent KDE obtaining $\alpha$ depended on the optimized bandwidth $h_{\text{opt}}$ shown as Equation [](#alpha-trans1). From that, $h_{\text{opt}}$ can be solved by the equation of subsituting $\hat{S}_{\text{D}}(\alpha(h_{\text{opt}}))$ to Equation [](#amise-dev). 
 
@@ -209,6 +209,6 @@ Finally, Equation [](#ultimate-bw) is solved using Brent's method [@brent2013alg
 
 Overall, the Sheather-Jones method optimizes the bandwidth parameter ($h$) by minimizing the AMISE. The primary challenge of this approach lies in estimating the unknown curvature of the true underlying density function $f$. This is achieved by utilizing a pilot estimation step (a secondary KDE) with an auxiliary bandwidth, which effectively cancels the asymptotic biases of the roughness estimator.
 
-In practice, the implementations utilize a linear binning technique to drastically reduce the computational complexity. Furthermore, while @sheatherReliableDataBasedBandwidth1991 originally outlined a Newton-Raphson framework to solve for the final bandwidth, the practical implementation employ Brent’s method. This numerical root-finding approach guarantees convergence and computational robustness when solving Equation [](#ultimate-bw). 
+In practice, the implementations utilize a linear binning technique to drastically reduce the computational complexity. Furthermore, while @sheatherReliableDataBasedBandwidth1991 originally outlined a Newton-Raphson framework to solve for the final bandwidth, the practical implementation employs Brent’s method. This numerical root-finding approach guarantees convergence and computational robustness when solving Equation [](#ultimate-bw). 
 
 However, the primary theoretical drawback of this method is its circularity: it relies on the assumption that the real unknown density function $f$ can be approximated well enough by an initial normal-scaled kernel estimator.
