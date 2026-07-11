@@ -7,11 +7,9 @@ numbering:
 
 ## Introduction
 
-[Kernel Density Estimation (KDE)](https://en.wikipedia.org/wiki/Kernel_density_estimation) is a common estimator allowing to model random-variance data, which does not follow any model assumptions (e.g. Bell curve of Normal Distribution). 
+[Kernel Density Estimation (KDE)](https://en.wikipedia.org/wiki/Kernel_density_estimation) is a powerful non-parametric technique used to estimate the probability density function of a random variable without relying on rigid structural assumptions (such as the bell curve of a Normal distribution). The behavior of a KDE model depends primarily on two components: the kernel function-typically a standard Gaussian distribution that assigns local probability weights based on distance-and the bandwidth parameter $h$. 
 
-KDE mainly depends on the kernel function (usually Normal Distribution), which is assumed as local model for each point to calculate partitional probability for others based on their distances. Moreover, a smoothing parameter $h$ - bandwidth, is a important constant affecting to sensitivity of the model. If $h$ is too small, the model is oversmoothing (underfitting). In contrast, the estimator would noisily wiggle (overfitting) when the $h$ being too large [@Scott2012].
-
-Eventhough many methods were developped to optimize $h$ value, the method of @sheatherReliableDataBasedBandwidth1991 is still a reliable approach by minimizing the erroneous differences of estimator for various complex nonparametric models [@eidousComparativeStudyBandwidth2010].     
+The bandwidth $h$ acts as a crucial smoothing parameter that dictates sensitivity of the model. If $h$ is too small, the estimator overfits the data, creating a noisy, wiggling curve. Conversely, if $h$ is too large, the estimator undersmooths (underfits) the data, washing away genuine structural details into a flat, uninformative curve [@Scott2012]. While numerous methodologies have been developed to optimize $h$, the plug-in approach by @sheatherReliableDataBasedBandwidth1991 remains a benchmark standard, reliably minimizing the Asymptotic Mean Integrated Squared Error (AMISE) across a wide array of complex, non-parametric distributions [@eidousComparativeStudyBandwidth2010].
 
 :::{tip} Seurat command
 This command is captured from the process of [SCTransform](./sctransform.md).
