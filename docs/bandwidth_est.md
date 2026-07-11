@@ -9,7 +9,9 @@ numbering:
 
 [Kernel Density Estimation (KDE)](https://en.wikipedia.org/wiki/Kernel_density_estimation) is a common estimator allowing to model random-variance data, which does not follow any model assumptions (e.g. Bell curve of Normal Distribution). 
 
-KDE mainly depends on a kernel function, which is assumed as local model for each point to calculate partitional probability for others based on their distances. Moreover, a smoothing parameter $h$ - bandwidth, is a constant playing a important role.  
+KDE mainly depends on the kernel function (usually Normal Distribution), which is assumed as local model for each point to calculate partitional probability for others based on their distances. Moreover, a smoothing parameter $h$ - bandwidth, is a important constant affecting to sensitivity of the model. If $h$ is too small, the model is oversmoothing (underfitting). In contrast, the estimator would noisily wiggle (overfitting) when the $h$ being too large [@Scott2012].
+
+Eventhough many methods were developped to optimize $h$ value, the method of @sheatherReliableDataBasedBandwidth1991 is still a reliable approach by minimizing the erroneous differences of estimator for various complex nonparametric models [@eidousComparativeStudyBandwidth2010].     
 
 :::{tip} Seurat command
 This command is captured from the process of [SCTransform](./sctransform.md).
