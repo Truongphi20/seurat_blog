@@ -52,12 +52,18 @@ For each gene, logarithmic geometric mean ($\mu_{\text{g}}$) computed by Equatio
 
 #### Outlier detection
 
+The local outlier genes followed the $\mu_{g}$-axis are detected based on the log-scaled values of overdispersion factor ($F = 1+\mu/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. They represent for outlier detectors of variance and mean perspectively.
+
+Initially, the genes are isolated into bins according to their $\mu_{g}$ value with the heuristic binwidth rescaled from the optimal bandwidth by the method of @sheatherReliableDataBasedBandwidth1991 ensuring data staying grounded on bins (https://github.com/satijalab/sctransform/issues/214).   
+
 ```{math}
 :label: outlier-score
 
-\frac{X - \text{median}(X)}{\text{MAD}(X)}
+S = \frac{X - \text{median}(X)}{\text{MAD}(X)}
 
 ```
+
+
 
 ### Pearson residuals
 
