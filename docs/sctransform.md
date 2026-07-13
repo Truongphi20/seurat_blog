@@ -52,20 +52,20 @@ For each gene, logarithmic geometric mean ($\mu_{\text{g}}$) computed by Equatio
 
 #### Outlier detection
 
-The local outlier genes followed the $\mu_{g}$-axis are detected based on the matrices of the log-scaled overdispersion factor ($F = 1+\mu/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. They represent for outlier detectors of variance and mean perspectively.
+Local outlier genes along the $\mu_{g}$-axis are detected based on the matrices of the log-scaled overdispersion factor ($F = 1+\mu/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. These parameters represent outlier indicators for variance and mean, respectively.
 
-Initially, the genes are isolated into bins according to their $\mu_{g}$ value with the heuristic binwidth rescaled from the optimal bandwidth by the method of @sheatherReliableDataBasedBandwidth1991 to ensure data fairly staying grounded on bins (https://github.com/satijalab/sctransform/issues/214).   
+Initially, the genes are assigned to bins according to their $\mu_{g}$ value. The binwidth is determined using a heuristic rescale from the optimal bandwidth featured by @sheatherReliableDataBasedBandwidth1991 to ensure data is fairly distributed across bins (https://github.com/satijalab/sctransform/issues/214). 
 
 ```{math}
 :label: outlier-score
 
-S = \frac{X - \text{median}(X)}{\text{MAD}(X)}
+S = \frac{X - \text{median}(X)}{\text{MAD}(X) + \epsilon}
 
 ```
 
-For each evaluated matrix ($X$ is $F$ or $\beta$), the outlier scores ($S$) are computed for the points in each bin following Equation [](#outlier-score), which measures the distance to the median and eliminates deviation by [Median Absolute Deviation (MAD)](https://en.wikipedia.org/wiki/Median_absolute_deviation) to enable comparability. For enhancing reliability, the measurement is processed on two grids lating on each other a half of binwidth. A outlier gene is labeled on a matrix when the scores on both grids are larger than a threshold, which defaults 10.
+For each evaluated matrix ($X$ representing either $F$ or $\beta$), the outlier scores ($S$) are computed for the points within each bin following Equation [](#outlier-score), which measures the distance to the median and eliminates deviation by [Median Absolute Deviation (MAD)](https://en.wikipedia.org/wiki/Median_absolute_deviation) to enable comparability. For enhancing reliability, the measurement is processed on two overlapping grids, offset by half a binwidth. A gene is flagged as an outlier within a specific matrix when its absolute score on both grids exceeds a threshold, which defaults to 10.
 
-Ultimately, a gene is marked as an outlier gene when both evaluated matrices (variance and mean) agree.
+Ultimately, a gene is marked as an outlier if it is flagged by either of the evaluated matrices (variance or mean).
 
 ### Pearson residuals
 
