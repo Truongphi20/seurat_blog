@@ -50,7 +50,7 @@ Next, theoretical overdispersion $\hat{\theta}$, which is derived from mean-vari
 
 For each gene, logarithmic geometric mean ($\mu_{\text{g}}$) computed by Equation [](#geometric-mean-fn), represents as a centric count without affected by outlier samples. With $C_j$ is the count value of sample $j$ in total $N$ samples, and $\epsilon$ (default is 1) is a small fixed number to avoid $\ln(0)$ [@hafemeisterNormalizationVarianceStabilization2019].
 
-#### Outlier detection
+#### Local outlier detection
 
 Local outlier genes along the $\mu_{g}$-axis are detected based on the matrices of the log-scaled overdispersion factor ($F = 1+\mu/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. These parameters represent outlier indicators for variance and mean, respectively.
 
@@ -66,6 +66,8 @@ S = \frac{X - \text{median}(X)}{\text{MAD}(X) + \epsilon}
 For each evaluated matrix ($X$ representing either $F$ or $\beta$), the outlier scores ($S$) are computed for the points within each bin following Equation [](#outlier-score), which measures the distance to the median and eliminates deviation by [Median Absolute Deviation (MAD)](https://en.wikipedia.org/wiki/Median_absolute_deviation) to enable comparability. For enhancing reliability, the measurement is processed on two overlapping grids, offset by half a binwidth. A gene is flagged as an outlier within a specific matrix when its absolute score on both grids exceeds a threshold, which defaults to 10.
 
 Ultimately, a gene is marked as an outlier if it is flagged by either of the evaluated matrices (variance or mean).
+
+#### Smoothing
 
 ### Pearson residuals
 
