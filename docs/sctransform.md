@@ -52,9 +52,9 @@ For each gene, logarithmic geometric mean ($\mu_{\text{g}}$) computed by Equatio
 
 #### Outlier detection
 
-The local outlier genes followed the $\mu_{g}$-axis are detected based on the log-scaled values of overdispersion factor ($F = 1+\mu/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. They represent for outlier detectors of variance and mean perspectively.
+The local outlier genes followed the $\mu_{g}$-axis are detected based on the matrices of the log-scaled overdispersion factor ($F = 1+\mu/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. They represent for outlier detectors of variance and mean perspectively.
 
-Initially, the genes are isolated into bins according to their $\mu_{g}$ value with the heuristic binwidth rescaled from the optimal bandwidth by the method of @sheatherReliableDataBasedBandwidth1991 ensuring data staying grounded on bins (https://github.com/satijalab/sctransform/issues/214).   
+Initially, the genes are isolated into bins according to their $\mu_{g}$ value with the heuristic binwidth rescaled from the optimal bandwidth by the method of @sheatherReliableDataBasedBandwidth1991 to ensure data fairly staying grounded on bins (https://github.com/satijalab/sctransform/issues/214).   
 
 ```{math}
 :label: outlier-score
@@ -63,7 +63,9 @@ S = \frac{X - \text{median}(X)}{\text{MAD}(X)}
 
 ```
 
+For each evaluated matrix ($X$ is $F$ or $\beta$), the outlier scores ($S$) are computed for the points in each bin following Equation [](#outlier-score), which measures the distance to the median and eliminates deviation by [Median Absolute Deviation (MAD)](https://en.wikipedia.org/wiki/Median_absolute_deviation) to enable comparability. For enhancing reliability, the measurement is processed on two grids lating on each other a half of binwidth. A outlier gene is labeled on a matrix when the scores on both grids are larger than a threshold, which defaults 10.
 
+Ultimately, a gene is marked as an outlier gene when both evaluated matrices (variance and mean) agree.
 
 ### Pearson residuals
 
