@@ -367,7 +367,7 @@ get_model_pars <- function(genes_step1, bin_size, umi, model_str, cells_step1,
 
 # commands/sctransform-0.4.3/R/utils.R:141
 robust_scale_binned <- function(y, x, breaks) {
-  browser()
+  # browser()
   bins <- cut(x = x, breaks = breaks, ordered_result = TRUE)
   tmp <- aggregate(x = y, by = list(bin=bins), FUN = function(x) (x - median(x)) / (mad(x) + .Machine$double.eps))
   score <- rep(0, length(x))
@@ -379,7 +379,7 @@ robust_scale_binned <- function(y, x, breaks) {
 # commands/sctransform-0.4.3/R/utils.R:120
 is_outlier <- function(y, x, th = 10) 
 {
-  browser()
+  # browser()
   bin.width <- (max(x) - min(x)) * bw.SJ(x) / 2
   eps <- .Machine$double.eps * 10
   breaks1 <- seq(from = min(x) - eps, to = max(x) + bin.width, by = bin.width)
