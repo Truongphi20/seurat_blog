@@ -27,9 +27,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="1.4449635"
-     inkscape:cx="810.40108"
-     inkscape:cy="135.29753"
+     inkscape:zoom="2.043487"
+     inkscape:cx="821.39011"
+     inkscape:cy="191.09493"
      inkscape:window-width="1850"
      inkscape:window-height="1016"
      inkscape:window-x="70"
@@ -774,9 +774,9 @@
          id="text71"><tspan
            x="-14.462693"
            y="55.440758"
-           id="tspan32">Gene<tspan
+           id="tspan17">Gene<tspan
    style="font-size:65%;baseline-shift:sub"
-   id="tspan31">M</tspan></tspan></text><text
+   id="tspan1">M</tspan></tspan></text><text
          xml:space="preserve"
          style="font-size:8.52389px;line-height:1.35;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;stroke-width:0.399557"
          x="33.92802"
@@ -1104,7 +1104,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,12.286675,26.526407)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan33">Compute variance</tspan></text></g><g
+             id="tspan18">Compute variance</tspan></text></g><g
          id="g60"
          transform="translate(26.445071,3.5620419)"><rect
            style="fill:#ffffff;stroke:#000000;stroke-width:0.41669;stroke-dasharray:none;paint-order:stroke fill markers"
@@ -1122,12 +1122,12 @@
            transform="matrix(0.88834823,0,0,0.88834823,13.136652,65.058688)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan34">Compute estimated<tspan
+             id="tspan19">Compute estimated<tspan
    y="187.7133"
-   id="tspan35"> </tspan></tspan><tspan
+   id="tspan20"> </tspan></tspan><tspan
              x="10.615968"
              y="197.28593"
-             id="tspan36">variance</tspan></text></g><g
+             id="tspan21">variance</tspan></text></g><g
          id="g62"
          transform="translate(26.4451,5.87793)"><rect
            style="fill:#ffffff;stroke:#000000;stroke-width:0.41669;stroke-dasharray:none;paint-order:stroke fill markers"
@@ -1145,11 +1145,11 @@
            transform="matrix(0.88834823,0,0,0.88834823,12.501255,106.4527)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan37">Standardize 
+             id="tspan22">Standardize 
 </tspan><tspan
              x="10.615968"
              y="197.28593"
-             id="tspan38">variance</tspan></text><g
+             id="tspan23">variance</tspan></text><g
            id="g4"
            transform="matrix(0.578972,0,0,0.578972,344.917,141.405)"><rect
              width="100%"
@@ -1390,7 +1390,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,153.22605,28.270086)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan39">Compute log-mean</tspan></text></g><g
+             id="tspan24">Compute log-mean</tspan></text></g><g
          id="g94"
          transform="translate(0,1.6523892)"><rect
            style="fill:#ffffff;stroke:#000000;stroke-width:0.41669;stroke-dasharray:none;paint-order:stroke fill markers"
@@ -1408,7 +1408,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,153.22605,70.368243)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan40">Compute dispersion</tspan></text></g><g
+             id="tspan25">Compute dispersion</tspan></text></g><g
          id="g95"
          transform="translate(0,6.137665)"><rect
            style="fill:#ffffff;stroke:#000000;stroke-width:0.41669;stroke-dasharray:none;paint-order:stroke fill markers"
@@ -1426,11 +1426,11 @@
            transform="matrix(0.88834823,0,0,0.88834823,154.67638,105.88116)"><tspan
              x="10.615967"
              y="187.7133"
-             id="tspan41">Standardize
+             id="tspan26">Standardize
 </tspan><tspan
              x="10.615967"
              y="197.28593"
-             id="tspan42">dispersion</tspan></text></g><g
+             id="tspan27">dispersion</tspan></text></g><g
          id="g96"
          transform="translate(0.8013658,6.8116093)"><rect
            style="fill:#ffffff;stroke:#000000;stroke-width:0.41669;stroke-dasharray:none;paint-order:stroke fill markers"
@@ -1448,7 +1448,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,152.99497,196.15015)"><tspan
              x="10.615967"
              y="187.7133"
-             id="tspan43">Filtering features</tspan></text></g><g
+             id="tspan28">Filtering features</tspan></text></g><g
          id="g76"
          transform="translate(28.849169,69.542407)"><rect
            style="fill:#ffffff;stroke:#000000;stroke-width:0.41669;stroke-dasharray:none;paint-order:stroke fill markers"
@@ -1466,7 +1466,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,11.699889,89.223335)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan44">Ranking</tspan></text></g><path
+             id="tspan29">Ranking</tspan></text></g><path
          style="fill:none;stroke:#000000;stroke-width:0.578972px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker83)"
          d="m 47.414675,293.95664 v 14.73293"
          id="path76" /><g
@@ -1487,7 +1487,7 @@
            transform="matrix(0.88834823,0,0,0.88834823,11.699889,89.223335)"><tspan
              x="10.615968"
              y="187.7133"
-             id="tspan45">Ranking</tspan></text></g><path
+             id="tspan30">Ranking</tspan></text></g><path
          style="fill:none;stroke:#000000;stroke-width:0.578972px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker83)"
          d="m 160.89298,206.94484 v 14.73293"
          id="path93" /><path
@@ -1594,7 +1594,8 @@
          style="stroke-width:0.997896;stroke-dasharray:none"><path
            id="path126"
            style="fill:#e6e6e6;stroke:none;stroke-width:1.26617;stroke-dasharray:none"
-           d="m 419.03858,88.688981 c -23.52166,0 -43.00221,10.766927 -60.29551,28.603519 V 454.12087 H 478.29876 V 116.23083 C 461.2634,99.029566 442.08743,88.688981 419.03858,88.688981 Z" /><path
+           d="m 419.03858,88.688981 c -23.52166,0 -43.00221,10.766927 -60.29551,28.603519 V 465.94295 H 478.29876 V 116.23083 C 461.2634,99.029566 442.08743,88.688981 419.03858,88.688981 Z"
+           sodipodi:nodetypes="sccccs" /><path
            fill="none"
            stroke="#000000"
            d="m 784.46833,454.11853 c -35.50227,0 -65.48505,-8.83115 -91.31874,-23.75278 -37.6098,-21.6985 -66.43668,-56.29862 -90.69698,-95.31558 C 566.92497,277.9395 541.15475,211.36325 511.86982,161.82756 486.45489,118.83913 458.40073,88.691375 419.04117,88.691375 c -39.46105,0 -67.55326,30.300005 -93.01896,73.453395 -29.23417,49.54838 -54.99171,116.03581 -90.48128,173.05767 -24.46331,39.30753 -53.55792,74.11319 -91.61056,95.7343 -25.60527,14.57902 -55.270852,23.18179 -90.31633,23.18179"
@@ -1616,7 +1617,7 @@
            d="m 418.62144,493.27233 v 24.46859"
            id="path120" /><path
            style="fill:none;stroke:#606060;stroke-width:1.26493;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:5.05971, 1.26493;stroke-dashoffset:0;stroke-opacity:0.996078"
-           d="m 478.01119,455.51872 v 62.0906"
+           d="m 478.01119,467.3408 v 50.26852"
            id="path121"
            sodipodi:nodetypes="cc" /><text
            xml:space="preserve"

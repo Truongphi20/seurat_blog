@@ -69,6 +69,18 @@ Ultimately, a gene is marked as an outlier if it is flagged by either of the eva
 
 #### Kernel smoothing
 
+```{math}
+:label: smoothing-func
+\begin{cases}
+\begin{aligned}
+
+\large w_{ij} &= K\left(\frac{|x_i - x_j|}{h}\right) \\
+\large \overline{y}_j &= \frac{\sum_{i=i_{\text{min}}}^N y_i \cdot w_{ij} }{\sum_{i=i_{\text{min}}}^N w_{ij}} 
+
+\end{aligned}
+\end{cases}
+```
+
 ### Pearson residuals
 
 ## Summary
