@@ -67,7 +67,7 @@ For each evaluated matrix ($X$ representing either $F$ or $\beta$), the outlier 
 
 Ultimately, a gene is marked as an outlier if it is flagged by either of the evaluated matrices (variance or mean).
 
-#### Smoothing
+#### Kernel smoothing
 
 ### Pearson residuals
 
