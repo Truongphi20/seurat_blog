@@ -440,7 +440,6 @@ reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, c
 
   # look for outliers in the parameters
   # outliers are those that do not fit the overall relationship with the mean at all
-  browser()
   outliers <- apply(model_pars, 2, function(y) is_outlier(y, genes_log_gmean_step1))
   outliers <- apply(outliers, 1, any)
 
@@ -468,7 +467,7 @@ reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, c
   o <- order(x_points)
   model_pars_fit <- matrix(NA_real_, length(genes), ncol(model_pars),
                            dimnames = list(genes, colnames(model_pars)))
-
+  browser()
   # fit / regularize dispersion parameter
   model_pars_fit[o, 'dispersion_par'] <- ksmooth(x = genes_log_gmean_step1, y = model_pars[, 'dispersion_par'],
                                                  x.points = x_points, bandwidth = bw, kernel='normal')$y
