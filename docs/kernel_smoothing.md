@@ -33,4 +33,6 @@ Command explanation:
 
 ## Workflow
 
+![](./static/bw_smoothing.png)
+
 ## Summary

@@ -8,6 +8,7 @@ mystack <- readRDS("/workspaces/seurat_blog/test_data/inputs_ksmooth.rds")
 cloned_ksmooth <- function(x, y, kernel = c("box", "normal"), bandwidth = 0.5,
            range.x = range(x), n.points = max(100L, length(x)), x.points)
 {
+    browser()
     ## box is [-0.5, 0.5]. normal is sd = 1.4826/4
     if(missing(y) || is.null(y))
         stop("numeric y must be supplied.\nFor density estimation use density()")
