@@ -35,4 +35,16 @@ Command explanation:
 
 ![](./static/bw_smoothing.png)
 
+```{math}
+:label: smoothing-func
+\begin{cases}
+\begin{aligned}
+
+\Large w_{ij} &= K\left(\frac{|x_i - x_j|}{h}\right) \\
+\Large \overline{y}_j &= \frac{\sum_{i=i_{\text{min}}}^N y_i \cdot w_{ij} }{\sum_{i=i_{\text{min}}}^N w_{ij}} 
+
+\end{aligned}
+\end{cases}
+```
+
 ## Summary
