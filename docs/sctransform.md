@@ -59,11 +59,11 @@ Initially, the genes are assigned to bins according to their $\mu_{g}$ value. Th
 ```{math}
 :label: outlier-score
 
-S = \frac{X - \text{median}(X)}{\text{MAD}(X) + \epsilon}
+S = \frac{Y - \text{median}(Y)}{\text{MAD}(Y) + \epsilon}
 
 ```
 
-For each evaluated matrix ($X$ representing either $F$ or $\beta$), the outlier scores ($S$) are computed for the points within each bin following Equation [](#outlier-score), which measures the distance to the median and eliminates deviation by [Median Absolute Deviation (MAD)](https://en.wikipedia.org/wiki/Median_absolute_deviation) to enable comparability. For enhancing reliability, the measurement is processed on two overlapping grids, offset by half a binwidth. A gene is flagged as an outlier within a specific matrix when its absolute score on both grids exceeds a threshold, which defaults to 10.
+For each evaluated matrix ($Y$ representing either $F$ or $\beta$), the outlier scores ($S$) are computed for the points within each bin following Equation [](#outlier-score), which measures the distance to the median and eliminates deviation by [Median Absolute Deviation (MAD)](https://en.wikipedia.org/wiki/Median_absolute_deviation) to enable comparability. For enhancing reliability, the measurement is processed on two overlapping grids, offset by half a binwidth. A gene is flagged as an outlier within a specific matrix when its absolute score on both grids exceeds a threshold, which defaults to 10.
 
 Ultimately, a gene is marked as an outlier if it is flagged by either of the evaluated matrices (variance or mean).
 
@@ -74,8 +74,8 @@ Ultimately, a gene is marked as an outlier if it is flagged by either of the eva
 \begin{cases}
 \begin{aligned}
 
-\large w_{ij} &= K\left(\frac{|x_i - x_j|}{h}\right) \\
-\large \overline{y}_j &= \frac{\sum_{i=i_{\text{min}}}^N y_i \cdot w_{ij} }{\sum_{i=i_{\text{min}}}^N w_{ij}} 
+\large w_{ij} &= K\left(\frac{|x_i - x_j|}{\overline{\sigma}}\right) \\
+\large \overline{y}_j &= \frac{\sum_{i=i_{\text{min}}}^m y_i \cdot w_{ij} }{\sum_{i=i_{\text{min}}}^m w_{ij}} 
 
 \end{aligned}
 \end{cases}
