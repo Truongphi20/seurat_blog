@@ -54,7 +54,7 @@ For each gene, logarithmic geometric mean ($\mu_{\text{g}}$) computed by Equatio
 
 Local outlier genes along the $\mu_{g}$-axis are detected based on the matrices of the log-scaled overdispersion factor ($F = 1+\mu/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. These parameters serve for variance and mean outlier indicators, respectively.
 
-Initially, the genes are assigned to bins according to their $\mu_{g}$ value. The binwidth is determined using a heuristic rescale from the optimal bandwidth featured by @sheatherReliableDataBasedBandwidth1991 to ensure data is fairly distributed across bins (https://github.com/satijalab/sctransform/issues/214). 
+Initially, the genes are assigned to bins according to their $\mu_{g}$ value. The binwidth is determined using a heuristic rescale from the optimal bandwidth featured by @sheatherReliableDataBasedBandwidth1991 to ensure data is fairly distributed across bins (https://github.com/satijalab/sctransform/issues/214).
 
 ```{math}
 :label: outlier-score
@@ -83,9 +83,18 @@ The $F$ and $\beta$ vectors are sequentially smoothed by the Nadaraya-Watson ker
 \end{cases}
 ```
 
-The smoothed vector $\overline{y}$ of whole genes is computed by weighted average of anchored genes, which shown by Equation [](#smoothing-func). Particularly, the weight is the probability of distance from the current gene $j$ to anchored gene $i$ following Normal Distribution, which is kernel function $K$.
+The smoothed vector $\overline{y}$ of all genes is computed by weighted average of anchored genes, which shown by Equation [](#smoothing-func). Particularly, the weight ($w_{ij}$) is the probability of distance from the current gene $j$ to anchored gene $i$ following Normal Distribution, which is kernel function $K$.
 
 ![](./static/bw_smoothing.png)
+
+The interquartile of the distance distribution is assumed to be the range $[-0.25h, +0.25h]$, where $h$ is the optimal bandwidth of overdispersion genes by the method of @sheatherReliableDataBasedBandwidth1991, see [](./bandwidth_est.md) for details. Noticeably, the optimized $h$ is tripled by default. All together, this helps the distance close to the expected range obtained higher weight.
+
+```{math}
+:label: sigma-kernel
+\overline{\sigma} = \frac{0.25}{\Phi^{-1}(0.75)}h
+```
+
+Based on the assumption, standard deviation of the distance distribution ($\overline{\sigma}$) used in Equation [](#smoothing-func) computed by Equation [](#sigma-kernel) with $\Phi^{-1}(0.75)$ is the inverse cumulative distribution function of 75th percentile.
 
 ### Pearson residuals
 
