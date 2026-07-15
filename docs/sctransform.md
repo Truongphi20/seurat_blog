@@ -69,7 +69,7 @@ Ultimately, a gene is marked as an outlier if it is flagged by either of the eva
 
 #### Kernel smoothing
 
-The $F$ and $\beta$ vectors are sequentially smoothed by the Nadaraya-Watson kernel regression estimate [@nadarayaEstimatingRegression1964]. The smoothing is anchored by overdispersion genes, which were filtered outliers and Poisson genes.    
+The estimated parameters ($F$ and $\beta$) are sequentially smoothed across gene expression levels (log geometric mean) using the Nadaraya-Watson kernel regression estimator [@nadarayaEstimatingRegression1964]. To avoid overfitting, this smoothing is anchored by a subset of overdispersion genes which exclude the previously flagged outliers and Poisson-like genes.
 
 ```{math}
 :label: smoothing-func
@@ -83,15 +83,15 @@ The $F$ and $\beta$ vectors are sequentially smoothed by the Nadaraya-Watson ker
 \end{cases}
 ```
 
-The smoothed vector $\overline{y}$ of all genes is computed by weighted average of anchored genes, which shown by Equation [](#smoothing-func). Particularly, the weight ($w_{ij}$) is the probability of distance from the current gene $j$ to anchored gene $i$ following Normal Distribution, which is kernel function $K$.
+The smoothed value $\overline{y}_j$ of any gene $j$ is computed by weighted average of anchored genes, as defined in Equation [](#smoothing-func). Particularly, the weight ($w_{ij}$) is the density determined by the Gaussian kernel function $K$ at the distance of $\mu_g$ between the current gene $j$ ($x_j$) and anchored gene $i$ ($x_i$). In $m$ overdispersion genes, the employed subset starts from anchored gene $i_{\text{min}}$, which is nearest to the boundary, four times the bandwidth h, from the targeted $\mu_g$ range. 
 
 ![](./static/bw_smoothing.png)
 
-The interquartile of the distance distribution is assumed to be the range $[-0.25h, +0.25h]$, where $h$ is the optimal bandwidth of overdispersion genes by the method of @sheatherReliableDataBasedBandwidth1991, see [](./bandwidth_est.md) for details. Noticeably, the optimized $h$ is tripled by default. All together, this helps the distance close to the expected range obtained higher weight.
+The interquartile of the distance distribution is assumed to be the range $[-0.25h, +0.25h]$, where $h$ is the optimal bandwidth of overdispersion genes by the method of @sheatherReliableDataBasedBandwidth1991, see [](./bandwidth_est.md) for details. Noticeably, the optimized $h$ is tripled by default. All together, this ensures that anchor genes lying closer to the expected range obtained higher weight.
 
 ```{math}
 :label: sigma-kernel
-\overline{\sigma} = \frac{0.25}{\Phi^{-1}(0.75)}h
+\overline{\sigma} = \frac{0.25}{\Phi^{-1}(0.75)}h \approx 0.3707 \cdot h
 ```
 
 Based on the assumption, standard deviation of the distance distribution ($\overline{\sigma}$) used in Equation [](#smoothing-func) computed by Equation [](#sigma-kernel) with $\Phi^{-1}(0.75)$ is the inverse cumulative distribution function of 75th percentile.
