@@ -52,7 +52,7 @@ For each gene, logarithmic geometric mean ($\mu_{\text{g}}$) computed by Equatio
 
 #### Local outlier detection
 
-Local outlier genes along the $\mu_{g}$-axis are detected based on the matrices of the log-scaled overdispersion factor ($F = 1+\mu/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. These parameters represent outlier indicators for variance and mean, respectively.
+Local outlier genes along the $\mu_{g}$-axis are detected based on the matrices of the log-scaled overdispersion factor ($F = 1+\mu/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. These parameters serve for variance and mean outlier indicators, respectively.
 
 Initially, the genes are assigned to bins according to their $\mu_{g}$ value. The binwidth is determined using a heuristic rescale from the optimal bandwidth featured by @sheatherReliableDataBasedBandwidth1991 to ensure data is fairly distributed across bins (https://github.com/satijalab/sctransform/issues/214). 
 
@@ -69,6 +69,8 @@ Ultimately, a gene is marked as an outlier if it is flagged by either of the eva
 
 #### Kernel smoothing
 
+The $F$ and $\beta$ vectors are sequentially smoothed by the Nadaraya-Watson kernel regression estimate [@nadarayaEstimatingRegression1964]. The smoothing is anchored by overdispersion genes, which were filtered outliers and Poisson genes.    
+
 ```{math}
 :label: smoothing-func
 \begin{cases}
@@ -80,6 +82,10 @@ Ultimately, a gene is marked as an outlier if it is flagged by either of the eva
 \end{aligned}
 \end{cases}
 ```
+
+The smoothed vector $\overline{y}$ of whole genes is computed by weighted average of anchored genes, which shown by Equation [](#smoothing-func). Particularly, the weight is the probability of distance from the current gene $j$ to anchored gene $i$ following Normal Distribution, which is kernel function $K$.
+
+![](./static/bw_smoothing.png)
 
 ### Pearson residuals
 
