@@ -52,7 +52,7 @@ For each gene, logarithmic geometric mean ($\mu_{\text{g}}$) computed by Equatio
 
 #### Local outlier detection
 
-Local outlier genes along the $\mu_{g}$-axis are detected based on the matrices of the log-scaled overdispersion factor ($F = 1+\mu/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. These parameters serve for variance and mean outlier indicators, respectively.
+Local outlier genes along the $\mu_{g}$-axis are detected based on the matrices of the log-scaled overdispersion factor ($F = 1+\mu_g/\theta$) and $\beta$ estimated from Gamma-Poisson GLM. These parameters serve for variance and mean outlier indicators, respectively.
 
 Initially, the genes are assigned to bins according to their $\mu_{g}$ value. The binwidth is determined using a heuristic rescale from the optimal bandwidth featured by @sheatherReliableDataBasedBandwidth1991 to ensure data is fairly distributed across bins (https://github.com/satijalab/sctransform/issues/214).
 
@@ -76,14 +76,14 @@ The estimated parameters ($F$ and $\beta$) are sequentially smoothed across gene
 \begin{cases}
 \begin{aligned}
 
-\large w_{ij} &= K\left(\frac{|x_i - x_j|}{\overline{\sigma}}\right) \\
+\large w_{ij} &= K\left(\frac{|\mu_{g}(i) - \mu_{g}(j)|}{\overline{\sigma}}\right) \\
 \large \overline{y}_j &= \frac{\sum_{i=i_{\text{min}}}^m y_i \cdot w_{ij} }{\sum_{i=i_{\text{min}}}^m w_{ij}} 
 
 \end{aligned}
 \end{cases}
 ```
 
-The smoothed value $\overline{y}_j$ of any gene $j$ is computed by weighted average of anchored genes, as defined in Equation [](#smoothing-func). Particularly, the weight ($w_{ij}$) is the density determined by the Gaussian kernel function $K$ at the distance of $\mu_g$ between the current gene $j$ ($x_j$) and anchored gene $i$ ($x_i$). In $m$ overdispersion genes, the employed subset starts from anchored gene $i_{\text{min}}$, which is nearest to the boundary, four times the bandwidth h, from the targeted $\mu_g$ range. 
+The smoothed value $\overline{y}_j$ of any gene $j$ is computed by weighted average of anchored genes, as defined in Equation [](#smoothing-func). Particularly, the weight ($w_{ij}$) is the density determined by the Gaussian kernel function $K$ at the distance between the current gene $j$ and anchored gene $i$ in the $\mu_g$ level. In $m$ overdispersion genes, the employed subset starts from anchored gene $i_{\text{min}}$, which is nearest to the boundary, four times the bandwidth h, from the targeted $\mu_g$ range. 
 
 ![](./static/bw_smoothing.png)
 
