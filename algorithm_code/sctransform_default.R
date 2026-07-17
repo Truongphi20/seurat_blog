@@ -467,7 +467,7 @@ reg_model_pars <- function(model_pars, genes_log_gmean_step1, genes_log_gmean, c
   o <- order(x_points)
   model_pars_fit <- matrix(NA_real_, length(genes), ncol(model_pars),
                            dimnames = list(genes, colnames(model_pars)))
-  browser()
+
   # fit / regularize dispersion parameter
   model_pars_fit[o, 'dispersion_par'] <- ksmooth(x = genes_log_gmean_step1, y = model_pars[, 'dispersion_par'],
                                                  x.points = x_points, bandwidth = bw, kernel='normal')$y
@@ -602,6 +602,7 @@ vst <- function(umi,
     res <- matrix(NA_real_, length(genes), nrow(regressor_data_final), dimnames = list(genes, rownames(regressor_data_final)))
     for (i in 1:max_bin){
         genes_bin <- genes[bin_ind == i]
+        browser()
         mu <- exp(tcrossprod(model_pars_final[genes_bin, -1, drop=FALSE], regressor_data_final))
         y <- as.matrix(umi[genes_bin, , drop=FALSE])
 

@@ -98,4 +98,16 @@ Based on the assumption, standard deviation of the distance distribution ($\over
 
 ### Pearson residuals
 
+```{math}
+\begin{cases}
+\begin{aligned}
+
+\mu_{ij} &= \exp(\beta_{i} + \ln(C_{j})) \\
+\sigma_{ij}^2 &= \mu_{ij} + \frac{1}{\theta_{i}}\mu_{ij}^2 \\
+z_{ij} &= \frac{c_{ij}  - \mu_{ij}}{\sigma_{ij}} 
+
+\end{aligned}
+\end{cases}
+```
+
 ## Summary
