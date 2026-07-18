@@ -129,10 +129,12 @@ Finally, specific Pearson residuals are measured from the inbalance between the 
 
 In practice, the variance $\sigma_{ij}^2$ obtains a lower boundary $\sigma_{\text{min}}^2$ defined in Equation [](#min-sigma), where the inbalance is expected to be always greater than the general median, and the maximum of residual is 5. 
 
-### UMI correction
+### Count correctness
+
+From the residuals, the count matrix is corrected following Equation [](#cout-correctness-fn). 
 
 ```{math}
-:label: umi-correction-fn
+:label: cout-correctness-fn
 \begin{cases}
 \begin{aligned}
 
@@ -143,5 +145,9 @@ In practice, the variance $\sigma_{ij}^2$ obtains a lower boundary $\sigma_{\tex
 \end{aligned}
 \end{cases}
 ```
+
+The genewise count mean $\mu_c(i)$ and variation $\sigma_{c}^2(i)$ for the correctness are calculated similarly to $\mathbb{E}[c_{ij}]$, and $\sigma_{ij}^2$ in Equation [](#pearson-residuals-eq) respectively, excepting that specifying the median of log-scaled total count of samples.
+
+Ultimately, the correctness of count values ($\mathbb{C}[c_{ij}]$) is estimated by the combination of the secured mean count across samples, and the specific expectation inbalance derived from the residual.
 
 ## Summary
