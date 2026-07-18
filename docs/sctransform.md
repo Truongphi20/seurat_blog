@@ -151,3 +151,5 @@ The genewise count mean $\mu_c(i)$ and variation $\sigma_{c}^2(i)$ for the corre
 Ultimately, the correctness of count values ($\mathbb{C}[c_{ij}]$) is estimated by the combination of the secured mean count across samples, and the specific expectation inbalance derived from the residual.
 
 ## Summary
+
+The transform has removed the technical noises without missing statistical variances.   
