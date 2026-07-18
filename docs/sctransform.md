@@ -18,7 +18,7 @@ pbmc <- SCTransform(pbmc, vars.to.regress = "percent.mt", verbose = FALSE)
 
 ### Fitting model
 
-At the beginning, only genes obtains overdispersion factor ($\sigma^2 > \mu$) are used to train. A number of genes is randomly selected (default is 2,000) across their expression levels, and the total count of selected genes must be greater than 5 by default. Subsequently, their raw count matrix are modeled by Gamma-Poisson general linear model (Gamma-Poisson GLM) to properly obtain overdispersion. See [](./glmGamPoi.md) for more detail about the model-fitting process. 
+At the beginning, only genes obtains overdispersion factor ($\sigma^2 > \mu$) are used to train. A number of genes is randomly selected (default is 2,000) across their expression levels, and the total count of selected genes must be greater than 5 by default. Subsequently, their raw count matrix are modeled by Gamma-Poisson general linear model (Gamma-Poisson GLM), i.e Negative Binomial (NB) model, to properly obtain overdispersion. See [](./glmGamPoi.md) for more detail about the model-fitting process. 
 
 Briefly, it uses the Maximum Likelihood Estimates (MLE) method to estimate coefficients of the model according to the count values of each gene. The coefficients include relative log-scaled count mean $\beta$, and overdispersion $\theta$. Note that the definition of overdispersion between sctransform and Gamma-Poisson GLM are reciprocal.
 
@@ -96,18 +96,30 @@ The interquartile of the distance distribution is assumed to be the range $[-0.2
 
 Based on the assumption, standard deviation of the distance distribution ($\overline{\sigma}$) used in Equation [](#smoothing-func) computed by Equation [](#sigma-kernel) with $\Phi^{-1}(0.75)$ being the inverse cumulative distribution function of 75th percentile.
 
+By the end, smoothed $\beta$ and $\theta$, which is recoverd from smoothed $F$, are ultilized for the next process.   
+
 ### Pearson residuals
 
+While Chi-square test exams the correlationship between two variable by count data, Pearson residuals determine the contribution of each component relationship to the overal correlation. The computation of specific Pearson residual ($z_{ij}$) is described as Equation [](#pearson-residuals-eq).
+
 ```{math}
+:label: pearson-residuals-eq
 \begin{cases}
 \begin{aligned}
 
-\mu_{ij} &= \exp(\beta_{i} + \ln(C_{j})) \\
-\sigma_{ij}^2 &= \mu_{ij} + \frac{1}{\theta_{i}}\mu_{ij}^2 \\
-z_{ij} &= \frac{c_{ij}  - \mu_{ij}}{\sigma_{ij}} 
+\mathbb{E}[c_{ij}] &= \exp(\beta_{i} + \ln(C_{j})) \\
+\sigma_{ij}^2 &= \mathbb{E}[c_{ij}] + \frac{1}{\theta_{i}}\mathbb{E}[c_{ij}]^2 \\
+z_{ij} &= \frac{c_{ij}  - \mathbb{E}[c_{ij}]}{\sigma_{ij}} 
 
 \end{aligned}
 \end{cases}
 ```
+
+First, the expected count of specific gene $i$ and cell $j$ ($\mathbb{E}[c_{ij}]$) is computed following as [expected frequency in Chi-square test](https://www.rpubs.com/StatsResource/Chi_Square_Expected_Values) with the gene-specific log-scaled mean $\beta_i$ estimated in [the smoothing step](#kernel-smoothing) and the total count $C_{j}$ for each cell.
+
+Hence count data assumably follows NB distribution, the variance ($\sigma_{ij}^2$) for residuals is derived from $\mathbb{E}[c_{ij}]$ as the mean, and smoothed overdispersion $\theta_i$ originating from NB model estimation.
+
+Finally, specific Pearson residuals are measured from the inbalance between the observe ($c_{ij}$ - the real specific count) and the expected value ($\mathbb{E}[c_{ij}]$), and divided over by standard deviation $\sigma_{ij}$ to be able to compare with rivals. 
+
 
 ## Summary
