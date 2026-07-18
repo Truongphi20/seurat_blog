@@ -599,6 +599,7 @@ vst <- function(umi,
     bin_ind <- ceiling(x = 1:length(x = genes) / bin_size)
     max_bin <- max(bin_ind)
 
+    browser()
     res <- matrix(NA_real_, length(genes), nrow(regressor_data_final), dimnames = list(genes, rownames(regressor_data_final)))
     for (i in 1:max_bin){
         genes_bin <- genes[bin_ind == i]
