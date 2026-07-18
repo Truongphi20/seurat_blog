@@ -7,7 +7,7 @@ numbering:
 
 ## Introduction
 
-[Kernel Density Estimation (KDE)](https://en.wikipedia.org/wiki/Kernel_density_estimation) is a powerful non-parametric technique used to estimate the probability density function of a random variable without relying on rigid structural assumptions (such as the bell curve of a Normal distribution). The behavior of a KDE model depends primarily on two components: the kernel function-typically a standard Gaussian distribution that assigns local probability weights based on distance-and the bandwidth parameter $h$. 
+[Kernel Density Estimation (KDE)](https://en.wikipedia.org/wiki/Kernel_density_estimation) is a powerful non-parametric technique used to estimate the probability density function of a random variable without relying on rigid structural assumptions (such as the bell curve of a Normal distribution). The behavior of a KDE model depends primarily on two components: the kernel function-typically a standard Gaussian distribution that assigns local probability weights based on distance, and the bandwidth parameter $h$. 
 
 The bandwidth $h$ acts as a crucial smoothing parameter that dictates sensitivity of the model. If $h$ is too small, the estimator overfits the data, creating a noisy, wiggling curve. Conversely, if $h$ is too large, the estimator undersmooths (underfits) the data, washing away genuine structural details into a flat, uninformative curve [@Scott2012]. 
 
