@@ -129,4 +129,19 @@ Finally, specific Pearson residuals are measured from the inbalance between the 
 
 In practice, the variance $\sigma_{ij}^2$ obtains a lower boundary $\sigma_{\text{min}}^2$ defined in Equation [](#min-sigma), where the inbalance is expected to be always greater than the general median, and the maximum of residual is 5. 
 
+### UMI correction
+
+```{math}
+:label: umi-correction-fn
+\begin{cases}
+\begin{aligned}
+
+\mu_c(i) &= \exp\left( \beta_i + \text{median}(\ln(C_j)) \right) \\
+\sigma_{c}^2(i) &= \mu_c(i) + \frac{1}{\theta_i} \mu_c(i)^2 \\
+\mathbb{C}[c_{ij}] &= \mu_c(i) + z_{ij} \sigma_{c}(i)
+
+\end{aligned}
+\end{cases}
+```
+
 ## Summary

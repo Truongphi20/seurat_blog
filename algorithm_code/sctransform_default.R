@@ -248,6 +248,7 @@ clip_matrix_values <- function(mat, clip_range) {
 # commands/sctransform-0.4.3/R/denoise.R:81
 correct <- function(x, data = 'y', cell_attr = x$cell_attr)
 {
+    browser()
     data <- x[[data]]
     latent_var <- x$arguments$latent_var
 
@@ -599,11 +600,9 @@ vst <- function(umi,
     bin_ind <- ceiling(x = 1:length(x = genes) / bin_size)
     max_bin <- max(bin_ind)
 
-    browser()
     res <- matrix(NA_real_, length(genes), nrow(regressor_data_final), dimnames = list(genes, rownames(regressor_data_final)))
     for (i in 1:max_bin){
         genes_bin <- genes[bin_ind == i]
-        browser()
         mu <- exp(tcrossprod(model_pars_final[genes_bin, -1, drop=FALSE], regressor_data_final))
         y <- as.matrix(umi[genes_bin, , drop=FALSE])
 
