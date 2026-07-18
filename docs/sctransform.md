@@ -100,7 +100,7 @@ By the end, smoothed $\beta$ and $\theta$, which is recoverd from smoothed $F$, 
 
 ### Pearson residuals
 
-While Chi-square test exams the correlationship between two variable by count data, Pearson residuals determine the contribution of each component relationship to the overal correlation. The data is cut down into discrepancy bins by genes in order (500 bins by default). The computation of specific Pearson residual ($z_{ij}$) in each bin is described as Equation [](#pearson-residuals-eq).
+While Chi-square test exams the correlationship between two variable by count data, Pearson residuals determine the contribution of each component relationship to the overal correlation. The computation of specific Pearson residual ($z_{ij}$) in each bin is described as Equation [](#pearson-residuals-eq).
 
 ```{math}
 :label: pearson-residuals-eq
@@ -119,11 +119,14 @@ First, the expected count of specific gene $i$ and cell $j$ ($\mathbb{E}[c_{ij}]
 
 Hence count data assumably follows NB distribution, the variance ($\sigma_{ij}^2$) for residuals is derived from $\mathbb{E}[c_{ij}]$ as the mean, and smoothed overdispersion $\theta_i$ originating from NB model estimation.
 
-```{math}
-\sigma_{\text{min}}^2 = \left(  \frac{\text{mean}(c_{ij})}{5}  \right)^2
-```
 
 Finally, specific Pearson residuals are measured from the inbalance between the observe ($c_{ij}$ - the real specific count) and the expected value ($\mathbb{E}[c_{ij}]$), and divided over by standard deviation $\sigma_{ij}$ to be comparable. 
 
+```{math}
+:label: min-sigma
+\sigma_{\text{min}}^2 = \left(  \frac{\text{median}(c_{ij})}{5}  \right)^2
+```
+
+In practice, the variance $\sigma_{ij}^2$ obtains a lower boundary $\sigma_{\text{min}}^2$ defined in Equation [](#min-sigma), where the inbalance is expected to be always greater than the general median, and the maximum of residual is 5. 
 
 ## Summary
