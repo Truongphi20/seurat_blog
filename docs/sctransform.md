@@ -148,7 +148,7 @@ From the residuals, the count matrix is corrected following Equation [](#cout-co
 
 The genewise count mean $\mu_c(i)$ and variation $\sigma_{c}^2(i)$ for the correctness are calculated similarly to $\mathbb{E}[c_{ij}]$, and $\sigma_{ij}^2$ in Equation [](#pearson-residuals-eq) respectively, excepting that specifying the median of log-scaled total count of samples.
 
-Ultimately, the correctness of count values ($\mathbb{C}[c_{ij}]$) is estimated by the combination of the secured mean count across samples, and the specific expectation inbalance derived from the residual.
+Ultimately, the correctness of count values ($\mathbb{C}[c_{ij}]$) is estimated by the combination of the secured mean count across samples, and the specific expectation inbalance derived from the residual. Noticeably, the corrected values are polished by rounding, and the minimum threshold being 0.  
 
 ## Summary
 
