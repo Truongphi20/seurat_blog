@@ -17,9 +17,9 @@ pbmc <- SCTransform(pbmc, vars.to.regress = "percent.mt", verbose = FALSE)
 ## Workflow
 
 
-Overall, the raw count matrix is ultilized for [Negative Binomial (NB) model estimate](#fitting-model), which provides likelihood mean, and overdispersion parameters for each genes. After the estimating, the optimal parameters are discrepancy among genes, a [regulation step](#regularizing-model) is necessary to smooth variance and drop down noises. 
+Overall, the raw count matrix is utilized for [Negative Binomial (NB) model estimate](#fitting-model), which provides likelihood mean, and overdispersion parameters for each genes. After the estimating, the optimal parameters are discrepancy among genes, a [regulation step](#regularizing-model) is necessary to smooth variance and drop down noise. 
 
-By that, the contribution of elements in count matrix to the correlationship between genes and samples is measured by [Pearson residuals](#pearson-residuals). Finally, [the count matrix is corrected](#count-correctness) by elimimating variance noises between samples and recovering from residuals.          
+By that, the contribution of elements in count matrix to the correlation between genes and samples is measured by [Pearson residuals](#pearson-residuals). Finally, [the count matrix is corrected](#count-correctness) by eliminating variance noise between samples and recovering from residuals.          
 
 (fitting-model)=
 ### Fitting model
@@ -104,12 +104,12 @@ The interquartile of the distance distribution is assumed to be the range $[-0.2
 
 Based on the assumption, standard deviation of the distance distribution ($\overline{\sigma}$) used in Equation [](#smoothing-func) computed by Equation [](#sigma-kernel) with $\Phi^{-1}(0.75)$ being the inverse cumulative distribution function of 75th percentile.
 
-By the end, smoothed $\beta$ and $\theta$, which is recoverd from smoothed $F$, are ultilized for the next process.   
+By the end, smoothed $\beta$ and $\theta$, which is recoverd from smoothed $F$, are utilized for the next process.   
 
 (pearson-residuals)=
 ### Pearson residuals
 
-While Chi-square test exams the correlationship between two variable by count data, Pearson residuals determine the contribution of each component relationship to the overal correlation. The computation of specific Pearson residual ($z_{ij}$) in each bin is described as Equation [](#pearson-residuals-eq).
+While Chi-square test exams the relationship between two variable by count data, Pearson residuals determine the contribution of each component relationship to the overal correlation. The computation of specific Pearson residual ($z_{ij}$) in each bin is described as Equation [](#pearson-residuals-eq).
 
 ```{math}
 :label: pearson-residuals-eq
@@ -162,4 +162,4 @@ Ultimately, the correctness of count values ($\mathbb{C}[c_{ij}]$) is estimated 
 
 ## Summary
 
-The transform has removed the technical noises without missing statistical variances.   
+The transform has removed the technical noise without missing statistical variances.   
