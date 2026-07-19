@@ -143,7 +143,7 @@ In practice, the variance $\sigma_{ij}^2$ is bound by a lower threshold $\sigma_
 (count-correctness)=
 ### Count correctness
 
-From the residuals, the count matrix is corrected following Equation [](#cout-correctness-fn). 
+Using the stabilized Pearson residuals, the raw count matrix is corrected following Equation [](#cout-correctness-fn).
 
 ```{math}
 :label: cout-correctness-fn
@@ -158,9 +158,9 @@ From the residuals, the count matrix is corrected following Equation [](#cout-co
 \end{cases}
 ```
 
-The genewise count mean $\mu_c(i)$ and variation $\sigma_{c}^2(i)$ for the correctness are calculated similarly to $\mathbb{E}[c_{ij}]$, and $\sigma_{ij}^2$ in Equation [](#pearson-residuals-eq) respectively, excepting that specifying the median of log-scaled total count of samples.
+The gene-specific baseline mean $\mu_c(i)$ and variance $\sigma_{c}^2(i)$ used for this correction step are calculated similarly to $\mathbb{E}[c_{ij}]$ and $\sigma_{ij}^2$ in Equation [](#pearson-residuals-eq), excepting that specifying the median of log-scaled total count of samples.
 
-Ultimately, the correctness of count values ($\mathbb{C}[c_{ij}]$) is estimated by the combination of the secured mean count across samples, and the specific expectation inbalance derived from the residual. Noticeably, the corrected values are polished by rounding, and the minimum threshold being 0.  
+Ultimately, the corrected count value ($\mathbb{C}[c_{ij}]$) is computed by the combination of the baseline mean count across samples, and the specific expectation deviation derived from the specific residual. Finally, the corrected values are polished by rounding, and the minimum floor set at 0.
 
 ## Summary
 
