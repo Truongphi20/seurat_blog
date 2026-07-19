@@ -6,6 +6,8 @@ numbering:
 
 ## Introduction
 
+Normalization is the crucial first step, where technically sequencing bias is cut down while maintaining biological variation, for downstream analysis. 
+
 :::{tip} Seurat command
 
 ```R
