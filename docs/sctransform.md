@@ -17,9 +17,9 @@ pbmc <- SCTransform(pbmc, vars.to.regress = "percent.mt", verbose = FALSE)
 ## Workflow
 
 
-Overall, the raw count matrix is utilized for [Negative Binomial (NB) model estimate](#fitting-model), which provides likelihood mean, and overdispersion parameters for each genes. After the estimating, the optimal parameters are discrepancy among genes, a [regulation step](#regularizing-model) is necessary to smooth variance and drop down noise. 
+Overall, the raw count matrix is utilized for [Negative Binomial (NB) model estimate](#fitting-model) to determine the expected mean and overdispersion parameters for each gene. After the estimating, the raw likelihood parameters are highly variable across genes, a [regulation step](#regularizing-model) is applied to stabilize variance and drop down the sampling noise.
 
-By that, the contribution of elements in count matrix to the correlation between genes and samples is measured by [Pearson residuals](#pearson-residuals). Finally, [the count matrix is corrected](#count-correctness) by eliminating variance noise between samples and recovering from residuals.          
+Next, the contribution of each element in the count matrix to the Chi-square correlation between genes and samples is quantified via [Pearson residuals](#pearson-residuals). Finally, [the count matrix is corrected](#count-correctness) by eliminating technical noise across samples, and reconstructing normalized expression counts from the stabilized residuals.
 
 (fitting-model)=
 ### Fitting model
