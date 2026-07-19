@@ -16,6 +16,12 @@ pbmc <- SCTransform(pbmc, vars.to.regress = "percent.mt", verbose = FALSE)
 
 ## Workflow
 
+
+Overall, the raw count matrix is ultilized for [Negative Binomial (NB) model estimate](#fitting-model), which provides likelihood mean, and overdispersion parameters for each genes. After the estimating, the optimal parameters are discrepancy among genes, a [regulation step](#regularizing-model) is necessary to smooth variance and drop down noises. 
+
+By that, the contribution of elements in count matrix to the correlationship between genes and samples is measured by [Pearson residuals](#pearson-residuals). Finally, [the count matrix is corrected](#count-correctness) by elimimating variance noises between samples and recovering from residuals.          
+
+(fitting-model)=
 ### Fitting model
 
 At the beginning, only genes obtains overdispersion factor ($\sigma^2 > \mu$) are used to train. A number of genes is randomly selected (default is 2,000) across their expression levels, and the total count of selected genes must be greater than 5 by default. Subsequently, their raw count matrix are modeled by Gamma-Poisson general linear model (Gamma-Poisson GLM), i.e Negative Binomial (NB) model, to properly obtain overdispersion. See [](./glmGamPoi.md) for more detail about the model-fitting process. 
@@ -37,6 +43,7 @@ Briefly, it uses the Maximum Likelihood Estimates (MLE) method to estimate coeff
 
 Next, theoretical overdispersion $\hat{\theta}$, which is derived from mean-variance relationship of NB model, shown as Equation [](#mean-var). $\alpha$ is the ratio of expected overdispersion ($\hat{\theta}$) over observed overdispersion ($\theta$), which originates from estimation above. If $\alpha < 0.001$, the model for that gene is assumed to follow the Poisson distribution ($\sigma^2 = \mu$, and $\theta = \infty$). 
 
+(regularizing-model)=
 ### Regularizing model
 
 #### Geometric mean
@@ -99,6 +106,7 @@ Based on the assumption, standard deviation of the distance distribution ($\over
 
 By the end, smoothed $\beta$ and $\theta$, which is recoverd from smoothed $F$, are ultilized for the next process.   
 
+(pearson-residuals)=
 ### Pearson residuals
 
 While Chi-square test exams the correlationship between two variable by count data, Pearson residuals determine the contribution of each component relationship to the overal correlation. The computation of specific Pearson residual ($z_{ij}$) in each bin is described as Equation [](#pearson-residuals-eq).
@@ -130,6 +138,7 @@ Finally, specific Pearson residuals are measured from the inbalance between the 
 
 In practice, the variance $\sigma_{ij}^2$ obtains a lower boundary $\sigma_{\text{min}}^2$ defined in Equation [](#min-sigma), where the inbalance is expected to be always greater than the general median, and the maximum of residual is 5. 
 
+(count-correctness)=
 ### Count correctness
 
 From the residuals, the count matrix is corrected following Equation [](#cout-correctness-fn). 
