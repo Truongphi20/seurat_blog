@@ -6,13 +6,22 @@ numbering:
 
 ## Introduction
 
-Normalization is the crucial first step, where technically sequencing bias is cut down while maintaining biological variation, for downstream analysis. 
+Normalization and preprocessing are the key challenges affecting directly to downstream rcRNA-seq results, in which technically sequencing bias is cut down while biological variation is reserved. An effective workflow would eliminate technical bias among cells/samples and keep genewise heterogeneity without being overwhelmed by dominant genes [@hafemeisterNormalizationVarianceStabilization2019;@choudharyComparisonEvaluationStatistical2022]. 
+
+Based on that, SCTransform is introduced as a probabilistic approach stablizing variation in the count matrix [@hafemeisterNormalizationVarianceStabilization2019]. When it is significant difference in cell expression originally, the SCTransform method is able to replace Seurat standard preprocessing workflow ([normalization](./normalization.md), [feature selection](./variable_features.md), and [scaling](./scaling.md)) mentioned in [pbmc3k_tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial#normalizing-the-data).   
 
 :::{tip} Seurat command
+
+This command is captured from the [sctransform vignette](https://satijalab.org/seurat/articles/sctransform_vignette).
 
 ```R
 pbmc <- SCTransform(pbmc, vars.to.regress = "percent.mt", verbose = FALSE)
 ```
+Command explanation:
+
+- `pbmc`: the Seurat object containing the count matrix.
+- `vars.to.regress`: metadata columns is regressed out.
+- `verbose`: print process messages.
 
 :::
 
