@@ -171,6 +171,12 @@ The gene-specific baseline mean $\mu_c(i)$ and variance $\sigma_{c}^2(i)$ used f
 
 Ultimately, the corrected count value ($\mathbb{C}[c_{ij}]$) is computed by the combination of the baseline mean count across samples, and the specific expectation deviation derived from the specific residual. Finally, the corrected values are polished by rounding, and the minimum floor set at 0.
 
+### Post analysis
+
+#### Feature selection
+
+#### Data regression
+
 ## Summary
 
 The transform has removed the technical noise without missing statistical variances.   
