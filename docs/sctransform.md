@@ -175,6 +175,10 @@ Ultimately, the corrected count value ($\mathbb{C}[c_{ij}]$) is computed by the 
 
 #### Feature selection
 
+The top variable features (genes) are determined by sorting out the variance of Pearson residuals. 
+
+After computing residuals, the residuals are clipped by the range $[-\sqrt{M}, \sqrt{M}]$ with $M$ being the number of samples, in order to deduce the impact of extreme outliers. Next, genewise variance of residuals is calculated and sorting out the top variable features (the cap is 3000 features by default).  
+
 #### Data regression
 
 ## Summary
