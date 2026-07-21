@@ -181,6 +181,18 @@ After computing residuals, they are clipped by the range $[-\sqrt{M}, \sqrt{M}]$
 
 #### Data regression
 
+```{math}
+z_i  = \beta_0 z_0 + \beta_1 p_{mt} + e_i
+```
+
+```{math}
+X = [p_{mt} \: z_0] = QR
+```
+
+```{math}
+e_i = z_i - Q (Q^T z_i)
+```
+
 ## Summary
 
 The transform has removed the technical noise without missing statistical variances.   

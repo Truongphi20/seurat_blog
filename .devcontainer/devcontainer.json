@@ -13,7 +13,8 @@
         "yzhang.markdown-all-in-one",
         "mystmd.mystmd",
         "REditorSupport.r",
-        "ms-vscode.cpptools-extension-pack"
+        "ms-vscode.cpptools-extension-pack",
+        "fortran-lang.linter-gfortran"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"
