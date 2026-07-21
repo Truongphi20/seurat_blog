@@ -39,6 +39,7 @@ RUN Rscript -e 'options(timeout = 2400); \
     BiocManager::install("BSgenome.Hsapiens.UCSC.hg38", update = FALSE, ask = FALSE); \
     remotes::install_github("satijalab/azimuth", ref = "master", upgrade = "never")'
 
+RUN apt-get update && sudo apt-get install -y rsync default-jdk
 
 USER $USERNAME
 WORKDIR /workspace
@@ -47,6 +48,6 @@ RUN Rscript -e "install.packages('languageserver', repos='https://cloud.r-projec
 ENV R_HOME "/usr/local/bin/R"
 
 # Install for R complier
-RUN sudo apt-get install -y libreadline-dev libxt-dev rsync default-jdk
+RUN sudo apt-get install -y libreadline-dev libxt-dev
 
 ENTRYPOINT ["bash", "-l"]
