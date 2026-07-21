@@ -48,6 +48,5 @@ ENV R_HOME "/usr/local/bin/R"
 
 # Install for R complier
 RUN sudo apt-get install -y libreadline-dev libxt-dev rsync default-jdk
-ENV LD_LIBRARY_PATH="/workspaces/seurat_blog/commands/r-source-4.5.2/lib:${LD_LIBRARY_PATH}"
 
 ENTRYPOINT ["bash", "-l"]

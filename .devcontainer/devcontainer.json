@@ -26,5 +26,10 @@
     "--cap-add=SYS_PTRACE",
     "--security-opt", "seccomp=unconfined"
   ],
+  "containerEnv": {
+    "LD_LIBRARY_PATH": "/workspaces/seurat_blog/commands/r-source-4.5.2/lib:${containerEnv:LD_LIBRARY_PATH}"
+  },
+  "postCreateCommand": "bash .devcontainer/setup-r.sh",
+
   "forwardPorts": [3000, 3100]
 }
