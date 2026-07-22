@@ -51,22 +51,11 @@ lm_cloned <- function(formula, data, model = TRUE)
     ## need stats:: for non-standard evaluation
     mf[[1L]] <- quote(stats::model.frame)
     mf <- eval(mf, parent.frame())
-    mt <- attr(mf, "terms") # allow model.frame to update it
+    mt <- attr(mf, "terms")
     y <- model.response(mf, "numeric")
-    ## avoid any problems with 1D or nx1 arrays by as.vector.
-    offset <- model.offset(mf)
-    mlm <- is.matrix(y)
 
     x <- model.matrix(mt, mf, NULL)
-    z <- lm.fit_cloned(x, y)
-    
-    class(z) <- c(if(mlm) "mlm", "lm")
-    z$na.action <- attr(mf, "na.action")
-    z$offset <- offset
-    z$contrasts <- attr(x, "contrasts")
-    z$xlevels <- .getXlevels(mt, mf)
-    z$terms <- mt
-    z$model <- mf
+    z <- lm.fit_cloned(x, y)        # x is Intercept + percent.mt; y is GENE
     
     return(z)
 }
