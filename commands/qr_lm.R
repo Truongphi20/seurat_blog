@@ -1,5 +1,44 @@
+# Load shared lib
+stats_dll <- dyn.load("/workspaces/seurat_blog/commands/r-source-4.5.2/library/stats/libs/stats.so")
+
 # Load stack frame
 my_stack <- readRDS("/workspaces/seurat_blog/test_data/inputs_lm_qr.rds")
+
+# commands/r-source-4.5.2/src/library/stats/all.R:15048
+lm.fit_cloned <- function(x, y, tol = 1e-07)
+{
+    n <- nrow(x)
+    p <- ncol(x)
+    z <- .Call(stats_dll$Cdqrls, x, y, tol, FALSE)
+    coef <- z$coefficients
+    pivot <- z$pivot
+
+    ## careful here: the rank might be 0
+    r1 <- seq_len(z$rank)
+    dn <- colnames(x) %||% paste0("x", 1L:p)
+    nmeffects <- c(dn[pivot[r1]], rep.int("", n - z$rank))
+    r2 <- if(z$rank < p) (z$rank+1L):p else integer()
+
+    coef[r2] <- NA
+    ## avoid copy
+    if(z$pivoted) coef[pivot] <- coef
+    names(coef) <- dn
+    names(z$effects) <- nmeffects
+    
+    z$coefficients <- coef
+    r1 <- y - z$residuals
+
+    ## avoid unnecessary copy
+    if(z$pivoted) colnames(z$qr) <- colnames(x)[z$pivot]
+    qr <- z[c("qr", "qraux", "pivot", "tol", "rank")]
+
+    result <- c(z[c("coefficients", "residuals", "effects", "rank")],
+      list(fitted.values = r1, assign = attr(x, "assign"),
+       qr = structure(qr, class="qr"),
+       df.residual = n - z$rank))
+
+    return(result)
+}
 
 # commands/r-source-4.5.2/src/library/stats/all.R:14975
 lm_cloned <- function(formula, data, model = TRUE)
@@ -19,7 +58,7 @@ lm_cloned <- function(formula, data, model = TRUE)
     mlm <- is.matrix(y)
 
     x <- model.matrix(mt, mf, NULL)
-    z <- lm.fit(x, y, offset = offset, singular.ok=TRUE)
+    z <- lm.fit_cloned(x, y)
     
     class(z) <- c(if(mlm) "mlm", "lm")
     z$na.action <- attr(mf, "na.action")
