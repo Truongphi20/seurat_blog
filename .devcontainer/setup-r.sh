@@ -8,11 +8,14 @@ if [ -d "$R_SRC_DIR" ]; then
     cd "$R_SRC_DIR"
 
     # 1. Configure R with debug flags and shlib support
+    export FFLAGS="-O0 -g"
+    export FCFLAGS="-O0 -g"
+    export CFLAGS="-O0 -g"
+    export CXXFLAGS="-O0 -g"
+
     ./configure \
         --enable-R-shlib \
-        --without-recommended-packages \
-        CFLAGS="-g -O0" \
-        FFLAGS="-g -O0"
+        --without-recommended-packages
 
     # 2. Set up dummy SVN / documentation files to bypass svnonly checks
     mkdir -p .svn doc
