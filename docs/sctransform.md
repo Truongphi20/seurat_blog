@@ -181,7 +181,7 @@ After computing residuals, they are clipped by the range $[-\sqrt{M}, \sqrt{M}]$
 
 #### Residualization
 
-Subsequently, based on the parameter `vars.to.regress`, Pearson residuals, which were clean up the bias between cells and genes, are performed residualization against the percentage of mitochondrial genes (related to cell survival status). It helps remove another unexpected variance from technical errors causing cell damages.  
+Subsequently, based on the parameter `vars.to.regress`, Pearson residuals, which were removed the bias of cells and genes through modelling, are performed residualization against the percentage of mitochondrial genes (related to cell survival status). It helps remove another unexpected variance from technical errors causing cell damages.  
 
 ```{math}
 :label: data-reg
@@ -198,9 +198,9 @@ A &= \begin{bmatrix} {\scriptstyle \vert} & {\scriptstyle \vert} \\ 1 & p_{mt} \
 
 The dependence is modeled by a linear formula shown as Equation [](#data-reg), where Pearson residual vector of gene $i$ ($z_i$) depend on the linear model of percentage of mitochondrial genes in each cell ($p_{mt}$), and the independant residual vector ($r_i$).
 
-:::{tip} Mathematic performance to estimate new residual
+:::{tip} Mathematical method to estimate new residual
 
-To estimate new residual $r$, the coefficient matrix $A$ is performed $QR$ decomposition by householder transformations, which is efficient in storage and computation (See the [Martijn's lecture](https://youtu.be/pOiOH3yESPM) to understand the mathematical method). 
+To estimate new residual $r$, the coefficient matrix $A$ is performed $QR$ decomposition by householder transformations, which is efficient in storage and computation (See the [Martijn's lecture](https://youtu.be/pOiOH3yESPM) to understand the mathematical rudimentary). 
 
 ```{math}
 :label: res-math

@@ -248,7 +248,6 @@ clip_matrix_values <- function(mat, clip_range) {
 # commands/sctransform-0.4.3/R/denoise.R:81
 correct <- function(x, data = 'y', cell_attr = x$cell_attr)
 {
-    browser()
     data <- x[[data]]
     latent_var <- x$arguments$latent_var
 
