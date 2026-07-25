@@ -179,19 +179,26 @@ The top variable features (genes) are determined by sorting out the variance of 
 
 After computing residuals, they are clipped by the range $[-\sqrt{M}, \sqrt{M}]$ with $M$ being the number of samples, in order to deduce the impact of extreme outliers. Next, genewise variance of residuals is calculated and sorting out the top variable features (the cap is 3000 features by default).  
 
-#### Data regression
+#### Residualization
+
+Subsequently, based on the parameter `vars.to.regress`, Pearson residuals, which were clean up the bias between cells and genes, are performed residualization against the percentage of mitochondrial genes (related to cell survival status). It helps remove another unexpected variance from technical errors causing cell damages.  
 
 ```{math}
-z_i  = \beta_0 z_0 + \beta_1 p_{mt} + e_i
+:label: data-reg
+\begin{cases}
+\begin{aligned}
+
+z  &= Ax + r \\
+A &= \begin{bmatrix} {\scriptstyle \vert} & {\scriptstyle \vert} \\ 1 & p_{mt} \\ {\scriptstyle \vert} & {\scriptstyle \vert} \end{bmatrix}
+
+\end{aligned}
+\end{cases}
 ```
 
-```{math}
-X = [p_{mt} \: z_0] = QR
-```
 
-```{math}
-e_i = z_i - Q (Q^T z_i)
-```
+The dependence is modeled by a linear formula shown as Equation [](#data-reg), where Pearson residual ($z$) depend on the linear model of percentage of mitochondrial genes ($p_{mt}$), and the independant residual ($r$).
+
+To estimate new residual $r$, the coefficient matrix $A$ is performed QR decomposition by householder transformation, which is efficient in storage and computation (See the [Martijn's lecture](https://youtu.be/pOiOH3yESPM) to understand the mathematical method).
 
 ## Summary
 
