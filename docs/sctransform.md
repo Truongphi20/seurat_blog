@@ -198,7 +198,7 @@ A &= \begin{bmatrix} {\scriptstyle \vert} & {\scriptstyle \vert} \\ 1 & p_{mt} \
 
 The dependence is modeled by a linear formula shown as Equation [](#data-reg), where Pearson residual vector of gene $i$ ($z_i$) depend on the linear model of percentage of mitochondrial genes in each cell ($p_{mt}$), and the independant residual vector ($r_i$).
 
-To estimate new residual $r$, the coefficient matrix $A$ is performed QR decomposition by householder transformation, which is efficient in storage and computation (See the [Martijn's lecture](https://youtu.be/pOiOH3yESPM) to understand the mathematical method).
+To estimate new residual $r$, the coefficient matrix $A$ is performed $QR$ decomposition by householder transformations, which is efficient in storage and computation (See the [Martijn's lecture](https://youtu.be/pOiOH3yESPM) to understand the mathematical method). Noticeably, $Rx$ is the projection of $\mathbf{z}_i$ onto the $R$-space when applying the transformations.
 
 ## Summary
 
