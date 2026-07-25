@@ -212,7 +212,7 @@ To estimate new residual $r$, the coefficient matrix $A$ is performed $QR$ decom
 \end{aligned}
 ```
 
-The method is detailed as expansion [](#res-math), where $c$ and $d$ are the component vectors obtained when applying the Householder transformations for $\mathbf{z}_i$. Noticeably, $R\mathbf{x}$ is the projection of $\mathbf{z}_i$ onto the $R$-space ($R\mathbf{x} = c$, length $c$ is the column number of $A$).
+The method is detailed as expansion [](#res-math), where $c$ and $d$ are the component vectors obtained when applying the Householder transformations for $\mathbf{z}_i$. Noticeably, $R\mathbf{x}$ is the projection of $\mathbf{z}_i$ onto the $R$-space ($R\mathbf{x} = c$, length of $c$ is the column number of $A$).
 
 :::
 
