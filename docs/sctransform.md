@@ -188,7 +188,7 @@ Subsequently, based on the parameter `vars.to.regress`, Pearson residuals, which
 \begin{cases}
 \begin{aligned}
 
-z_i  &= Ax + r_i \\
+\mathbf{z}_i  &= A\mathbf{x} + \mathbf{r}_i \\
 A &= \begin{bmatrix} {\scriptstyle \vert} & {\scriptstyle \vert} \\ 1 & p_{mt} \\ {\scriptstyle \vert} & {\scriptstyle \vert} \end{bmatrix}
 
 \end{aligned}
@@ -198,7 +198,23 @@ A &= \begin{bmatrix} {\scriptstyle \vert} & {\scriptstyle \vert} \\ 1 & p_{mt} \
 
 The dependence is modeled by a linear formula shown as Equation [](#data-reg), where Pearson residual vector of gene $i$ ($z_i$) depend on the linear model of percentage of mitochondrial genes in each cell ($p_{mt}$), and the independant residual vector ($r_i$).
 
-To estimate new residual $r$, the coefficient matrix $A$ is performed $QR$ decomposition by householder transformations, which is efficient in storage and computation (See the [Martijn's lecture](https://youtu.be/pOiOH3yESPM) to understand the mathematical method). Noticeably, $Rx$ is the projection of $\mathbf{z}_i$ onto the $R$-space when applying the transformations.
+:::{tip} Mathematic performance to estimate new residual
+
+To estimate new residual $r$, the coefficient matrix $A$ is performed $QR$ decomposition by householder transformations, which is efficient in storage and computation (See the [Martijn's lecture](https://youtu.be/pOiOH3yESPM) to understand the mathematical method). 
+
+```{math}
+:label: res-math
+\begin{aligned} 
+\mathbf{r_i} &= \mathbf{z_i} - A\mathbf{x} \\ 
+           &= Q \left( Q^T \mathbf{z_i} - R \mathbf{x} \right) \\ 
+           &= Q \left[ \begin{pmatrix} \mathbf{c} \\ \mathbf{d} \end{pmatrix} - \begin{pmatrix} R \mathbf{x} \\ \mathbf{0} \end{pmatrix} \right] \\
+           &= Q \begin{pmatrix} \mathbf{0} \\ \mathbf{d} \end{pmatrix}
+\end{aligned}
+```
+
+The method is detailed as expansion [](#res-math), where $c$ and $d$ are the component vectors obtained when applying the Householder transformations for $\mathbf{z}_i$. Noticeably, $R\mathbf{x}$ is the projection of $\mathbf{z}_i$ onto the $R$-space ($R\mathbf{x} = c$, length $c$ is the column number of $A$).
+
+:::
 
 ## Summary
 
