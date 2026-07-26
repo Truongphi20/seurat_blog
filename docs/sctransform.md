@@ -28,11 +28,11 @@ Command explanation:
 ## Workflow
 
 
-Overall, the raw count matrix is utilized for [Negative Binomial (NB) model estimate](#fitting-model) to determine the expected mean and overdispersion parameters for each gene. After the estimating, the raw likelihood parameters are highly variable across genes, a [regulation step](#regularizing-model) is applied to stabilize variance and drop down the sampling noise.
+Overall, the raw count matrix is utilized for [Negative Binomial (NB) model estimate](#fitting-model) to determine the expected mean and overdispersion parameters for each gene. After the estimating, the raw likelihood parameters are highly variable across genes, a [regulation step](#regularizing-model) is applied to stabilize variance and reduce the sampling noise.
 
 Next, the contribution of each element in the count matrix to the Chi-square dependence between genes and samples is quantified via [Pearson residuals](#pearson-residuals). Subsequently, [the count matrix is corrected](#count-correctness) by eliminating technical noise across samples, and reconstructing normalized expression counts from the stabilized residuals.
 
-Ultimately, the residuals are polished through [Post analysis](#post-analysis) by selecting top variable features and unchaining the dependence of variables in metadata (cell survival status displayed by percentage of mitochonrial genes according to the command), which is another technical bias.   
+Finally, the residuals undergo [post-processing](#post-analysis), where highly variable features are identified, and confounding biological or technical covariates (such as cell viability indicated by the percentage of mitochondrial reads) can be regressed out, yielding a polished residual matrix ready for downstream analysis (e.g., PCA and clustering).
 
 (fitting-model)=
 ### Fitting model
@@ -174,7 +174,7 @@ The gene-specific baseline mean $\mu_c(i)$ and variance $\sigma_{c}^2(i)$ used f
 Ultimately, the corrected count value ($\mathbb{C}[c_{ij}]$) is computed by the combination of the baseline mean count across samples, and the specific expectation deviation derived from the specific residual. Finally, the corrected values are polished by rounding, and the minimum floor set at 0.
 
 (post-analysis)
-### Post analysis
+### Post-processing
 
 #### Feature selection
 
