@@ -173,14 +173,14 @@ The gene-specific baseline mean $\mu_c(i)$ and variance $\sigma_{c}^2(i)$ used f
 
 Ultimately, the corrected count value ($\mathbb{C}[c_{ij}]$) is computed by the combination of the baseline mean count across samples, and the specific expectation deviation derived from the specific residual. Finally, the corrected values are polished by rounding, and the minimum floor set at 0.
 
-(post-analysis)
+(post-analysis)=
 ### Post-processing
 
 #### Feature selection
 
-The top variable features (genes) are determined by sorting out the variance of Pearson residuals. 
+The top variable features (genes) are determined by ranking the variance of Pearson residuals across cells. 
 
-After computing residuals, they are clipped by the range $[-\sqrt{M}, \sqrt{M}]$ with $M$ being the number of samples, in order to deduce the impact of extreme outliers. Next, genewise variance of residuals is calculated and sorting out the top variable features (the cap is 3000 features by default).  
+In detail, after computing the raw residuals, they are clipped by the range $[-\sqrt{M/30}, \sqrt{M/30}]$ (where $M$ is the total number of cells) to mitigate the distorting impact of extreme outliers. Next, genewise variance of these clipped residuals is calculated and the genes are sorted to select the top variable features (capped at 3,000 features by default).  
 
 #### Residualization
 
