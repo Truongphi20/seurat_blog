@@ -12,3 +12,6 @@ pbmc <- PercentageFeatureSet(pbmc, pattern = "^MT-", col.name = "percent.mt")
 
 # run sctransform
 pbmc <- SCTransform(pbmc, vars.to.regress = "percent.mt", verbose = FALSE)
+
+# run PCA
+pbmc <- RunPCA(pbmc, verbose = FALSE)
