@@ -224,4 +224,6 @@ Finally, the resulting residuals are mean-centered within each gene.
 
 ## Summary
 
-The transform has removed the technical noise without missing statistical variances.   
+To reduce technical noise without losing statistical variance, sctransform fits and regularizes a negative binomial model to stabilize variance across genes. Technical bias across cells is removed via Pearson residualization while preserving true biological variation. Furthermore, top variable features are selected, and dependence on confounding covariates is regressed out.
+
+Notably, the corrected count matrix is reconstructed directly from the initial Pearson residuals before post-processing. Consequently, the corrected counts remain independent of additional covariate regressions, thereby preserving the baseline biological variance of the raw counts.
