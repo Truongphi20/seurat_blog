@@ -6,9 +6,9 @@ numbering:
 
 ## Introduction
 
-Normalization and preprocessing are the key challenges affecting directly to downstream rcRNA-seq results, in which technically sequencing bias is cut down while biological variation is reserved. An effective workflow would eliminate technical bias among cells/samples and keep genewise heterogeneity without being overwhelmed by dominant genes [@hafemeisterNormalizationVarianceStabilization2019;@choudharyComparisonEvaluationStatistical2022]. 
+Normalization and preprocessing are the key challenges affecting directly to downstream scRNA-seq results, in which technically sequencing bias is cut down while biological variation is reserved. An effective workflow would eliminate technical bias among cells/samples and keep genewise heterogeneity without being overwhelmed by dominant genes [@hafemeisterNormalizationVarianceStabilization2019;@choudharyComparisonEvaluationStatistical2022]. 
 
-Based on that, SCTransform is introduced as a probabilistic approach stablizing variation in the count matrix [@hafemeisterNormalizationVarianceStabilization2019]. When it is significant difference in cell expression originally, the SCTransform method is able to replace Seurat standard preprocessing workflow ([normalization](./normalization.md), [feature selection](./variable_features.md), and [scaling](./scaling.md)), mentioned in [pbmc3k_tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial#normalizing-the-data).   
+Based on that, SCTransform is introduced as a probabilistic approach stabilizing variation in the count matrix [@hafemeisterNormalizationVarianceStabilization2019]. When there is a significant difference in cell expression originally, the SCTransform method is able to replace Seurat standard preprocessing workflow ([normalization](./normalization.md), [feature selection](./variable_features.md), and [scaling](./scaling.md)), mentioned in [pbmc3k_tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial#normalizing-the-data).   
 
 :::{tip} Seurat command
 
@@ -31,14 +31,14 @@ Command explanation:
 
 Overall, the raw count matrix is utilized for [Negative Binomial (NB) model estimate](#fitting-model) to determine the expected mean and overdispersion parameters for each gene. After the estimating, the raw likelihood parameters are highly variable across genes, a [regulation step](#regularizing-model) is applied to stabilize variance and reduce the sampling noise.
 
-Next, the contribution of each element in the count matrix to the Chi-square dependence between genes and samples is quantified via [Pearson residuals](#pearson-residuals). Subsequently, [the count matrix is corrected](#count-correctness) by eliminating technical noise across samples, and reconstructing normalized expression counts from the stabilized residuals.
+Next, the contribution of each element in the count matrix to the Chi-square dependence between genes and samples is quantified via [Pearson residuals](#pearson-residuals). Subsequently, [the count matrix is corrected](#count-correction) by eliminating technical noise across samples, and reconstructing normalized expression counts from the stabilized residuals.
 
-Finally, the Pearson residuals undergo [post-processing](#post-analysis), where highly variable features are identified, and confounding biological or technical covariates (such as cell viability indicated by the percentage of mitochondrial reads) can be regressed out, yielding a polished residual matrix ready for downstream analysis (e.g., PCA and clustering).
+Finally, the Pearson residuals undergo [post-processing](#post-processing), where highly variable features are identified, and confounding biological or technical covariates (such as cell viability indicated by the percentage of mitochondrial reads) can be regressed out, yielding a polished residual matrix ready for downstream analysis (e.g., PCA and clustering).
 
 (fitting-model)=
 ### Fitting model
 
-At the beginning, only genes obtains overdispersion factor ($\sigma^2 > \mu$) are used to train. A number of genes is randomly selected (default is 2,000) across their expression levels, and the total count of selected genes must be greater than 5 by default. Subsequently, their raw count matrix are modeled by Gamma-Poisson general linear model (Gamma-Poisson GLM), i.e Negative Binomial (NB) model, to properly obtain overdispersion. See [](./glmGamPoi.md) for more detail about the model-fitting process. 
+At the beginning, only genes obtaining an overdispersion factor ($\sigma^2 > \mu$) are used to train. A number of genes is randomly selected (default is 2,000) across their expression levels, and the total count of selected genes must be greater than 5 by default. Subsequently, their raw count matrix are modeled by Gamma-Poisson general linear model (Gamma-Poisson GLM), i.e Negative Binomial (NB) model, to properly obtain overdispersion. See [](./glmGamPoi.md) for more detail about the model-fitting process. 
 
 Briefly, it uses the Maximum Likelihood Estimates (MLE) method to estimate coefficients of the model according to the count values of each gene. The coefficients include relative log-scaled count mean $\beta$, and overdispersion $\theta$. Note that the definition of overdispersion between sctransform and Gamma-Poisson GLM are reciprocal.
 
@@ -152,13 +152,13 @@ Finally, the specific Pearson residual is measured from the deviation between th
 
 In practice, the variance $\sigma_{ij}^2$ is bound by a lower threshold $\sigma_{\text{min}}^2$ defined in Equation [](#min-sigma), where the deviation is expected to be always greater than the general median, and the maximum of residual is 5.
 
-(count-correctness)=
-### Count correctness
+(count-correction)=
+### Count correction
 
-Using the stabilized Pearson residuals, the raw count matrix is corrected following Equation [](#cout-correctness-fn).
+Using the stabilized Pearson residuals, the raw count matrix is corrected following Equation [](#count-correction-fn).
 
 ```{math}
-:label: cout-correctness-fn
+:label: count-correction-fn
 \begin{cases}
 \begin{aligned}
 
@@ -174,7 +174,7 @@ The gene-specific baseline mean $\mu_c(i)$ and variance $\sigma_{c}^2(i)$ used f
 
 Ultimately, the corrected count value ($\mathbb{C}[c_{ij}]$) is computed by the combination of the baseline mean count across samples, and the specific expectation deviation derived from the specific residual. Finally, the corrected values are polished by rounding, and the minimum floor set at 0.
 
-(post-analysis)=
+(post-processing)=
 ### Post-processing
 
 #### Feature selection
