@@ -216,6 +216,8 @@ The method is detailed as expansion [](#res-math), where $c$ and $d$ are the com
 
 :::
 
+Finally, the residuals are mean-centered within each gene.
+
 ## Summary
 
 The transform has removed the technical noise without missing statistical variances.   
