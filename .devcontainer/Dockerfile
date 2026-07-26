@@ -27,12 +27,27 @@ RUN apt-get update && apt-get install -y build-essential texinfo wget \
     && cd bashdb-5.2-1.2.0 && ./configure && make && make install \
     && cd .. && rm -rf bashdb-5.2-1.2.0*
 
+
+RUN apt-get update && apt-get install -y openssh-client
+
+# Install Azimuth
+RUN apt-get update && sudo apt-get install -y libgsl-dev
+RUN Rscript -e 'options(timeout = 2400); \
+    options(BioC_mirror = "https://packagemanager.posit.co/bioconductor"); \
+    if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager"); \
+    if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes"); \
+    BiocManager::install("BSgenome.Hsapiens.UCSC.hg38", update = FALSE, ask = FALSE); \
+    remotes::install_github("satijalab/azimuth", ref = "master", upgrade = "never")'
+
+RUN apt-get update && sudo apt-get install -y rsync default-jdk
+
 USER $USERNAME
 WORKDIR /workspace
 
 RUN Rscript -e "install.packages('languageserver', repos='https://cloud.r-project.org')"
 ENV R_HOME "/usr/local/bin/R"
 
-RUN apt-get update && apt-get install -y openssh-client
+# Install for R complier
+RUN sudo apt-get install -y libreadline-dev libxt-dev
 
 ENTRYPOINT ["bash", "-l"]

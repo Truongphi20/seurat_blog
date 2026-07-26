@@ -14,5 +14,6 @@ linters: linters_with_defaults(
     indentation_linter = NULL,
     spaces_inside_linter = NULL,
     commented_code_linter = NULL,
-    seq_linter = NULL
+    seq_linter = NULL,
+    object_length_linter = NULL
   )
