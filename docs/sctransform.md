@@ -8,7 +8,7 @@ numbering:
 
 Normalization and preprocessing are the key challenges affecting directly to downstream rcRNA-seq results, in which technically sequencing bias is cut down while biological variation is reserved. An effective workflow would eliminate technical bias among cells/samples and keep genewise heterogeneity without being overwhelmed by dominant genes [@hafemeisterNormalizationVarianceStabilization2019;@choudharyComparisonEvaluationStatistical2022]. 
 
-Based on that, SCTransform is introduced as a probabilistic approach stablizing variation in the count matrix [@hafemeisterNormalizationVarianceStabilization2019]. When it is significant difference in cell expression originally, the SCTransform method is able to replace Seurat standard preprocessing workflow ([normalization](./normalization.md), [feature selection](./variable_features.md), and [scaling](./scaling.md)) mentioned in [pbmc3k_tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial#normalizing-the-data).   
+Based on that, SCTransform is introduced as a probabilistic approach stablizing variation in the count matrix [@hafemeisterNormalizationVarianceStabilization2019]. When it is significant difference in cell expression originally, the SCTransform method is able to replace Seurat standard preprocessing workflow ([normalization](./normalization.md), [feature selection](./variable_features.md), and [scaling](./scaling.md)), mentioned in [pbmc3k_tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial#normalizing-the-data).   
 
 :::{tip} Seurat command
 
@@ -180,11 +180,11 @@ Ultimately, the corrected count value ($\mathbb{C}[c_{ij}]$) is computed by the 
 
 The top variable features (genes) are determined by ranking the variance of Pearson residuals across cells. 
 
-In detail, after computing the raw residuals, they are clipped by the range $[-\sqrt{M/30}, \sqrt{M/30}]$ (where $M$ is the total number of cells) to mitigate the distorting impact of extreme outliers. Next, genewise variance of these clipped residuals is calculated and the genes are sorted to select the top variable features (capped at 3,000 features by default).  
+In detail, after computing the raw residuals, they are practically clipped by the range $[-\sqrt{M/30}, \sqrt{M/30}]$ (where $M$ is the total number of cells) to mitigate the distorting impact of extreme outliers. Next, genewise variance of these clipped residuals is calculated and the genes are sorted to select the top variable features (capped at 3,000 features by default).  
 
 #### Residualization
 
-Subsequently, based on the parameter `vars.to.regress`, Pearson residuals, which were removed the bias of cells and genes through modelling, are performed residualization against the percentage of mitochondrial genes (related to cell survival status). It helps remove another unexpected variance from technical errors causing cell damages.  
+Subsequently, based on the parameter `vars.to.regress`, Pearson residuals are residualized against the percentage of mitochondrial genes, which reflects cell survival status. This step eliminates additional unwanted variance arising from technical errors or cell damage.
 
 ```{math}
 :label: data-reg
@@ -199,11 +199,11 @@ A &= \begin{bmatrix} {\scriptstyle \vert} & {\scriptstyle \vert} \\ 1 & p_{mt} \
 ```
 
 
-The dependence is modeled by a linear formula shown as Equation [](#data-reg), where Pearson residual vector of gene $i$ ($z_i$) depend on the linear model of percentage of mitochondrial genes in each cell ($p_{mt}$), and the independant residual vector ($r_i$).
+This dependency is modeled linearly, as shown in Equation [](#data-reg), where the Pearson residual vector of gene $i$ ($\mathbf{z}_i$) depends on a linear model of the mitochondrial gene percentage ($p_{mt}$) and an independent residual vector ($\mathbf{r}_i$).
 
 :::{tip} Mathematical method to estimate new residual
 
-To estimate new residual $r$, the coefficient matrix $A$ is performed $QR$ decomposition by householder transformations, which is efficient in storage and computation (See the [Martijn's lecture](https://youtu.be/pOiOH3yESPM) to understand the mathematical concepts). 
+To estimate the updated residual vector $\mathbf{r}_i$, the design matrix $A$ is factored via $QR$ decomposition using Householder transformations, which is both memory- and computationally efficient (see [Martijn's lecture](https://youtu.be/pOiOH3yESPM) for the detailed mathematical concepts).
 
 ```{math}
 :label: res-math
@@ -215,11 +215,11 @@ To estimate new residual $r$, the coefficient matrix $A$ is performed $QR$ decom
 \end{aligned}
 ```
 
-The method is detailed as expansion [](#res-math), where $c$ and $d$ are the component vectors obtained when applying the Householder transformations for $\mathbf{z}_i$. Noticeably, $R\mathbf{x}$ is the projection of $\mathbf{z}_i$ onto the $R$-space ($R\mathbf{x} = c$, length of $c$ is the column number of $A$).
+The derivation is shown in Equation [](#res-math), where $\mathbf{c}$ and $\mathbf{d}$ are component vectors obtained by applying the Householder transformations to $\mathbf{z}_i$. Noticeably, $R\mathbf{x}$ is the projection of $\mathbf{z}_i$ onto the column space of $R$ ($R\mathbf{x} = \mathbf{c}$, where the length of vector $\mathbf{c}$ equals the number of columns in $A$).
 
 :::
 
-Finally, the residuals are mean-centered within each gene.
+Finally, the resulting residuals are mean-centered within each gene.
 
 ## Summary
 
