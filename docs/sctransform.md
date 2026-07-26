@@ -27,12 +27,13 @@ Command explanation:
 
 ## Workflow
 
+![](./static/sctransform_workflow.png)
 
 Overall, the raw count matrix is utilized for [Negative Binomial (NB) model estimate](#fitting-model) to determine the expected mean and overdispersion parameters for each gene. After the estimating, the raw likelihood parameters are highly variable across genes, a [regulation step](#regularizing-model) is applied to stabilize variance and reduce the sampling noise.
 
 Next, the contribution of each element in the count matrix to the Chi-square dependence between genes and samples is quantified via [Pearson residuals](#pearson-residuals). Subsequently, [the count matrix is corrected](#count-correctness) by eliminating technical noise across samples, and reconstructing normalized expression counts from the stabilized residuals.
 
-Finally, the residuals undergo [post-processing](#post-analysis), where highly variable features are identified, and confounding biological or technical covariates (such as cell viability indicated by the percentage of mitochondrial reads) can be regressed out, yielding a polished residual matrix ready for downstream analysis (e.g., PCA and clustering).
+Finally, the Pearson residuals undergo [post-processing](#post-analysis), where highly variable features are identified, and confounding biological or technical covariates (such as cell viability indicated by the percentage of mitochondrial reads) can be regressed out, yielding a polished residual matrix ready for downstream analysis (e.g., PCA and clustering).
 
 (fitting-model)=
 ### Fitting model
