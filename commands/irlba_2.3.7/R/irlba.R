@@ -180,7 +180,7 @@
 #' @importFrom methods slotNames
 #' @useDynLib irlba, .registration=TRUE, .fixes="C_"
 #' @export
-irlba <-
+irlba_cloned <-
 function(A,                     # data matrix
          nv=5, nu=nv,           # number of singular vectors to estimate
          maxit=1000,            # maximum number of iterations
@@ -197,6 +197,7 @@ function(A,                     # data matrix
          fastpath=TRUE,         # use the faster C implementation if possible
          svtol=tol,             # stopping tolerance percent change in estimated svs
          smallest=FALSE,        # set to TRUE to estimate subspaces associated w/smallest singular values
+         irlba_dll,             # extension dll
          ...)                   # optional experimental or deprecated arguments
 {
 # ---------------------------------------------------------------------
@@ -376,7 +377,7 @@ Use `set.seed` first for reproducibility.")
       if (length(center) != ncol(A)) stop("the centering vector length must match the number of matrix columns")
       CENTER <- as.double(center)
     }
-    ans <- .Call(C_IRLB, A, as.integer(k), as.double(v), as.integer(work),
+    ans <- .Call(irlba_dll$IRLB, A, as.integer(k), as.double(v), as.integer(work),
                  as.integer(maxit), as.double(tol), as.double(eps2), as.integer(SP),
                  as.integer(RESTART), RV, RW, RS, SCALE, SHIFT, CENTER, as.double(svtol))
     if (ans[[6]] == 0 || ans[[6]] == -2)

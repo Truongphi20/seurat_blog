@@ -1,12 +1,15 @@
-library("irlba")
-
 # Load stack frame
 my_stack <- readRDS("/workspaces/seurat_blog/test_data/inputs_irlba.rds")
 
-## Note that values in object (genes x cells) are scaled values
+# Load shared lib
+irlba_dll <- dyn.load("/workspaces/seurat_blog/commands/irlba_2.3.7/src/build/libirlba.so")
 
-## Run pca
-pca.results <- irlba(A = t(x = my_stack$object), nv = my_stack$npcs)
+## Load irlba
+source("/workspaces/seurat_blog/commands/irlba_2.3.7/R/irlba.R")
+
+## Run pca (commands/seurat-5.5.0/R/dimensional_reduction.R:944)
+## Note that values in object (genes x cells) are scaled values
+pca.results <- irlba_cloned(A = t(x = my_stack$object), nv = my_stack$npcs, irlba_dll = irlba_dll)
 
 ## View output
 print(dim(pca.results$v))
