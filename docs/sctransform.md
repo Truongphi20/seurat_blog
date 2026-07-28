@@ -105,7 +105,7 @@ The estimated parameters ($F$ and $\beta$) are sequentially smoothed across gene
 \end{cases}
 ```
 
-The smoothed value $\overline{y}_j$ of any gene $j$ is computed by weighted average of anchored genes, as defined in Equation [](#smoothing-func). Particularly, the weight ($w_{ij}$) is the density determined by the Gaussian kernel function $K$ at the distance between the current gene $j$ and anchored gene $i$ in the $\mu_g$ level. In $m$ overdispersion genes, the employed subset starts from anchored gene $i_{\text{min}}$, which is nearest to the boundary, four times the bandwidth h, from the targeted $\mu_g$ range. 
+The smoothed value $\overline{y}_j$ (in $F$ or $\beta$ matrix) of any gene $j$ is computed by weighted average of anchored genes, as defined in Equation [](#smoothing-func). Particularly, the weight ($w_{ij}$) is the density determined by the Gaussian kernel function $K$ at the distance between the current gene $j$ and anchored gene $i$ in the $\mu_g$ level. In $m$ overdispersion genes, the employed subset starts from anchored gene $i_{\text{min}}$, which is nearest to the boundary, four times the bandwidth h, from the targeted $\mu_g$ range. 
 
 ![](./static/bw_smoothing.png)
 
