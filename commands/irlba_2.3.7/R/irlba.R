@@ -377,6 +377,7 @@ Use `set.seed` first for reproducibility.")
       if (length(center) != ncol(A)) stop("the centering vector length must match the number of matrix columns")
       CENTER <- as.double(center)
     }
+    browser()
     ans <- .Call(irlba_dll$IRLB, A, as.integer(k), as.double(v), as.integer(work),
                  as.integer(maxit), as.double(tol), as.double(eps2), as.integer(SP),
                  as.integer(RESTART), RV, RW, RS, SCALE, SHIFT, CENTER, as.double(svtol))
