@@ -24,7 +24,7 @@ ElbowPlot(pbmc)
 
 #### Initializing
 
-The algorithm begins with the input feature matrix $A$ ($n$ cells $\times$ $m$ features) and a random residual vector $p_1$ of an arbitrary cell.
+The algorithm begins with the input feature matrix $A$ ($n$ cells $\times$ $m$ features) and an initial normalized vector $p_1 \in \mathbb{R}^m$ representing random feature residuals of an arbitrary cell.
 
 ```{math}
 :label: lanczos-begin
@@ -39,25 +39,25 @@ q_1 = \frac{1}{\alpha_1}A \cdot p_1  \\
 \end{cases}
 ```
 
-At the begin of iterations, $A \cdot p_1$ represents the covariance score of the arbitrary cell and cells in the $A$-base. Its magnitude $\alpha_1$ and scaled vector $q_1$ are described as Equation [](#lanczos-begin). 
+At the start of the iteration, $A \cdot p_1$ computes the cell similarity scores between all cells in $A$ and the arbitrary cell. Its magnitude is stored as $\alpha_1$, and the scaled unit vector $q_1 \in \mathbb{R}^n$ as described in Equation [](#lanczos-begin).
 
 #### The loop runs
 
-The number of iteration for biagonalization $k$ is the size of working Krylov subspace reflected by the number of singular vectors to estimate $v$ ($v=50$ by default, $k=v+7$).
+The number of iterations $k$ defines the size of the working Krylov subspace, as reflected by the number of desired singular vectors $v$ (by default, $v=50$; $k=v+7$).
 
 ```{math}
 :label: lanczos-baseline
 \bar{r}_j = A^T q_j - \alpha_j p_j
 ```
 
-For the iterator $j$, the based residual vector $\bar{r}_j$ defined as Equation [](#lanczos-baseline). Intuitively, it is the subtraction of the feature-weighted covariate score and baseline covariate score of the based cells with the current working cell.   
+For iteration $j$, the un-orthogonalized feature residual vector $\bar{r}_j \in \mathbb{R}^m$ is defined as Equation [](#lanczos-baseline). Intuitively, $\bar{r}_j$ represents the updated feature-weighted covariate score ($A^T q_j$) minus the baseline covariate score ($\alpha_j p_j$).
 
 ```{math}
 :label: lanczos-orthogon
-r_j = \bar{r}_j - P_{(1:j)} (P_{(1:j)}^T \bar{r}_j)
+r_j = \bar{r}_j - P_j (P_j^T \bar{r}_j)
 ```
 
-Subsequently, $\bar{r}_j$ is performed Gram-Schmidt projection to compute perpendicular residual $r_j$ against the previous residual vectors from $P_{(1:j)}$ space.  
+Subsequently, Gram-Schmidt re-orthogonalization is performed on $\bar{r}_j$ as shown in Equation [](#lanczos-orthogon) (where $P_j = [p_1, p_2, \dots, p_j]$), extracting a perpendicular residual vector $r_j$ that is strictly independent from all previously computed feature residual vectors ($P_j$).
 
 ### Augmented Lanczos Bidiagonalization
 
