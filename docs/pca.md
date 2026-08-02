@@ -24,7 +24,7 @@ ElbowPlot(pbmc)
 
 #### Initializing
 
-The algorithm begins with the input feature matrix $A$ ($n$ cells $\times$ $m$ features) and a random expression vector $p_1$ from an arbitrary cell.
+The algorithm begins with the input feature matrix $A$ ($n$ cells $\times$ $m$ features) and a random expression vector $p_1$ of an arbitrary cell.
 
 ```{math}
 :label: lanczos-begin
@@ -43,14 +43,18 @@ At the begin of iterations, $A \cdot p_1$ represents the covariance score of the
 
 #### The loop runs
 
+The number of iteration for biagonalization $k$ is the size of working Krylov subspace reflected by the number of singular vectors to estimate $v$ ($v=50$ by default, $k=v+7$).
+
 ```{math}
 :label: lanczos-baseline
 \bar{r}_j = A^T q_j - \alpha_j p_j
 ```
 
+For the iterator $j$, the based residual vector $\bar{r}_j$ defined as Equation [](#lanczos-baseline). Intuitively, it is the subtraction of the feature-specific covariate score and baseline covariate score of the based cell with the arbitrary cell.   
+
 ```{math}
 :label: lanczos-orthogon
-r_j = \bar{r}_j - p_{(1:j)} (p_{(1:j)}^T \bar{r}_j)
+r_j = \bar{r}_j - P_{(1:j)} (P_{(1:j)}^T \bar{r}_j)
 ```
 
 ### Augmented Lanczos Bidiagonalization
