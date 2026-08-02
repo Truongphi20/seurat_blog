@@ -91,7 +91,7 @@ Ultimately, a gene is marked as an outlier if it is flagged by either of the eva
 (kernel-smoothing)=
 #### Kernel smoothing
 
-The estimated parameters ($F$ and $\beta$) are sequentially smoothed across gene expression levels (log geometric mean) using the Nadaraya-Watson kernel regression estimator [@nadarayaEstimatingRegression1964]. To avoid overfitting, this smoothing is anchored by a subset of overdispersion genes which exclude the previously flagged outliers and Poisson-like genes.
+The estimated parameters ($F$ and $\beta$) are sequentially smoothed across gene expression levels (log geometric mean) using the Nadaraya-Watson kernel regression estimator [@nadarayaEstimatingRegression1964]. To avoid overfitting, this smoothing is anchored by the subset comprising overdispersion genes which exclude the previously flagged outliers and Poisson-like genes.
 
 ```{math}
 :label: smoothing-func
