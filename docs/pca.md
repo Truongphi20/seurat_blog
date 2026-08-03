@@ -60,7 +60,30 @@ r_j = \bar{r}_j - P_j (P_j^T \bar{r}_j)
 Subsequently, Gram-Schmidt orthogonalization is performed on $\bar{r}_j$ as shown in Equation [](#lanczos-orthogon) (where $P_j = [p_1, p_2, \dots, p_j]$), extracting a perpendicular residual vector $r_j$ that is strictly independent from all previously computed feature residual vectors ($P_j$).
 
 :::{tip} Why does $PP^Tv$ represent residual of $v$ on $P$-space? 
-haha
+
+![](./static/perpendicular.png)
+
+```{math}
+\begin{aligned}
+
+P^{T}e &= 0 \\
+P^{T}(v - P\hat{x}) &= 0 \\
+P^{T}P\hat{x} &= P^{T}v \\
+
+\end{aligned}
+```
+
+```{math}
+\begin{cases}
+\begin{aligned}
+
+\hat{x} &= P^{T}v \\
+\hat{r} &= PP^{T}v
+
+\end{aligned}
+\end{cases}
+```
+
 :::
 
 ```{math}
@@ -72,7 +95,6 @@ p_{j+1} &= \frac{r_j}{\lVert r_j \rVert} \\
 
 \end{aligned}
 \end{cases}
-
 ```
 
 
