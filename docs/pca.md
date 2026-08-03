@@ -59,11 +59,14 @@ r_j = \bar{r}_j - P_j (P_j^T \bar{r}_j)
 
 Subsequently, Gram-Schmidt orthogonalization is performed on $\bar{r}_j$ as shown in Equation [](#lanczos-orthogon) (where $P_j = [p_1, p_2, \dots, p_j]$), extracting a perpendicular residual vector $r_j$ that is strictly independent from all previously computed feature residual vectors ($P_j$).
 
-:::{tip} Why does $PP^Tv$ represent residual of $v$ on $P$-space? 
+:::{tip} Why does $PP^Tv$ represent residual of $v$ on the $P$-space? 
 
 ![](./static/perpendicular.png)
 
+Consider an arbitrary vector $v$ and a linear vector dimension $P$, $v$ always includes 2 components: the residual $r$ on $P$, which is constructed from vectors in the $P$-space with coefficients $\hat{x}$; and the perpendicular component $e$.
+
 ```{math}
+:label: penper-coeff
 \begin{aligned}
 
 P^{T}e &= 0 \\
@@ -73,16 +76,21 @@ P^{T}P\hat{x} &= P^{T}v \\
 \end{aligned}
 ```
 
+Hence $e$ is orthogonal (vertical) against $P$, the product of $e$ and foundational vectors of $P$ is 0. Based on that, the relationship between coefficents $\hat{x}$ and vector $v$ is described as Equation [](#penper-coeff), which is well known as the [Normal Equation](https://www.geeksforgeeks.org/machine-learning/ml-normal-equation-in-linear-regression/).    
+
 ```{math}
+:label: penper-residual
 \begin{cases}
 \begin{aligned}
 
 \hat{x} &= P^{T}v \\
-\hat{r} &= PP^{T}v
+r &= PP^{T}v
 
 \end{aligned}
 \end{cases}
 ```
+
+Due to the presumption that $P$ is orthogonal, $P^{T}P = I$. Therefore, the coefficients $\hat{x}$ and residual $r$ on the $P$ dimension of vector $v$ are shown as Equation [](#penper-residual).
 
 :::
 
