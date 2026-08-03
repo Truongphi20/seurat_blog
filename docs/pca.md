@@ -57,7 +57,41 @@ For iteration $j$, the un-orthogonalized feature residual vector $\bar{r}_j \in 
 r_j = \bar{r}_j - P_j (P_j^T \bar{r}_j)
 ```
 
-Subsequently, Gram-Schmidt re-orthogonalization is performed on $\bar{r}_j$ as shown in Equation [](#lanczos-orthogon) (where $P_j = [p_1, p_2, \dots, p_j]$), extracting a perpendicular residual vector $r_j$ that is strictly independent from all previously computed feature residual vectors ($P_j$).
+Subsequently, Gram-Schmidt orthogonalization is performed on $\bar{r}_j$ as shown in Equation [](#lanczos-orthogon) (where $P_j = [p_1, p_2, \dots, p_j]$), extracting a perpendicular residual vector $r_j$ that is strictly independent from all previously computed feature residual vectors ($P_j$).
+
+:::{tip} Why does $PP^Tv$ represent residual of $v$ on $P$-space? 
+haha
+:::
+
+```{math}
+\begin{cases}
+\begin{aligned}
+
+p_{j+1} &= \frac{r_j}{\lVert r_j \rVert} \\
+\bar{q}_{j+1} &= A \cdot p_{j+1} - \lVert r_j  \rVert q_j
+
+\end{aligned}
+\end{cases}
+
+```
+
+
+```{math}
+\hat{q}_{j+1} = \bar{q}_{j+1} - Q_{j+1} (Q^{T}_{j+1} \bar{q}_{j+1})
+```
+
+```{math}
+\begin{cases}
+\begin{aligned}
+
+\alpha_{j+1} = \lVert \hat{q}_{j+1} \rVert \\
+q_{j+1} = \frac{\hat{q}_{j+1}}{\alpha_{j+1}}
+
+\end{aligned}
+\end{cases}
+```
+
+#### Terminating
 
 ### Augmented Lanczos Bidiagonalization
 
