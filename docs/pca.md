@@ -47,17 +47,17 @@ The number of iterations $k$ defines the size of the working Krylov subspace, as
 
 ```{math}
 :label: lanczos-baseline
-\bar{r}_j = A^T q_j - \alpha_j p_j
+\bar{r}_{j+1} = A^T q_j - \alpha_j p_j
 ```
 
-For iteration $j$, the un-orthogonalized feature residual vector $\bar{r}_j \in \mathbb{R}^m$ is defined as Equation [](#lanczos-baseline). Intuitively, $\bar{r}_j$ represents the updated feature-weighted covariate score ($A^T q_j$) minus the baseline covariate score ($\alpha_j p_j$).
+For iteration $j$, the un-orthogonalized feature residual vector $\bar{r}_{j+1} \in \mathbb{R}^m$ is defined as Equation {eq}lanczos-baseline. Intuitively, $\bar{r}_j$ captures the updated feature loadings ($A^T q_j$) after stripping out the scaled baseline loadings ($\alpha_j p_j$) carried over from the previous feature load.
 
 ```{math}
 :label: lanczos-orthogon
-r_j = \bar{r}_j - P_j (P_j^T \bar{r}_j)
+r_{j+1} = \bar{r}_j - P_j (P_j^T \bar{r}_{j+1})
 ```
 
-Subsequently, Gram-Schmidt orthogonalization is performed on $\bar{r}_j$ as shown in Equation [](#lanczos-orthogon) (where $P_j = [p_1, p_2, \dots, p_j]$), extracting a perpendicular residual vector $r_j$ that is strictly independent from all previously computed feature residual vectors ($P_j$).
+Subsequently, Gram-Schmidt orthogonalization is performed on $\bar{r}_{j+1}$ as shown in Equation [](#lanczos-orthogon) (where $P_j = [p_1, p_2, \dots, p_j]$) to ensure the next feature axis $p_{j+1}$ is strictly independent of all previous feature vectors in $P_j$.
 
 :::{tip} Why does $PP^Tv$ represent residual of $v$ on the $P$-space? 
 
@@ -98,8 +98,8 @@ Due to the presumption that $P$ is orthogonal, $P^{T}P = I$. Therefore, the coef
 \begin{cases}
 \begin{aligned}
 
-p_{j+1} &= \frac{r_j}{\lVert r_j \rVert} \\
-\bar{q}_{j+1} &= A \cdot p_{j+1} - \lVert r_j  \rVert q_j
+p_{j+1} &= \frac{r_{j+1}}{\lVert r_{j+1} \rVert} \\
+\bar{q}_{j+1} &= A \cdot p_{j+1} - \lVert r_{j+1}  \rVert q_j
 
 \end{aligned}
 \end{cases}
