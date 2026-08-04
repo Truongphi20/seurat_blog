@@ -50,7 +50,7 @@ The number of iterations $k$ defines the size of the working Krylov subspace, as
 \bar{r}_{j+1} = A^T q_j - \alpha_j p_j
 ```
 
-For iteration $j$, the un-orthogonalized feature residual vector $\bar{r}_{j+1} \in \mathbb{R}^m$ is defined as Equation {eq}lanczos-baseline. Intuitively, $\bar{r}_j$ captures the updated feature loadings ($A^T q_j$) after stripping out the scaled baseline loadings ($\alpha_j p_j$) carried over from the previous feature load.
+For iteration $j$, the un-orthogonalized feature residual vector $\bar{r}_{j+1} \in \mathbb{R}^m$ is defined as Equation [](#lanczos-baseline). Intuitively, $\bar{r}_j$ captures the updated feature loadings ($A^T q_j$) after stripping out the scaled baseline loadings ($\alpha_j p_j$) carried over from the previous feature loading.
 
 ```{math}
 :label: lanczos-orthogon
@@ -95,6 +95,7 @@ Due to the presumption that $P$ is orthogonal, $P^{T}P = I$. Therefore, the coef
 :::
 
 ```{math}
+:label: q-raw-bar
 \begin{cases}
 \begin{aligned}
 
@@ -105,6 +106,7 @@ p_{j+1} &= \frac{r_{j+1}}{\lVert r_{j+1} \rVert} \\
 \end{cases}
 ```
 
+Similar to Equation [](#lanczos-baseline), after the new feature axis $p_{j+1}$ is determined by normalizing feature-load residual $r_{j+1}$, the next unothogonalized cell residual $\bar{q}_{j+1}$ is computed from the cell loading ($A \cdot p_{j+1}$) being dependent from the previous estimated cell loading ($\lVert r_{j+1}  \rVert q_j$). The details is described as Equation [](#q-raw-bar).
 
 ```{math}
 \hat{q}_{j+1} = \bar{q}_{j+1} - Q_{j+1} (Q^{T}_{j+1} \bar{q}_{j+1})
