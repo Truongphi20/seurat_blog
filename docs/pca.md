@@ -52,7 +52,7 @@ The number of iterations $k$ defines the size of the working Krylov subspace, as
 
 Throughout the loops, 2 orthogonormal matrices $P$ and $Q$, which respectively contains feature- and cell-oriented unit vectors for new dimension, are determined. An iteration includes 3 stages for each matrix, and follows the equations with annotatively alphabetical order.   
 
-The first stage is obtaining loading residuals, which covers native variation while stripping out previous estimated loadings. Next, Gram-Schmidt orthogonalization is performed to ensure that the next unit vector is strictly independent of all previous ones (where $X_j = [x_1,x_2,\dots,x_j]$). Finally, the orthogonal vector is performed Euclidean norm to gain the unit vector.
+The first stage is obtaining loading residuals, which covers indigenous variation while stripping out the loading baseline. Next, Gram-Schmidt orthogonalization is performed to ensure that the next unit vector is strictly independent of all previous ones (where $P_j = [p_1,p_2,\dots,p_j]$, and $Q_{j+1} = [q_1,q_2,\dots,q_{j+1}]$). Finally, the orthogonal vector is performed Euclidean norm to gain the unit vector.
 
 
 :::{tip} Why does $PP^Tv$ represent residual of $v$ on the $P$-space? 
