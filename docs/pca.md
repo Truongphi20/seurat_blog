@@ -44,49 +44,15 @@ At the start of the iteration, $A \cdot p_1$ computes the cell similarity scores
 
 The number of iterations $k$ defines the size of the working Krylov subspace, as reflected by the number of desired singular vectors $v$ (by default, $v=50$; $k=v+7$).
 
-|Steps | $P \in \mathbb{R}^{m \times k}$     |  $Q \in \mathbb{R}^{n \times k}$        |
+|Stages | $P \in \mathbb{R}^{m \times k}$     |  $Q \in \mathbb{R}^{n \times k}$        |
 |:------|:-------- | :---------- |
 |**Residulization**   | $\bar{p}_{j+1} = A^T q_j - \lVert \hat{q}_{j} \rVert p_j$ &emsp; (a) |  $\bar{q}_{j+1} = A \cdot p_{j+1} - \lVert \hat{p}_{j+1}  \rVert q_j$      &emsp; (d)     | 
 |**Othogonalization** | $\hat{p}_{j+1} = \bar{p}_{j+1} - P_j (P_j^T \bar{p}_{j+1})$ &emsp; (b) | $\hat{q}_{j+1} = \bar{q}_{j+1} - Q_{j+1} (Q^{T}_{j+1} \bar{q}_{j+1})$     &emsp; (e)        |
 |**Normalization**    | $p_{j+1} = \hat{p}_{j+1} / \lVert \hat{p}_{j+1} \rVert$ &emsp; (c) | $q_{j+1} = \hat{q}_{j+1} / \lVert \hat{q}_{j+1} \rVert$  &emsp; (f)   |
 
-```{math}
-:label: lanczos-baseline
-\bar{p}_{j+1} = A^T q_j - \lVert \hat{q}_{j} \rVert p_j
-```
+Throughout the loops, 2 orthogonormal matrices $P$ and $Q$, which respectively contains feature- and cell-oriented unit vectors for new dimension, are determined. An iteration includes 3 stages for each matrix, and follows the equations with annotatively alphabetical order.   
 
-For iteration $j$, the un-orthogonalized feature residual vector $\bar{p}_{j+1} \in \mathbb{R}^m$ is defined as Equation [](#lanczos-baseline). Intuitively, $\bar{p}_{j+1}$ captures the updated feature loadings ($A^T q_j$) after stripping out the scaled baseline loadings ($\alpha_j p_j$) carried over from the previous feature loadings.
-
-```{math}
-:label: lanczos-orthogon
-\hat{p}_{j+1} = \bar{p}_{j+1} - P_j (P_j^T \bar{p}_{j+1})
-```
-
-Subsequently, Gram-Schmidt orthogonalization is performed on $\bar{p}_{j+1}$ as shown in Equation [](#lanczos-orthogon) (where $P_j = [p_1, p_2, \dots, p_j]$) to ensure the next feature axis $p_{j+1}$ is strictly independent of all previous feature vectors in $P_j$.
-
-```{math}
-:label: q-raw-bar
-\begin{cases}
-\begin{aligned}
-
-p_{j+1} &= \frac{\hat{p}_{j+1}}{\lVert \hat{p}_{j+1} \rVert} \\
-\bar{q}_{j+1} &= A \cdot p_{j+1} - \lVert \hat{p}_{j+1}  \rVert q_j
-
-\end{aligned}
-\end{cases}
-```
-
-Similar to Equation [](#lanczos-baseline), after the new feature axis $p_{j+1}$ is determined by normalizing feature-load residual $\hat{p}_{j+1}$, the next unothogonalized cell residual $\bar{q}_{j+1}$ is computed from the cell loadings ($A \cdot p_{j+1}$) being dependent from the previous estimated cell loadings ($\lVert \hat{p}_{j+1}  \rVert q_j$). The details is described as Equation [](#q-raw-bar).
-
-```{math}
-\hat{q}_{j+1} = \bar{q}_{j+1} - Q_{j+1} (Q^{T}_{j+1} \bar{q}_{j+1})
-```
-
-```{math}
-:label: q-fom
-q_{j+1} = \frac{\hat{q}_{j+1}}{\lVert \hat{q}_{j+1} \rVert}
-
-```
+The first stage is obtaining loading residuals, which covers native variation while stripping out previous estimated loadings. Next, Gram-Schmidt orthogonalization is performed to ensure that the next unit vector is strictly independent of all previous ones (where $X_j = [x_1,x_2,\dots,x_j]$). Finally, the orthogonal vector is performed Euclidean norm to gain the unit vector.
 
 
 :::{tip} Why does $PP^Tv$ represent residual of $v$ on the $P$-space? 
