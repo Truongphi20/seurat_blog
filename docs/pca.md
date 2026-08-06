@@ -20,6 +20,33 @@ ElbowPlot(pbmc)
 
 ## Workflow
 
+### Augmented Lanczos Bidiagonalization
+
+```{math}
+\hat{B} = U_{B} \Sigma V_{B}^{T}
+```
+
+
+```{math}
+\begin{cases}
+\begin{aligned}
+
+r &= \lVert \hat{p}_{k} \rVert u_{k} \\
+r &< \delta \sigma_{\text{max}}
+
+\end{aligned}
+\end{cases}
+```
+
+```{math}
+V = \left[ \begin{array}{c|c} P V_B & \hat{p}_{k} \end{array} \right]
+```
+
+
+```{math}
+W = QU_B
+```
+
 ### Lanczos Bidiagonalization
 
 #### Initializing
@@ -56,7 +83,7 @@ The first stage is obtaining loading residuals, which covers indigenous variatio
 
 ```{math}
 :label: bidiagonal-matrix
-B = \begin{bmatrix}
+\hat{B} = \begin{bmatrix}
 \lVert \hat{q}_{1} \rVert &                           &                           &                             & \large 0                 \\
 \lVert \hat{p}_{1} \rVert & \lVert \hat{q}_{2} \rVert &                           &                             &                          \\
                           & \lVert \hat{p}_{2} \rVert & \lVert \hat{q}_{3} \rVert &                             &                          \\
@@ -65,7 +92,7 @@ B = \begin{bmatrix}
 \end{bmatrix} \in \mathbb{R}^{k \times k}
 ```
 
-During the iteration, the lower bidiogonal matrix $B$ is determined according to the Equation [](#bidiagonal-matrix).
+During the iteration, the lower bidiogonal matrix $\hat{B}$ is determined according to the Equation [](#bidiagonal-matrix).
 
 :::{tip} Why does $PP^Tv$ represent residual of $v$ on the $P$-space? 
 
@@ -102,15 +129,6 @@ Due to the presumption that $P$ is orthogonal, $P^{T}P = I$. Therefore, the coef
 
 :::
 
-### Augmented Lanczos Bidiagonalization
 
-```{math}
-B = U \Sigma V^{T}
-```
-
-
-```{math}
-\lVert \hat{p}_{k} \rVert u_{k} < \delta \sigma_{\text{max}}
-```
 
 ## Summary
