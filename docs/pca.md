@@ -105,12 +105,12 @@ Due to the presumption that $P$ is orthogonal, $P^{T}P = I$. Therefore, the coef
 ### Augmented Lanczos Bidiagonalization
 
 ```{math}
-B = V \Sigma U
+B = U \Sigma V^{T}
 ```
 
 
 ```{math}
-r = \lVert \hat{q}_{k} \rVert U_{k-1}
+\lVert \hat{p}_{k} \rVert u_{k} < \delta \sigma_{\text{max}}
 ```
 
 ## Summary
