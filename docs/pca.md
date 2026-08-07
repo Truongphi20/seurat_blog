@@ -42,6 +42,14 @@ r &< \delta \sigma_{\text{max}}
 V = \left[ \begin{array}{c|c} P V_B & \hat{p}_{k} \end{array} \right]
 ```
 
+```{math}
+B = \begin{bmatrix}
+\Sigma_v & r_v &   & 0 \\
+         &     &   &   \\
+0        &     &   & 0 \\
+\end{bmatrix} \in \mathbb{R}^{k \times k}
+```
+
 
 ```{math}
 W = QU_B
