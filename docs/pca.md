@@ -22,42 +22,7 @@ ElbowPlot(pbmc)
 
 ### Augmented Lanczos Bidiagonalization
 
-```{math}
-\hat{B} = U_{B} \Sigma V_{B}^{T}
-```
-
-
-```{math}
-\begin{cases}
-\begin{aligned}
-
-r &= \lVert \hat{p}_{k} \rVert u_{k} \\
-r &< \delta \sigma_{\text{max}}
-
-\end{aligned}
-\end{cases}
-```
-
-```{math}
-V = \left[ \begin{array}{c|c} P V_B & \hat{p}_{k} \end{array} \right]
-```
-
-```{math}
-B = \begin{bmatrix}
-\Sigma_v & r_v &   & 0 \\
-         &     &   &   \\
-0        &     &   & 0 \\
-\end{bmatrix} \in \mathbb{R}^{k \times k}
-```
-
-
-```{math}
-W = QU_B
-```
-
-### Lanczos Bidiagonalization
-
-#### Initializing
+#### Initialization
 
 The algorithm begins with the input feature matrix $A$ ($n$ cells $\times$ $m$ features) and an initial normalized vector $p_1 \in \mathbb{R}^m$ representing random feature residuals of an arbitrary cell.
 
@@ -75,7 +40,50 @@ q_1 &= \frac{\hat{q}_{1}}{\lVert \hat{q}_{1} \rVert}
 
 At the start of the iteration, $A \cdot p_1$ computes the cell similarity scores between all cells in $A$ and the arbitrary cell (cell loadings). Its magnitude is stored as $\alpha_1$, and the scaled unit vector $q_1 \in \mathbb{R}^n$ as described in Equation [](#lanczos-begin).
 
-#### The loop runs
+#### Iteration
+
+```{math}
+\hat{B} = U_{B} \Sigma V_{B}^{T}
+```
+
+
+```{math}
+\begin{cases}
+\begin{aligned}
+
+r &= \lVert \hat{p}_{k} \rVert u_{k} \\
+r &< \delta \sigma_{\text{max}}
+
+\end{aligned}
+\end{cases}
+```
+
+```{math}
+\hat{V} = \left[ \begin{array}{c|c} P V_B & \hat{p}_{k} \end{array} \right]
+```
+
+```{math}
+B = \begin{bmatrix}
+\Sigma_v & r_v &   & 0 \\
+         &     &   &   \\
+0        &     &   & 0 \\
+\end{bmatrix} \in \mathbb{R}^{k \times k}
+```
+
+#### Termination
+
+```{math}
+\begin{cases}
+\begin{aligned}
+
+W = QU_B \\
+V = \hat{V}V_B^{T}
+
+\end{aligned}
+\end{cases}
+```
+
+### Lanczos Bidiagonalization
 
 The number of iterations $k$ defines the size of the working Krylov subspace, as reflected by the number of desired singular vectors $v$ (by default, $v=50$; $k=v+7$).
 
