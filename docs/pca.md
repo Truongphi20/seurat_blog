@@ -24,7 +24,7 @@ ElbowPlot(pbmc)
 
 #### Initialization
 
-The algorithm begins with the input feature matrix $A$ ($n$ cells $\times$ $m$ features) and an initial normalized vector $p_1 \in \mathbb{R}^m$ representing random feature residuals of an arbitrary cell.
+The algorithm begins with the input feature matrix $A$ ($n$ cells $\times$ $m$ features) and an initial normalized vector $p_1 \in \mathbb{R}^m$ representing random feature residuals of an arbitrary cell. 
 
 ```{math}
 :label: lanczos-begin
@@ -42,12 +42,14 @@ At the start of the iteration, $A \cdot p_1$ computes the cell similarity scores
 
 #### Iteration
 
-The working dimension $k$ is reflected by the number of desired singular vectors $v$ (by default, $v=50$; $\Delta k = 7$ ;$k=v+ \Delta k$). The [](#lanczos-bidi) is performed by an initial iterator through all $k$ dimensions and later iterators from the $v$-th dimension to the end. The later loops is finished when the covergence condition is satisfied. 
+The working dimension $k$ is reflected by the number of desired singular vectors $v$ (by default, $v=50$; $\Delta k = 7$ ;$k=v+ \Delta k$). The [](#lanczos-bidi) is performed by an initial iterator through all $k$ dimensions and later iterators from the $v$-th dimension to the end. The later loops is finished when the covergence condition is satisfied. The maximal number of iterations is 1000 by default. 
 
 ```{math}
+:label: hat-b-decomp
 \hat{B} = U_{B} \Sigma V_{B}^{T}
 ```
 
+In each iterator, a biodiagonal matrix $\hat{B}$, Equation [](#bidiagonal-matrix), are updated and performed the Singular Value Decomposition (SVD) shown as Equation [](#hat-b-decomp).
 
 ```{math}
 \begin{cases}
@@ -61,6 +63,10 @@ r &< \delta \sigma_{\text{max}}
 ```
 
 ```{math}
+W = QU_B
+```
+
+```{math}
 \hat{V} = \left[ \begin{array}{c|c} P V_B & \hat{p}_{k} \end{array} \right]
 ```
 
@@ -70,10 +76,6 @@ B = \begin{bmatrix}
          &     &   &   \\
 0        &     &   & 0 \\
 \end{bmatrix} \in \mathbb{R}^{k \times k}
-```
-
-```{math}
-W = QU_B
 ```
 
 #### Termination
