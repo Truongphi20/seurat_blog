@@ -42,6 +42,8 @@ At the start of the iteration, $A \cdot p_1$ computes the cell similarity scores
 
 #### Iteration
 
+The working dimension $k$ is reflected by the number of desired singular vectors $v$ (by default, $v=50$; $\Delta k = 7$ ;$k=v+ \Delta k$). The [](#lanczos-bidi) is performed by an initial iterator through all $k$ dimensions and later iterators from the $v$-th dimension to the end. The later loops is finished when the covergence condition is satisfied. 
+
 ```{math}
 \hat{B} = U_{B} \Sigma V_{B}^{T}
 ```
@@ -70,6 +72,10 @@ B = \begin{bmatrix}
 \end{bmatrix} \in \mathbb{R}^{k \times k}
 ```
 
+```{math}
+W = QU_B
+```
+
 #### Termination
 
 ```{math}
@@ -83,9 +89,8 @@ V = \hat{V}V_B^{T}
 \end{cases}
 ```
 
+(lanczos-bidi)=
 ### Lanczos Bidiagonalization
-
-The number of iterations $k$ defines the size of the working Krylov subspace, as reflected by the number of desired singular vectors $v$ (by default, $v=50$; $k=v+7$).
 
 |Stages | $P \in \mathbb{R}^{m \times k}$     |  $Q \in \mathbb{R}^{n \times k}$        |
 |:------|:-------- | :---------- |
