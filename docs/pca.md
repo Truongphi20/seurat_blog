@@ -42,7 +42,7 @@ At the start of the iteration, $A \cdot p_1$ computes the cell similarity scores
 
 #### Iteration
 
-The working dimension $k$ is reflected by the number of desired singular vectors $v$ (by default, $v=50$; $\Delta k = 7$ ;$k=v+ \Delta k$). The [](#lanczos-bidi) is performed by an initial iterator through all $k$ dimensions and later iterators from the $v$-th dimension to the end. The later loops is finished when the covergence condition is satisfied. The maximal number of iterations is 1000 by default. 
+The working dimension $k$ is reflected by the number of desired singular vectors $v$ (by default, $v=50$; $\Delta k = 7$ ;$k=v+ \Delta k$). The [](#lanczos-bidi) is performed by an initial iterator through all $k$ dimensions and later iterators from the $v$-th dimension to the end. The later loops $n$ is finished when the covergence condition is satisfied. The maximal number of iterations is 1000 by default. 
 
 ```{math}
 :label: hat-b-decomp
@@ -63,11 +63,11 @@ r &< \delta \sigma_{\text{max}}
 ```
 
 ```{math}
-W = QU_B
+q_v^{(n+1)} = q_v^{(n)} U_B
 ```
 
 ```{math}
-\hat{V} = \left[ \begin{array}{c|c} P V_B & \hat{p}_{k} \end{array} \right]
+\hat{V}_A = \left[ \begin{array}{c|c} P V_B & \hat{p}_{k} \end{array} \right]
 ```
 
 ```{math}
@@ -84,8 +84,8 @@ B = \begin{bmatrix}
 \begin{cases}
 \begin{aligned}
 
-W = QU_B \\
-V = \hat{V}V_B^{T}
+U_A &= QU_B \\
+V_A &= \hat{V}_AV_B^{T}
 
 \end{aligned}
 \end{cases}
