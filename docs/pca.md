@@ -97,7 +97,7 @@ V_A &= \hat{V}_AV_B^{T}
 |Stages | $P \in \mathbb{R}^{m \times k}$     |  $Q \in \mathbb{R}^{n \times k}$        |
 |:------|:-------- | :---------- |
 |**Residulization**   | $\bar{p}_{j+1} = A^T q_j - \lVert \hat{q}_{j} \rVert p_j$ &emsp; (a) |  $\bar{q}_{j+1} = A \cdot p_{j+1} - \lVert \hat{p}_{j+1}  \rVert q_j$      &emsp; (d)     | 
-|**Othogonalization** | $\hat{p}_{j+1} = \bar{p}_{j+1} - P_j (P_j^T \bar{p}_{j+1})$ &emsp; (b) | $\hat{q}_{j+1} = \bar{q}_{j+1} - Q_{j+1} (Q^{T}_{j+1} \bar{q}_{j+1})$     &emsp; (e)        |
+|**Othogonalization** | $\hat{p}_{j+1} = \bar{p}_{j+1} - P_j (P_j^T \bar{p}_{j+1})$ &emsp; (b) | $\hat{q}_{j+1} = \bar{q}_{j+1} - Q_{j} (Q^{T}_{j} \bar{q}_{j+1})$     &emsp; (e)        |
 |**Normalization**    | $p_{j+1} = \hat{p}_{j+1} / \lVert \hat{p}_{j+1} \rVert$ &emsp; (c) | $q_{j+1} = \hat{q}_{j+1} / \lVert \hat{q}_{j+1} \rVert$  &emsp; (f)   |
 
 Throughout the loops, two orthogonormal matrices $P$ and $Q$, which respectively contains feature- and cell-oriented unit vectors for new dimension, are determined. An iteration includes three stages for each matrix, and follows the equations in annotatively alphabetical order.   
