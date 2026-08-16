@@ -21,7 +21,6 @@ The scaled-row value ($SR_{ij}$) is calculated for each gene $i$ and cell $j$. T
 
 ```{math}
 :label: scaling-func
-\Large
 \begin{cases}
 \begin{aligned}
 
