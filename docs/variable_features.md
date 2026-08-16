@@ -10,11 +10,7 @@ numbering:
 Feature selection is the process of identifying genes that exhibit meaningful biological variability across cells. In scRNA-seq analysis, selecting highly variable genes helps reduce technical noise, improve computational efficiency, and enhance downstream analyses [@lueckenCurrentBestPractices2019;@stuartComprehensiveIntegrationSingleCell2019].
 
 :::::{tip} Seurat command
-:class: dropdown
-:open: true
-
 ::::{tab-set}
-
 :::{tab-item} Variance stabilizing transformation
 ```R
 pbmc <- FindVariableFeatures(

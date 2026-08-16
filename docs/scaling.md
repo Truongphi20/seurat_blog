@@ -7,8 +7,6 @@ As the tutorial mentioned, scaling data is a prerequisite step for dimensionalit
 This method ensures that all genes are given equal weight and are placed on the same scale (z-scores), allowing for accurate downstream comparisons. 
 
 :::::{tip} Seurat command
-:class: dropdown
-:open: true
 
 ```R
 all.genes <- rownames(pbmc)
