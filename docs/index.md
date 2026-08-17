@@ -15,8 +15,14 @@ I write this blog as a extension of the Seurat vignette, exploring the proceeses
 
 The content in this blog strictly follows typical functional steps in Seurat vignette by showing the command used in the tutorial and explaining the underlying processes of each step. 
 
-![](./static/Overview.png)
+```{image} ./static/Overview.png
+:alt: Overview
+:width: 80%
+:align: center
+```
 
 First, the count matrix from the 10X Genomics comes through pre-processing stages to reduces technical noise and unexpected variance, it includes three main steps: [Normalization](./normalization.md), [Feature selection](./variable_features.md), and [Scaling data](./scaling.md). Moreover, an alternative approach is performing [SCTransform](./sctransform.md).
 
-Based on purified data, raw count 
+Based on purified data, count matrix is performed dimension reduction to pack variation across genes for cells using either Principal Component Analysis (PCA) or Uniform Manifold Approximation and Projection (UMAP). 
+
+Finally, projection of cells on PCA principle components is utilized to cluster cells and label marker genes to identify cell types for each cluster.
