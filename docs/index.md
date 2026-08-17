@@ -5,15 +5,16 @@ description: "Deep dives into Seurat internals"
 
 ## Motivation
 
-[Seurat](https://satijalab.org/seurat/) is a popular standard bioinformatic tool to explore and analyze single cell data. The vignette (tutorial) ["Guided Clustering Tutorial"](https://satijalab.org/seurat/articles/pbmc3k_tutorial) is seemed to be a foundation material for newcomers to get used to analysis steps in this domain.    
+[Seurat](https://satijalab.org/seurat/) is a standard bioinformatic tool used to explore and analyze single-cell RNA sequencing (scRNA-seq) data. Its ["Guided Clustering Tutorial"](https://satijalab.org/seurat/articles/pbmc3k_tutorial) serves as a foundational resource for newcomers learning standard single-cell workflows.
 
-Eventhough the vignette provides a solid scaffold for a primaritive scRNA-seq analysis by displaying the command lines and the brief abstractions, it is still lacked of the thoughtful insight and the midset of using algorithmic and statistic methods. It is an obstacle for someone being curious about the "under-the-hood" as being insufficient in technical foundation.    
+While the tutorial provides a solid scaffold by demonstrating key commands and high-level concepts, it lacks deep explanations of the underlying statistical and algorithmic methods. This creates a gap for readers who want to understand what happens "under the hood".
 
-I write this blog as a extension of the Seurat vignette, exploring the proceeses run underneath the "easy-going" commands and delivering their reasoning.  
+This blog serves as an extension of the Seurat vignette, detailing the processes running behind these straightforward commands and explaining the reasoning behind each step.
+
 
 ## Content
 
-The content in this blog strictly follows typical functional steps in Seurat vignette by showing the command used in the tutorial and explaining the underlying processes of each step. 
+The content in this blog strictly follows typical functional steps in the Seurat vignette, breaking down the main command and underlying mechanisms of each step. The method for knitting content of this blog detailed in [Methodology](./method.md). 
 
 ```{image} ./static/Overview.png
 :alt: Overview
@@ -21,8 +22,8 @@ The content in this blog strictly follows typical functional steps in Seurat vig
 :align: center
 ```
 
-First, the count matrix from the 10X Genomics comes through pre-processing stages to reduces technical noise and unexpected variance, it includes three main steps: [Normalization](./normalization.md), [Feature selection](./variable_features.md), and [Scaling data](./scaling.md). Moreover, an alternative approach is performing [SCTransform](./sctransform.md).
+First, the raw count matrix (such as from 10X Genomics) undergoes pre-processing to reduce technical noise and unwanted variance. This traditional pipeline includes three key steps: [Normalization](./normalization.md), [Feature selection](./variable_features.md), and [Scaling data](./scaling.md). Alternatively, [SCTransform](./sctransform.md) can be performed as an all-in-one approach.
 
-Based on purified data, count matrix is performed dimension reduction to pack variation across genes for cells using either Principal Component Analysis (PCA) or Uniform Manifold Approximation and Projection (UMAP). 
+Next, purified matrix is performed Principal Component Analysis (PCA) to capture major axes of biological variation across cells, which facilitates cell clustering. From all of that, Uniform Manifold Approximation and Projection (UMAP) is employed to fine-tuning clusters.  
 
-Finally, projection of cells on PCA principle components is utilized to cluster cells and label marker genes to identify cell types for each cluster.
+Finally, marker genes are identified each cells proving bases for cell-type determination.
