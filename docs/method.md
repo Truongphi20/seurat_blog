@@ -14,8 +14,6 @@ To fully comprehence an implementation, I dissect it into two mutual components:
 
 I utilize programmatic debugger to explore the "body", and map the statictical/mathematical concepts from the articles, documentation, or lectures to completely capture the "spirit". Sometimes, if the method of the article is throughout, it is a acceleration for "body" dissecting.  
 
-### Identifying functional steps by debugging 
-
 In general, I use R debuger directly on command line to walk into functional commands in the tutorial, used commands:
 
 | Command           |   Purpose     |
@@ -45,7 +43,6 @@ Occasionally, the methodology is hidden behind the R foundational packages, e.g.
 
 Important breakpoints for functional steps are diagramed as stack flow charts (see [breakpoint diagrams](https://github.com/Truongphi20/seurat_blog/blob/main/docs/static/breakpoints)).
 
-### Conceptual Dissection
 
 ## Environment
 
