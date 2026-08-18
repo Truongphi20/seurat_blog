@@ -27,3 +27,9 @@ First, the raw count matrix (such as from 10X Genomics) undergoes pre-processing
 Next, purified matrix is performed Principal Component Analysis (PCA) to capture major axes of biological variation across cells, which facilitates cell clustering. From all of that, Uniform Manifold Approximation and Projection (UMAP) is employed to fine-tuning clusters.  
 
 Finally, marker genes are identified each cells proving bases for cell-type determination.
+
+::: {attention}
+
+Sections on dimensionality reduction and marker gene labeling will be available soon!
+
+:::
