@@ -41,7 +41,7 @@ Attentionally, used binary shared library should be build in debug mode from its
 | `<gdb> s`               | Step into a function |
 | `<gdb> dir`             | Mapping path of source code folder | 
 
-Occasionally, the methodology is hidden behind the R foundational packages, e.g. `stats`, the build of r-base with debuggable mode is neccessary (see [setup-r.sh](https://github.com/Truongphi20/seurat_blog/blob/main/.devcontainer/setup-r.sh)). By default, debuggable r is setup when igniting the [devcontainer](https://code.visualstudio.com/docs/devcontainers/containers).
+Occasionally, the methodology is hidden behind the R foundational packages, e.g. `stats`, the build of r-base with debuggable mode is neccessary (see [setup-r.sh](https://github.com/Truongphi20/seurat_blog/blob/main/.devcontainer/setup-r.sh)).
 
 Important breakpoints for functional steps are diagramed as stack flow charts (see [breakpoint diagrams](https://github.com/Truongphi20/seurat_blog/blob/main/docs/static/breakpoints)).
 
@@ -49,4 +49,4 @@ Important breakpoints for functional steps are diagramed as stack flow charts (s
 
 ## Environment
 
-A DevContainer based on the `satijalab/seurat:5.5.0` image is used as the environment (obtains R v4.5.2) for walking through the codebase and deploying this blog. Detailed configurations are available in the [Dockerfile](https://github.com/Truongphi20/seurat_blog/blob/main/.devcontainer/Dockerfile).
+A [DevContainer](https://code.visualstudio.com/docs/devcontainers/containers) based on the `satijalab/seurat:5.5.0` image is used as the environment (obtains R v4.5.2) for walking through the codebase and deploying this blog. Detailed configurations are available in the [Dockerfile](https://github.com/Truongphi20/seurat_blog/blob/main/.devcontainer/Dockerfile).
