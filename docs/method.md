@@ -10,9 +10,9 @@ Seurat v5.5.0 works as an R-centric workflow, where whole dependencies and inter
 
 ## Reverse-engineering
 
-To fully comprehence an implementation, I dissect it into two parts: the "body" - What are implemented steps inside?; and the "spirit" - Why does each step being performed like this?
+To fully comprehence an implementation, I dissect it into two mutual components: the "body" - What are implemented steps inside?; and the "spirit" - Why does each step being performed like this?
 
-I utilize programmatic debugger to explore the "body", and map the statictical/mathematical concepts from the articles, documentation, or lectures to completely capture the "spirit".
+I utilize programmatic debugger to explore the "body", and map the statictical/mathematical concepts from the articles, documentation, or lectures to completely capture the "spirit". Sometimes, if the method of the article is throughout, it is a acceleration for "body" dissecting.  
 
 ### Identifying functional steps by debugging 
 
@@ -41,7 +41,7 @@ Attentionally, used binary shared library should be build in debug mode from its
 | `<gdb> s`               | Step into a function |
 | `<gdb> dir`             | Mapping path of source code folder | 
 
-Occasionally, the methodology hides behind the R foundational packages, e.g. `stats`, the build of r-base with debuggable mode is neccessary (see [setup-r.sh](https://github.com/Truongphi20/seurat_blog/blob/main/.devcontainer/setup-r.sh)). By default, debuggable r is setup when igniting the [devcontainer](https://code.visualstudio.com/docs/devcontainers/containers).
+Occasionally, the methodology is hidden behind the R foundational packages, e.g. `stats`, the build of r-base with debuggable mode is neccessary (see [setup-r.sh](https://github.com/Truongphi20/seurat_blog/blob/main/.devcontainer/setup-r.sh)). By default, debuggable r is setup when igniting the [devcontainer](https://code.visualstudio.com/docs/devcontainers/containers).
 
 Important breakpoints for functional steps are diagramed as stack flow charts (see [breakpoint diagrams](https://github.com/Truongphi20/seurat_blog/blob/main/docs/static/breakpoints)).
 
