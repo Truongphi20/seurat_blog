@@ -14,7 +14,7 @@ This blog serves as an extension of the Seurat vignette, detailing the processes
 
 ## Content
 
-The content in this blog strictly follows typical functional steps in the Seurat vignette, breaking down the main command and underlying mechanisms of each step. The method for knitting content of this blog detailed in [Methodology](./method.md). 
+The content in this blog strictly follows typical functional steps in the Seurat (v5.5.0) vignette, breaking down the main command and underlying mechanisms of each step. The method for knitting content of this blog detailed in [Methodology](./method.md). 
 
 ```{image} ./static/Overview.png
 :alt: Overview
