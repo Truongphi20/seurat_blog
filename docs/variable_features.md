@@ -10,11 +10,7 @@ numbering:
 Feature selection is the process of identifying genes that exhibit meaningful biological variability across cells. In scRNA-seq analysis, selecting highly variable genes helps reduce technical noise, improve computational efficiency, and enhance downstream analyses [@lueckenCurrentBestPractices2019;@stuartComprehensiveIntegrationSingleCell2019].
 
 :::::{tip} Seurat command
-:class: dropdown
-:open: true
-
 ::::{tab-set}
-
 :::{tab-item} Variance stabilizing transformation
 ```R
 pbmc <- FindVariableFeatures(
@@ -64,21 +60,20 @@ This method computes standardized variance based on the raw layer input (the `co
 
 ```{math}
 :label: compute-var
-\Large \sigma_{i}^2 = \frac{\sum_{j=1}^{N}{(c_{ij} - \mu_{i})^2}}{N-1}
+\sigma_{i}^2 = \frac{\sum_{j=1}^{N}{(c_{ij} - \mu_{i})^2}}{N-1}
 ```
 
 Firstly, the variance ($\sigma_{i}^2$) corresponding to each gene is computed following the formula [](#compute-var), where $c_{ij}$ is an element of gene $i$ and cell $j$ in the count matrix; $\mu_{i}$ is the mean of expression count of gene $i$; and N is the number of cells.
 
 ```{math}
 :label: loess
-\large \hat{\sigma_{i}}^2 = \text{LOESS} \left( \log_{10}(\sigma_i^2) \sim \log_{10}(\mu_i) \right)
+\hat{\sigma_{i}}^2 = \text{LOESS} \left( \log_{10}(\sigma_i^2) \sim \log_{10}(\mu_i) \right)
 ```
 
 Subsequently, the expected variance ($\hat{\sigma_{i}}^2$) is estimated by the Local Polynomial Regression model (LOESS) [@cleveland2017local]. The model fits a smooth trend to capture the relationship between gene abundance and variance in log-log space (the formula [](#loess)). Using local parabolic fitting, the expected variance is estimated across the mean expression range to generate a continuous, smooth curve (See [brilliant Josh's explanation](https://www.youtube.com/watch?v=Vf7oJ6z2LCc)).
 
 ```{math}
 :label: compute-std-var
-\Large
 \begin{cases}
 \begin{aligned}
 z_{ij} &= \frac{c_{ij} - \mu_{i}}{\hat{\sigma_{i}}} \\
@@ -105,7 +100,7 @@ The [log-normalized matrix](./normalization.md#log-normalize) is utilized to exe
 
 ```{math}
 :label: mean-mvp
-\Large \text{log}_{\mu_{i}} = \ln \left( 1 + \frac{1}{N} \sum^{N}_{j=1}{\left(e^{LN_{ij}} - 1\right)} \right)
+\text{log}_{\mu_{i}} = \ln \left( 1 + \frac{1}{N} \sum^{N}_{j=1}{\left(e^{LN_{ij}} - 1\right)} \right)
 ```
 
 The formula [](#mean-mvp) reverses the [log-normalization](#log-norm) step to recover relative count ($RC_{ij}$), calculates the arithmetic mean of these relative counts for each gene, and finally converts the resulting mean back to the log scale using the $\ln(1+x)$ transformation.
@@ -114,7 +109,6 @@ The values of log-mean are utilized to divide the genes into distinct bins, wher
 
 ```{math}
 :label: disp-comp
-\Large
 \begin{cases}
 \begin{aligned}
   \mu_i   &= \frac{1}{N} \sum_{j=1}^{N} RC_{ij} \\
@@ -129,7 +123,6 @@ Hence, the relationship between the mean and variance of background genes is exp
 
 ```{math}
 :label: disp-std
-\Large
 \overline{disp}_i = \frac{disp_i - \mu_{\text{bin}_k}}{\sigma_{\text{bin}_k}}
 ```
 

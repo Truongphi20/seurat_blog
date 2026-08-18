@@ -55,7 +55,7 @@ Briefly, it uses the Maximum Likelihood Estimates (MLE) method to estimate coeff
 \end{cases}
 ```
 
-Next, theoretical overdispersion $\hat{\theta}$, which is derived from mean-variance relationship of NB model, shown as Equation [](#mean-var). $\alpha$ is the ratio of expected overdispersion ($\hat{\theta}$) over observed overdispersion ($\theta$), which originates from estimation above. If $\alpha < 0.001$, the model for that gene is assumed to follow the Poisson distribution ($\sigma^2 = \mu$, and $\theta = \infty$). 
+Next, theoretical overdispersion $\hat{\theta}$, which is derived from mean-variance relationship of NB model, shown as Equation [](#mean-var). $\alpha$ is the ratio of expected overdispersion ($\hat{\theta}$) over observed overdispersion ($\theta$), which originates from estimation above. If $\alpha < 0.001$, the model for that gene is assumed to follow the Poisson distribution ($\sigma^2 = \mu$, and $\theta \rightarrow -\infty$). 
 
 (regularizing-model)=
 ### Regularizing model
@@ -91,7 +91,7 @@ Ultimately, a gene is marked as an outlier if it is flagged by either of the eva
 (kernel-smoothing)=
 #### Kernel smoothing
 
-The estimated parameters ($F$ and $\beta$) are sequentially smoothed across gene expression levels (log geometric mean) using the Nadaraya-Watson kernel regression estimator [@nadarayaEstimatingRegression1964]. To avoid overfitting, this smoothing is anchored by a subset of overdispersion genes which exclude the previously flagged outliers and Poisson-like genes.
+The estimated parameters ($F$ and $\beta$) are sequentially smoothed across gene expression levels (log geometric mean) using the Nadaraya-Watson kernel regression estimator [@nadarayaEstimatingRegression1964]. To avoid overfitting, this smoothing is anchored by the subset comprising overdispersion genes which exclude the previously flagged outliers and Poisson-like genes.
 
 ```{math}
 :label: smoothing-func
@@ -105,7 +105,7 @@ The estimated parameters ($F$ and $\beta$) are sequentially smoothed across gene
 \end{cases}
 ```
 
-The smoothed value $\overline{y}_j$ of any gene $j$ is computed by weighted average of anchored genes, as defined in Equation [](#smoothing-func). Particularly, the weight ($w_{ij}$) is the density determined by the Gaussian kernel function $K$ at the distance between the current gene $j$ and anchored gene $i$ in the $\mu_g$ level. In $m$ overdispersion genes, the employed subset starts from anchored gene $i_{\text{min}}$, which is nearest to the boundary, four times the bandwidth h, from the targeted $\mu_g$ range. 
+The smoothed value $\overline{y}_j$ (in $F$ or $\beta$ matrix) of any gene $j$ is computed by weighted average of anchored genes, as defined in Equation [](#smoothing-func). Particularly, the weight ($w_{ij}$) is the density determined by the Gaussian kernel function $K$ at the distance between the current gene $j$ and anchored gene $i$ in the $\mu_g$ level. In $m$ overdispersion genes, the employed subset starts from anchored gene $i_{\text{min}}$, which is nearest to the boundary, four times the bandwidth h, from the targeted $\mu_g$ range. 
 
 ![](./static/bw_smoothing.png)
 
