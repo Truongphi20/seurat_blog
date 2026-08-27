@@ -181,7 +181,9 @@ Ultimately, the corrected count value ($\mathbb{C}[c_{ij}]$) is computed by the 
 
 The top variable features (genes) are determined by ranking the variance of Pearson residuals across cells. 
 
-In detail, after computing the raw residuals, they are practically clipped by the range $[-\sqrt{M/30}, \sqrt{M/30}]$ (where $M$ is the total number of cells) to mitigate the distorting impact of extreme outliers. Next, genewise variance of these clipped residuals is calculated and the genes are sorted to select the top variable features (capped at 3,000 features by default).  
+In detail, after computing the raw residuals, they are practically clipped by the range $[-\sqrt{M/30}, \sqrt{M/30}]$ (where $M$ is the total number of cells) to mitigate the distorting impact of extreme outliers. This step is particularly important for preventing extremely low-expression genes (sampling noise, $\sigma_{ij} < 1$) from artificially inflating residuals and dominating downstream analysis. 
+
+Next, genewise variance of these clipped residuals is calculated and the genes are sorted to select the top variable features (capped at 3,000 features by default).  
 
 #### Residualization
 
